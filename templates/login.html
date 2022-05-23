@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- This snippet uses Font Awesome 5 Free as a dependency. You can download it at fontawesome.io! -->
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 col-xl-9 mx-auto">
+        <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
+          <div style="width: 45%;background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;">
+            <!-- Background image for card set in CSS! -->
+          </div>
+          <div class="card-body p-4 p-sm-5">
+            <h5 class="card-title text-center mb-5 fw-light fs-5">Set credentials</h5>
+            <form>
+
+              <div class="form-floating">
+                <select class="form-select" id="floatingSelect">
+                  <option selected>REWE</option>
+                  <option value="1">Picnic</option>
+                  <option value="2">HelloFresh</option>
+                </select>
+                <label for="floatingSelect">Vendor</label>
+              </div>
+
+              <hr>
+
+              <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="floatingInputEmail" placeholder="name@example.com">
+                <label for="floatingInputEmail">Email address</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+              </div>
+
+              <div class="d-grid mb-2">
+                <button class="btn btn-primary" type="submit">Save</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+{% endblock %}

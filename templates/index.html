@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="row py-xl-5 py-lg-5 py-md-5 py-sm-5 py-3">
+
+  <!-- <form id="formName" action="/1" method="post"> -->
+  <form action="/" enctype="multipart/form-data" method="POST">
+
+    <!-- <div class="jumbotron card card-image" style="background-image: url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;">
+      <div class="text-white text-center py-5 px-4">
+        <div>
+          <h2 class="card-title h1-responsive pt-3 mb-5 font-bold"><strong>#MakeYourWeeklySelection</strong></h2>
+        </div>
+      </div>
+    </div> -->
+
+
+
+    <div class="row py-xl-5 py-lg-5 py-md-5 py-sm-5 py-3">
+      {%for k in range(0, amount)%}
+      <!-- Gallery item -->
+
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="quiz_card_area">
+
+          <!--<input class="quiz_checkbox" type="checkbox" name="c_checkboxField" value={{k}} onchange="document.getElementById('formName').submit()" />-->
+          <input class="quiz_checkbox" type="checkbox" name="c_checkboxField" value={{k}} />
+          <div class="single_quiz_card">
+            <div class="bg-white rounded shadow-sm"><img src="{{filename[k]}}" alt="" class="img-fluid card-img-top rounded-top">
+              <div class="p-4">
+                <h5> <a href="#" class="text-dark">{{r_name[k]}}</a></h5>
+                <p class="small text-muted mb-0">{{r_subtitle[k]}}</p>
+                <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+                  <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">{{r_type[k]}}</span></p>
+                  <div class="badge text-bg-primary">{{r_subtype[k]}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- End -->
+      {%endfor%}
+
+    </div>
+
+
+</div>
+
+<div class="d-grid gap-2 position-fixed start-50 translate-middle-x" style="bottom:2%">
+  <div class="container-fluid bg-light rounded shadow bg-opacity-70" style="padding: .25em; white-space: nowrap;">
+
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button type="submit" class="btn btn-dark" name="btn" value="basket" style="padding: 5px;">
+        <i class="bi bi-bag-plus-fill" style="font-size:15px; vertical-align: bottom;"></i>
+        <span style="font-size:15px; vertical-align: center;">Add to Basket</span>
+      </button>
+
+      <button type="button" class="btn btn-outline-dark" style="padding: 5px;" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom">
+        <i class="bi bi-sliders2" style="font-size:30px; vertical-align: 10%;top:10%;"></i>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasBottomLabel">How would you like to find your recipes?</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="d-grid gap-2 col-6 mx-auto">
+      <button class="btn btn-outline-dark" type="submit" name="btn" value="random"><i class="bi bi-shuffle" style="font-size:15px; vertical-align: bottom;"></i> Random</button>
+      <button class="btn btn-outline-dark" type="submit" name="btn" value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent Week</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+</div>
+
+
+</form>
+{% endblock %}
