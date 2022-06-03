@@ -12,9 +12,6 @@ from urllib3 import util
 
 host = "https://gw.hellofresh.com"
 
-#credentials = ["gokewaw415@votooe.com","11111111"]
-credentials = ["kai-schiffer@web.de","datpaM-dogxus-jofte3"]
-
 '''
 setup cipher suite
 '''

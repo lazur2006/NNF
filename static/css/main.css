@@ -44,13 +44,14 @@ body {
 
 .quiz_card_area{position: relative;margin-bottom: 30px;}
 .single_quiz_card{
-    border:1px solid #efefef;
-    -webkit-transition: all 0.3s linear;
-    -moz-transition: all 0.3s linear;
-    -o-transition: all 0.3s linear;
-    -ms-transition: all 0.3s linear;
-    -khtml-transition: all 0.3s linear;
-    transition: all 0.3s linear;
+    border:2px solid #efefef;
+    border-radius: .5rem;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    -o-transition: all 0.1s linear;
+    -ms-transition: all 0.1s linear;
+    -khtml-transition: all 0.1s linear;
+    transition: all 0.1s linear;
 }
 
 .quiz_checkbox {

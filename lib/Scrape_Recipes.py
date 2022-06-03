@@ -1,14 +1,11 @@
-import sys
-import os
 import requests
 import re
 import urllib.request
 import time
-import numpy as np
 import base64
-from scipy.io import savemat, loadmat
 from tqdm import tqdm
 from PyQt5.QtCore import QThread, pyqtSignal
+import sqlite3
 
 host = "https://gw.hellofresh.com"
 salt = "hellofresh-ios-customer:ca154f43-687b-4866-9d4e-a618f42da8c9"
@@ -30,6 +27,7 @@ class Thread(QThread):
     def __init__(self):
         super(Thread, self).__init__()
         self._isRunning = True
+        self._tqdmObj = TQDM(range(1))
 
     def __del__(self):
         self.wait()
@@ -62,7 +60,6 @@ class Thread(QThread):
             minIngredientAmount = 3
             # Should also are the images saved?
             saveImg=True
-            buildCorMatrix=True
             
             LOCALE=["de-DE","en-US"]
             COUNTRY=["de","us"]
@@ -84,7 +81,18 @@ class Thread(QThread):
               }
             
             # find out how many recipes are present (only german DE market)
-            response = requests.get(url, headers=headers, params=payload).json()
+            try:
+                response = session.request("GET", url, headers=headers, params=payload, timeout=2)
+            except:
+                response.status_code = 503
+            cnt = 0
+            while response.status_code == 503 and cnt < 5:
+                        try:
+                            response = session.request("GET", url, headers=headers, params=payload, timeout=2)
+                        except:
+                            response.status_code = 503
+                        cnt = cnt + 1
+            response = response.json()
             total = response['total']
             iterations = int(response['total']/limit)
             residuals = response['total']%limit
@@ -96,13 +104,13 @@ class Thread(QThread):
                 iterations=iterations+1
             recipes=[]
             offset = 0
-            _tqdmObj = TQDM(range(iterations))
-            for i in _tqdmObj.tq:
+            self._tqdmObj = TQDM(range(iterations))
+            for i in self._tqdmObj.tq:
                 if not self._isRunning:
                     break
                 self._max.emit(iterations)
                 self._signal.emit(i)
-                self._state_msg.emit("Step 1/8\n\nDownload "+str(i)+" of "+str(iterations)+" packages server\n\nRemaining Time "+_tqdmObj.remaining())
+                self._state_msg.emit("Step 1/8\n\nDownload "+str(i)+" of "+str(iterations)+" packages server\n\nRemaining Time "+self._tqdmObj.remaining())
                 payload={
                     "offset": str(offset),
                     "limit": str(limit),
@@ -110,7 +118,22 @@ class Thread(QThread):
                     "country": country
                 }
                 offset += 250
-                recipes.extend(session.request("GET", url, headers=headers, params=payload).json()['items'])
+                try:
+                    response = session.request("GET", url, headers=headers, params=payload, timeout=2)
+                    timeout = False
+                except:
+                    response.status_code = 503
+                    timeout = True
+                cnt = 0
+                if response.status_code == 503 or timeout:
+                    print("503 detected ... do max 5 retries")
+                    while response.status_code == 503 and cnt < 5:
+                        try:
+                            response = session.request("GET", url, headers=headers, params=payload, timeout=2)
+                        except:
+                            response.status_code = 503
+                        cnt = cnt + 1
+                recipes.extend(response.json()['items'])
             
             # Drop recipes when
             # - ingredients list is empty
@@ -177,130 +200,100 @@ class Thread(QThread):
             recipes=[]
             recipes=recipesFinal
             
+            ''' SQlite connection ------------------------------------------ '''
+            ''' convert recipes to single lists '''
+            listRecipes = list(map(list, zip(*recipesFinal)))
             
-            if country=="de":
-                ite=2
-            else:
-                ite=1
-            # Loop for simplify the recipes
-            # (1) standard
-            # (2) simple
-            for opt in range(ite):
-                if not self._isRunning:
-                    break
-                if opt==0:
-                    print(">> Start standard recipe session")
-                    self._max.emit(ite)
-                    self._signal.emit(0)
-                    self._state_msg.emit("Start standard recipe session")
-                else:
-                    print(">> Start simplified recipe session")
-                print(">> Create ingredient list")
-                Ingredients = []
-                tmp=[]
-                matFile=loadmat('db/de-DE-s/dict.mat')['HelloIngredients'][1:]
-                _tqdmObj = TQDM(range(len(recipes)))
-                for i in _tqdmObj.tq:
-                    self._max.emit(len(recipes))
-                    self._signal.emit(i)
-                    if opt:
-                        step="6"
-                    else:
-                        step="2"
-                    self._state_msg.emit("Step "+step+"/8\n\nRearrange the recipes...\n\nRemaining Time "+_tqdmObj.remaining())
+            ''' create SQlite db file '''
+            conn = sqlite3.connect('static/db/recipe.db')
+            
+
+            conn.execute('DROP TABLE IF EXISTS RECIPE;')
+            conn.execute('DROP TABLE IF EXISTS INGREDIENTS;')
+            conn.execute('DROP TABLE IF EXISTS INSTRUCTIONS;')
+            conn.execute('DROP TABLE IF EXISTS TAGS;')
+            conn.execute('DROP TABLE IF EXISTS UINGREDIENT;')
+            
+            conn.execute('''CREATE TABLE RECIPE
+                         (ID INT PRIMARY KEY NOT NULL,
+                         RECIPE_NAME TEXT NOT NULL,
+                         RECIPE_LINK TEXT NOT NULL,
+                         RECIPE_SUBTITLE TEXT NOT NULL,
+                         RECIPE_LABEL TEXT NOT NULL
+                         )
+                         ;''')
+            conn.execute('''CREATE TABLE INGREDIENTS
+                         (ID INT PRIMARY KEY NOT NULL,
+                         UID INT NOT NULL,
+                         AMOUNT REAL NOT NULL,
+                         UNIT TEXT NOT NULL,
+                         INGREDIENT TEXT NOT NULL
+                         )
+                         ;''')
+            conn.execute('''CREATE TABLE INSTRUCTIONS
+                         (ID INT PRIMARY KEY NOT NULL,
+                         UID INT NOT NULL,
+                         INSTRUCTION TEXT NOT NULL
+                         )
+                         ;''')
+            conn.execute('''CREATE TABLE TAGS
+                         (ID INT PRIMARY KEY NOT NULL,
+                         UID INT NOT NULL,
+                         TAG TEXT NOT NULL
+                         )
+                         ;''')
+            cnt = [0,0,0]
+            for i in range(len(listRecipes[0])):
+                conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL) VALUES (?,?,?,?,?)",
+                             (i,
+                              listRecipes[0][i],
+                              listRecipes[2][i],
+                              listRecipes[7][i][0],
+                              listRecipes[6][i][0]
+                              ));
+                for j,ingredient in enumerate(listRecipes[1][i]):
+                    conn.execute("INSERT INTO INGREDIENTS (ID,UID,AMOUNT,UNIT,INGREDIENT) VALUES (?,?,?,?,?)",(cnt[0],i,ingredient[0],ingredient[1],ingredient[2]))
+                    cnt[0] = cnt[0] + 1
+                for j,instruction in enumerate(listRecipes[3][i]):
+                    conn.execute("INSERT INTO INSTRUCTIONS (ID,UID,INSTRUCTION) VALUES (?,?,?)",(cnt[1],i,instruction))
+                    cnt[1] = cnt[1] + 1
+                for j,tag in enumerate(listRecipes[5][i]):
+                    conn.execute("INSERT INTO TAGS (ID,UID,TAG) VALUES (?,?,?)",(cnt[2],i,tag))
+                    cnt[2] = cnt[2] + 1
+                    
+            ''' '''
+            conn.execute("CREATE TABLE UINGREDIENT AS SELECT DISTINCT INGREDIENT FROM INGREDIENTS ORDER BY INGREDIENT")
+            
+            
+            ''' Get ingredient conversion table but only results which should be converted '''
+            conn_cv = sqlite3.connect('static/db/ingredients.db')
+            conversions = conn_cv.execute("SELECT * FROM 'ingredients' WHERE Converted is not '' order by Converted").fetchall()
+            conn_cv.close()
+            
+            for element in conversions:
+                conn.execute("UPDATE INGREDIENTS SET INGREDIENT = REPLACE(INGREDIENT,?,?) WHERE INGREDIENT = ?;",(element[0],element[1],element[0],))
+            conn.commit()
+            conn.close()
+
+                    
+            # Save image urls to file
+            if(saveImg):
+                print(">> Load and save recipe images")
+                self._tqdmObj = TQDM(range(len(recipes)))
+                for i in self._tqdmObj.tq:
                     if not self._isRunning:
                         break
-                    for j in range(len(recipes[i][1])):
-                        # Should be simplified?
-                        if(opt):
-                            for k in range(len(matFile)):
-                                if matFile[k][0][0].strip()==recipes[i][1][j][2]:
-                                    if matFile[k][1]:
-                                        recipes[i][1][j][2]=matFile[k][1][0].strip()
-                            tmp.append(recipes[i][1][j][2])
-                        else:
-                            tmp.append(recipes[i][1][j][2])
-                    Ingredients.append(tmp)
-                    tmp=[]
-                    
-                # Save image urls to file
-                if(saveImg and not opt):
-                    print(">> Load and save recipe images")
-                    _tqdmObj = TQDM(range(len(recipes)))
-                    for i in _tqdmObj.tq:
-                        if not self._isRunning:
-                            break
-                        self._max.emit(len(recipes))
-                        self._signal.emit(i)
-                        self._state_msg.emit("Step 3/8\n\nDownload recipe image "+str(i)+" of "+str(len(recipes))+"\n\nRemaining Time "+_tqdmObj.remaining())
-                        try:
-                            urllib.request.urlretrieve(recipes[i][4], "img/"+locale+"/"+str(i)+".jpg")
-                        except:
-                            urllib.request.urlretrieve("https://help.ifttt.com/hc/article_attachments/360041394694/no_image_card.png", "img/"+locale+"/"+str(i)+".jpg")
-                
-                # Build ingredient recipes correlation matrix
-                if(buildCorMatrix):
-                    print(">> Build correlation matrix")
-                    s_CrlFct = np.zeros([len(Ingredients),len(Ingredients)])
-                    _tqdmObj = TQDM(range(len(Ingredients)))
-                    for j in _tqdmObj.tq:
-                        if not self._isRunning:
-                            break
-                        self._max.emit(len(Ingredients))
-                        self._signal.emit(j)
-                        if opt:
-                            step="7"
-                        else:
-                            step="4"
-                        self._state_msg.emit("Step "+step+"/8\n\nBuild correlation matrix...\n\nRemaining Time "+_tqdmObj.remaining())
-                        for k in range(len(Ingredients)):
-                            ar = Ingredients[j] + Ingredients[k]
-                            s_NotUnique = len(ar)
-                            s_Unique = len(np.unique(ar))
-                            s_CrlFct[j][k] = abs(s_Unique - s_NotUnique)
-                    
-                    
-                
-                # Build unique ingredient list
-                print(">> Create final unique ingredient list")
-                ingredientListUniqueType=[]
-                _tqdmObj = TQDM(range(len(Ingredients)))
-                for j in _tqdmObj.tq:
-                    self._max.emit(len(Ingredients))
-                    self._signal.emit(j)
-                    if opt:
-                        step="8"
-                    else:
-                        step="5"
-                    self._state_msg.emit("Step "+step+"/8\n\nSave all results...")
-                    for k in range(len(Ingredients[j])):
-                        ingredientListUniqueType.append(Ingredients[j][k])
-                ingredientListUniqueType=np.unique(ingredientListUniqueType)
-                
-                if self._isRunning:
-                    if(opt):
-                        # Path to simplified data
-                        path="db/"+locale+"-s/"
-                    else:
-                        # Standard path
-                        path="db/"+locale+"/"
-                    if(buildCorMatrix):
-                        # Save the correlation matrix to *.mat file
-                        savemat(path+"cor_fac.mat", {"CorrelationFactors":s_CrlFct})
-                    # Save the ingredient list to *.mat file
-                    savemat(path+"ingredients.mat", {"ingredientListUniqueType":ingredientListUniqueType})
-                    # Save the recipes to *.mat file
-                    savemat(path+"data_pkg.mat", {"recipes":recipes})
+                    self._max.emit(len(recipes))
+                    self._signal.emit(i)
+                    self._state_msg.emit("Step 3/8\n\nDownload recipe image "+str(i)+" of "+str(len(recipes))+"\n\nRemaining Time "+self._tqdmObj.remaining())
+                    try:
+                        urllib.request.urlretrieve(recipes[i][4], "static/images/"+locale+"/"+str(i)+".jpg")
+                    except:
+                        urllib.request.urlretrieve("https://help.ifttt.com/hc/article_attachments/360041394694/no_image_card.png", "static/images/"+locale+"/"+str(i)+".jpg")
                     
             
             self._isRunning = False
-            
-            for i in (range(5)):
-                time.sleep(1)
-                self._state_msg.emit("Update finished\n\nApp will be restarted in "+str(4-i)+"...")
-                
-            os.execl(sys.executable, os.path.abspath(__file__), *sys.argv)
 
 
-t=Thread()
-t.run()
+# t=Thread()
+# t.run()
