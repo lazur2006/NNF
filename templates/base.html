@@ -11,171 +11,13 @@
   <!-- Bootstrap core CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-  </script>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-  </script>
-
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
 
-  <script>
-    $(function() {
-      var availableTags = [
-        {%for tags in tags %}
-        "{{tags}}",
-        {% endfor %}
-      ];
-      $("#tags").autocomplete({
-        source: function(request, response) {
-          var results = $.ui.autocomplete.filter(availableTags, request.term);
-          response(results.slice(0, 10));
-        }
-      });
-    });
-
-    function startConn() {
-      $('.btn').prop('disabled', true);
-      var source = new EventSource("/progress");
-      source.onmessage = function(event) {
-        $('.progress-bar').css('width', event.data + '%').attr('aria-valuenow', event.data);
-        $('.progress-bar-label').text(event.data + '%');
-
-        if (event.data == 100) {
-          source.close()
-        }
-      }
-    }
-
-    function populateTable(json) {
-      var ingredientsTab = document.querySelector("#ingredients-tab");
-      var recipesTab = document.querySelector("#recipes-tab");
-
-      if ($('#ingredients-tab').children().length > 0) {
-        while (ingredientsTab.firstChild) {
-          ingredientsTab.removeChild(ingredientsTab.firstChild);
-          recipesTab.removeChild(recipesTab.firstChild);
-        }
-      }
-
-      const ul_ingredients = document.createElement("ul");
-      const ul_recipes = document.createElement("ul");
-
-      ul_ingredients.classList.add('list-group');
-      ul_recipes.classList.add('list-group');
-
-      if (typeof json[1] != 'undefined') {
-
-        Object.keys(json[0]).forEach((row) => {
-          const span_recipes = document.createElement("span");
-          span_recipes.classList.add('badge');
-          span_recipes.classList.add('rounded-pill');
-          span_recipes.classList.add('text-bg-dark');
-          span_recipes.classList.add('m-3');
-          span_recipes.textContent = parseInt(row) + 1;
-
-          const li_recipes = document.createElement("li");
-          li_recipes.classList.add('list-group-item');
-          li_recipes.classList.add('d-flex');
-          li_recipes.classList.add('justify-content-left');
-          li_recipes.classList.add('align-items-center');
-          li_recipes.classList.add('text-break');
-          li_recipes.classList.add('text-wrap');
-          li_recipes.textContent = json[0][row];
-          ul_recipes.appendChild(li_recipes);
-
-          li_recipes.insertBefore(span_recipes, li_recipes.firstChild);
-          recipesTab.appendChild(ul_recipes);
-        })
-
-        Object.keys(json[1]).forEach((row) => {
-          const li_ingredients = document.createElement("li");
-          li_ingredients.classList.add('list-group-item');
-          li_ingredients.classList.add('d-flex');
-          li_ingredients.classList.add('justify-content-between');
-          li_ingredients.classList.add('align-items-center');
-          li_ingredients.classList.add('text-break');
-          li_ingredients.textContent = json[3][row];
-          ul_ingredients.appendChild(li_ingredients);
-
-          const span_ingredients = document.createElement("span");
-          span_ingredients.classList.add('badge');
-          span_ingredients.classList.add('rounded-pill');
-          span_ingredients.classList.add('text-bg-dark');
-          span_ingredients.classList.add('m-3');
-          if (json[1][row] == 0) {
-            span_ingredients.textContent = json[2][row];
-            if (json[2][row] == 'None' || json[2][row] == 'Einheit' || json[2][row] == 'nach Geschmack') {
-              span_ingredients.textContent = '-';
-            } else {
-              span_ingredients.textContent = json[2][row];
-            }
-          } else {
-            span_ingredients.textContent = json[1][row] + " " + json[2][row];
-            if (json[2][row] == 'None') {
-              span_ingredients.textContent = json[1][row] + " " + json[3][row];
-            }
-          }
-
-          li_ingredients.appendChild(span_ingredients);
-          ingredientsTab.appendChild(ul_ingredients);
-        })
-      }
-    }
-    $(document).on('submit', '#index-form', function(e) {
-      e.preventDefault();
-      var selection = new Object();
-      selection.Recipes = [];
-      selection.Route = $("#btn").val();
-
-      $("input:checkbox[name=checkbox]:checked").each(function() {
-        selection.Recipes.push($(this).val());
-      });
-      $.ajax({
-        url: '/',
-        data: JSON.stringify(selection),
-        contentType: 'application/json;charset=UTF-8',
-        type: 'POST',
-        success: function(response) {
-          //console.log(response);
-          populateTable(response);
-        },
-        error: function(error) {
-          //console.log(error);
-        }
-      })
-    });
-    //$(document).on('submit', '#index-form', function(e) {
-    //e.preventDefault();
-    function clearBasket() {
-      var ingredientsTab = document.querySelector("#ingredients-tab");
-      var recipesTab = document.querySelector("#recipes-tab");
-      $.ajax({
-        url: '/',
-        data: JSON.stringify({
-          Route: "clearBasket"
-        }),
-        contentType: 'application/json;charset=UTF-8',
-        type: 'POST',
-        success: function(response) {
-          if ($('#ingredients-tab').children().length > 0) {
-            while (ingredientsTab.firstChild) {
-              ingredientsTab.removeChild(ingredientsTab.firstChild);
-              recipesTab.removeChild(recipesTab.firstChild);
-            }
-          }
-        },
-        error: function(error) {
-          //console.log(error);
-        }
-      })
-    };
-    // $(document).ready(function() {
-    //   console.log("ready!");
-    // });
-  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+  <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
 
   <style>
     .bd-placeholder-img {
@@ -201,6 +43,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow" aria-label="Offcanvas navbar large">
     <div class="container-fluid">
       <a class="navbar-brand fs-6 fw-light" href="#"><i class="bi bi-boxes" style="font-size:15px; vertical-align: bottom;"></i> Built v1.0.1</a>
+      <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-block" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-qr-code-scan"></i> App</button>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2" aria-controls="offcanvasNavbar2">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -215,26 +58,42 @@
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('WebView:index')}}">Home</a>
+              <a class="nav-link m-0 p-0 ms-1 me-1" aria-current="page" href="{{ url_for('WebView:index')}}"><button type="button" class="btn btn-dark position-relative btn-sm">
+                Home
+              </button></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('WebView:login')}}">Account</a>
+              <a class="nav-link m-0 p-0 ms-1 me-1" href="{{ url_for('WebView:login')}}"><button type="button" class="btn btn-dark position-relative btn-sm">
+                Account
+              </button></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('WebView:checkout')}}">Basket</a>
+              <a class="nav-link m-0 p-0 ms-1 me-1" href="{{ url_for('WebView:orders')}}"><button type="button" class="btn btn-dark position-relative btn-sm">
+                Orders
+              </button></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('WebView:settings')}}">Settings</a>
+              <a class="nav-link m-0 p-0 ms-1 me-1" href="{{ url_for('WebView:settings')}}"><button type="button" class="btn btn-dark position-relative btn-sm">
+                Update
+              </button></a>
             </li>
           </ul>
-          <form class="d-flex mt-3 mt-lg-0" role="search">
-            <input class="form-control me-2" type="search" placeholder="Ingredient" aria-label="Search" id="tags">
-            <button class="btn btn-outline-secondary" type="submit">Search</button>
-          </form>
         </div>
       </div>
     </div>
   </nav>
+
+  <!-- Vertically centered modal -->
+    <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-body text-center"><img src="/static/images/qrcode.png" height="400" class="d-inline-block align-text-top" style=""></div>
+
+        </div>
+      </div>
+    </div>
+
 
   <div class="text-white text-center jumbotron specialjum shadow" style="background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;">
     <div class="container">
@@ -244,6 +103,7 @@
   <!-- Content goes here-->
   {% block content %} {% endblock %}
   </div>
+
   <div class="b-example-divider"></div>
 
   <div class="container">

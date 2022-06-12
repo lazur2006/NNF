@@ -65,6 +65,7 @@ class scrapeWeeklys(object):
           'user-agent': 'HelloFresh/22.8 (com.hellofresh.HelloFresh; build:4616773; iOS 14.6.0) Alamofire/5.4.4'
         }
         self.stream['LOGIN'] = self.session.request("POST", url, headers=headers, data=payload).json()
+        return(True if self.stream['LOGIN'].get('access_token',False) else False)
         
     def account(self):
         url = "https://www.hellofresh.de/gw/api/customers/me/subscriptions?country=de&locale=de-DE"

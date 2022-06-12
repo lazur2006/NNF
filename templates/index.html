@@ -3,43 +3,104 @@
 {% block content %}
 
 <div class="container-fluid">
-<div class="row py-xl-5 py-lg-5 py-md-5 py-sm-5 py-3">
-  {%for k in range(0, amount)%}
-  <!-- Gallery item -->
-  <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-    <div class="quiz_card_area">
-      <input class="quiz_checkbox" type="checkbox" id="c_checkboxField" name="checkbox" value={{k}} />
-      <div class="single_quiz_card">
-        <div class="bg-white rounded shadow-sm"><img src="{{filename[k]}}" alt="" class="img-fluid card-img-top rounded-top">
-          <div class="p-4">
-            <h5> <a href="#" class="text-dark">{{r_name[k]}}</a></h5>
-            <p class="small text-muted mb-0">{{r_subtitle[k]}}</p>
-            <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-              <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">{{r_type[k]}}</span></p>
-              <div class="badge text-bg-primary">{{r_subtype[k]}}</div>
+  <div class="row py-xl-5 py-lg-5 py-md-5 py-sm-5 py-3">
+    {%for k in range(0, amount)%}
+    <!-- Gallery item -->
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+      <div class="quiz_card_area">
+        <input class="quiz_checkbox" type="checkbox" id="c_checkboxField" name="checkbox" value={{k}} />
+        <div class="single_quiz_card">
+          <div class="bg-white rounded shadow-sm"><img src="{{filename[k]}}" alt="" class="img-fluid card-img-top rounded-top">
+            <div class="p-4">
+              <h5> <a href="#" class="text-dark">{{r_name[k]}}</a></h5>
+              <p class="small text-muted mb-0">{{r_subtitle[k]}}</p>
+              <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+                <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">{{r_type[k]}}</span></p>
+                <div class="badge text-bg-primary">{{r_subtype[k]}}</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    {%endfor%}
+    <!-- End -->
   </div>
-  {%endfor%}
-  <!-- End -->
-</div>
 </div>
 
-<div class="offcanvas offcanvas-end w-auto" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+<div class="offcanvas offcanvas-end w-max" tabindex="-1" id="offcanvasRightCheckout" aria-labelledby="offcanvasRightLabelCheckout">
 
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasRightLabel">Basket</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <div class="offcanvas-header bg-dark">
+    <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Checkout</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <div class="p-2 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold mb-3">Vendor</h1>
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+          <div>
+            <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>Before proceeding, make sure you have an account to use the Checkout by Vendor feature.
+          </div>
+        </div>
+        <div class="card pt-5 mt-5">
+          <img src="/static/images/REWE_logo.svg" height="45em" style="vertical-align: middle;">
+          <div class="card-body  text-center m-3">
+            <p class="card-text text-start">After proceed, please go to your REWE shopping cart on the official REWE website or your mobile app.</p>
+            <div class="d-grid gap-2 pt-3">
+              <span class="badge rounded-pill text-bg-success m-2" data-bs-toggle="tooltip" data-bs-placement="top">REWE<i class="bi bi-check-circle-fill ms-1 align-top"></i></span>
+              <button type="button" class="btn btn-outline-dark btn-lg" onclick="checkout('REWE')"><i class="bi bi-cart3 align-bottom"></i> Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card pt-5 mt-5">
+          <img src="/static/images/Picnic_logo.svg" height="65em" style="text-align: center;">
+          <div class="card-body  text-center m-3">
+            <p class="card-text text-start">If you continue with Picnic, please then go to your mobile app to continue and complete the offer.</p>
+            <div class="d-grid gap-2 pt-3">
+              <span class="badge rounded-pill text-bg-success m-2" data-bs-toggle="tooltip" data-bs-placement="top">Picnic<i class="bi bi-check-circle-fill ms-1 align-top"></i></span>
+              <button type="button" class="btn btn-outline-dark btn-lg" onclick="checkout('Picnic')">
+                <i class="bi bi-cart3 align-bottom" id="spinner_picnic_carticon"></i>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinner_picnic" style="display: none"></span>
+                 Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-2 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold mb-3">Recipe Card</h1>
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+          <div>
+            <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>Fortunately, if you don't want to go through vendor checkout, you can simply create the recipe card as a PDF file.
+          </div>
+        </div>
+        <div class="d-flex flex-column mb-3">
+          <button type="button" class="btn btn-outline-dark btn-lg mt-4" onclick="checkout('PDF')"><i class="bi bi-file-earmark-pdf" style="vertical-align: top; filter: grayscale(1)"></i> Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end w-max" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+
+  <div class="offcanvas-header bg-dark">
+    <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Basket</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
 
   <div class="offcanvas-body">
 
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">THE Recipes</h1>
+        <h1 class="display-5 fw-bold mb-3">Recipes</h1>
 
         <ul class="list-group" style="padding-bottom:1em" id="recipes-tab">
           <!-- script content section : populateTable() -->
@@ -50,14 +111,15 @@
 
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">THE Ingredients</h1>
+        <h1 class="display-5 fw-bold mb-3">Ingredients</h1>
 
         <ul class="list-group" style="padding-bottom:1em" id="ingredients-tab">
           <!-- script content section : populateTable() -->
         </ul>
 
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-          <button type="button" class="btn btn-dark">Checkout</button>
+
+        <div class="btn-group bg-light p-1 shadow position-absolute top-0 start-50 translate-middle-x mt-5" role="group">
+          <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" style="padding: 5px;" data-bs-target="#offcanvasRightCheckout" aria-controls="offcanvasRightCheckout">Checkout</button>
           <button type="button" class="btn btn-outline-dark" onclick="clearBasket()">Clear</button>
         </div>
 
@@ -100,7 +162,6 @@
   </div>
   <div class="offcanvas-body">
 
-    <!-- <div class="d-grid gap-2 col-6 mx-auto"> -->
     <form method="post" enctype="multipart/form-data" id="recipe-form" action="choose">
       <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5">
@@ -110,8 +171,6 @@
           <label for="customRange3" class="form-label">Recipes per page </label>
           <h1 id="toptitle">10</h1>
           <input type="range" class="form-range" min="5" max="50" step="1" value="10" name="range" oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em">
-
-
 
           <button class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle" style="font-size:15px; vertical-align: bottom;"></i> Random</button>
         </div>
@@ -125,9 +184,6 @@
         </div>
       </div>
     </form>
-    <!-- </div> -->
-
-
   </div>
 
-{% endblock %}
+  {% endblock %}

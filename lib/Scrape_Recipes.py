@@ -59,7 +59,8 @@ class Thread(QThread):
             # take only recipes in consideration if there ingredient amount is more than 3
             minIngredientAmount = 3
             # Should also are the images saved?
-            saveImg=True
+            saveImg=False
+            saveFiles=False
             
             LOCALE=["de-DE","en-US"]
             COUNTRY=["de","us"]
@@ -135,6 +136,11 @@ class Thread(QThread):
                         cnt = cnt + 1
                 recipes.extend(response.json()['items'])
             
+            if not saveImg:
+                self._tqdmObj = TQDM(range(10))
+                for i in self._tqdmObj.tq:
+                    time.sleep(1)
+            
             # Drop recipes when
             # - ingredients list is empty
             # - thermomix classified
@@ -200,80 +206,81 @@ class Thread(QThread):
             recipes=[]
             recipes=recipesFinal
             
-            ''' SQlite connection ------------------------------------------ '''
-            ''' convert recipes to single lists '''
-            listRecipes = list(map(list, zip(*recipesFinal)))
-            
-            ''' create SQlite db file '''
-            conn = sqlite3.connect('static/db/recipe.db')
-            
-
-            conn.execute('DROP TABLE IF EXISTS RECIPE;')
-            conn.execute('DROP TABLE IF EXISTS INGREDIENTS;')
-            conn.execute('DROP TABLE IF EXISTS INSTRUCTIONS;')
-            conn.execute('DROP TABLE IF EXISTS TAGS;')
-            conn.execute('DROP TABLE IF EXISTS UINGREDIENT;')
-            
-            conn.execute('''CREATE TABLE RECIPE
-                         (ID INT PRIMARY KEY NOT NULL,
-                         RECIPE_NAME TEXT NOT NULL,
-                         RECIPE_LINK TEXT NOT NULL,
-                         RECIPE_SUBTITLE TEXT NOT NULL,
-                         RECIPE_LABEL TEXT NOT NULL
-                         )
-                         ;''')
-            conn.execute('''CREATE TABLE INGREDIENTS
-                         (ID INT PRIMARY KEY NOT NULL,
-                         UID INT NOT NULL,
-                         AMOUNT REAL NOT NULL,
-                         UNIT TEXT NOT NULL,
-                         INGREDIENT TEXT NOT NULL
-                         )
-                         ;''')
-            conn.execute('''CREATE TABLE INSTRUCTIONS
-                         (ID INT PRIMARY KEY NOT NULL,
-                         UID INT NOT NULL,
-                         INSTRUCTION TEXT NOT NULL
-                         )
-                         ;''')
-            conn.execute('''CREATE TABLE TAGS
-                         (ID INT PRIMARY KEY NOT NULL,
-                         UID INT NOT NULL,
-                         TAG TEXT NOT NULL
-                         )
-                         ;''')
-            cnt = [0,0,0]
-            for i in range(len(listRecipes[0])):
-                conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL) VALUES (?,?,?,?,?)",
-                             (i,
-                              listRecipes[0][i],
-                              listRecipes[2][i],
-                              listRecipes[7][i][0],
-                              listRecipes[6][i][0]
-                              ));
-                for j,ingredient in enumerate(listRecipes[1][i]):
-                    conn.execute("INSERT INTO INGREDIENTS (ID,UID,AMOUNT,UNIT,INGREDIENT) VALUES (?,?,?,?,?)",(cnt[0],i,ingredient[0],ingredient[1],ingredient[2]))
-                    cnt[0] = cnt[0] + 1
-                for j,instruction in enumerate(listRecipes[3][i]):
-                    conn.execute("INSERT INTO INSTRUCTIONS (ID,UID,INSTRUCTION) VALUES (?,?,?)",(cnt[1],i,instruction))
-                    cnt[1] = cnt[1] + 1
-                for j,tag in enumerate(listRecipes[5][i]):
-                    conn.execute("INSERT INTO TAGS (ID,UID,TAG) VALUES (?,?,?)",(cnt[2],i,tag))
-                    cnt[2] = cnt[2] + 1
-                    
-            ''' '''
-            conn.execute("CREATE TABLE UINGREDIENT AS SELECT DISTINCT INGREDIENT FROM INGREDIENTS ORDER BY INGREDIENT")
-            
-            
-            ''' Get ingredient conversion table but only results which should be converted '''
-            conn_cv = sqlite3.connect('static/db/ingredients.db')
-            conversions = conn_cv.execute("SELECT * FROM 'ingredients' WHERE Converted is not '' order by Converted").fetchall()
-            conn_cv.close()
-            
-            for element in conversions:
-                conn.execute("UPDATE INGREDIENTS SET INGREDIENT = REPLACE(INGREDIENT,?,?) WHERE INGREDIENT = ?;",(element[0],element[1],element[0],))
-            conn.commit()
-            conn.close()
+            if saveFiles:
+                ''' SQlite connection ------------------------------------------ '''
+                ''' convert recipes to single lists '''
+                listRecipes = list(map(list, zip(*recipesFinal)))
+                
+                ''' create SQlite db file '''
+                conn = sqlite3.connect('static/db/recipe.db')
+                
+    
+                conn.execute('DROP TABLE IF EXISTS RECIPE;')
+                conn.execute('DROP TABLE IF EXISTS INGREDIENTS;')
+                conn.execute('DROP TABLE IF EXISTS INSTRUCTIONS;')
+                conn.execute('DROP TABLE IF EXISTS TAGS;')
+                conn.execute('DROP TABLE IF EXISTS UINGREDIENT;')
+                
+                conn.execute('''CREATE TABLE RECIPE
+                             (ID INT PRIMARY KEY NOT NULL,
+                             RECIPE_NAME TEXT NOT NULL,
+                             RECIPE_LINK TEXT NOT NULL,
+                             RECIPE_SUBTITLE TEXT NOT NULL,
+                             RECIPE_LABEL TEXT NOT NULL
+                             )
+                             ;''')
+                conn.execute('''CREATE TABLE INGREDIENTS
+                             (ID INT PRIMARY KEY NOT NULL,
+                             UID INT NOT NULL,
+                             AMOUNT REAL NOT NULL,
+                             UNIT TEXT NOT NULL,
+                             INGREDIENT TEXT NOT NULL
+                             )
+                             ;''')
+                conn.execute('''CREATE TABLE INSTRUCTIONS
+                             (ID INT PRIMARY KEY NOT NULL,
+                             UID INT NOT NULL,
+                             INSTRUCTION TEXT NOT NULL
+                             )
+                             ;''')
+                conn.execute('''CREATE TABLE TAGS
+                             (ID INT PRIMARY KEY NOT NULL,
+                             UID INT NOT NULL,
+                             TAG TEXT NOT NULL
+                             )
+                             ;''')
+                cnt = [0,0,0]
+                for i in range(len(listRecipes[0])):
+                    conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL) VALUES (?,?,?,?,?)",
+                                 (i,
+                                  listRecipes[0][i],
+                                  listRecipes[2][i],
+                                  listRecipes[7][i][0],
+                                  listRecipes[6][i][0]
+                                  ));
+                    for j,ingredient in enumerate(listRecipes[1][i]):
+                        conn.execute("INSERT INTO INGREDIENTS (ID,UID,AMOUNT,UNIT,INGREDIENT) VALUES (?,?,?,?,?)",(cnt[0],i,ingredient[0],ingredient[1],ingredient[2]))
+                        cnt[0] = cnt[0] + 1
+                    for j,instruction in enumerate(listRecipes[3][i]):
+                        conn.execute("INSERT INTO INSTRUCTIONS (ID,UID,INSTRUCTION) VALUES (?,?,?)",(cnt[1],i,instruction))
+                        cnt[1] = cnt[1] + 1
+                    for j,tag in enumerate(listRecipes[5][i]):
+                        conn.execute("INSERT INTO TAGS (ID,UID,TAG) VALUES (?,?,?)",(cnt[2],i,tag))
+                        cnt[2] = cnt[2] + 1
+                        
+                ''' '''
+                conn.execute("CREATE TABLE UINGREDIENT AS SELECT DISTINCT INGREDIENT FROM INGREDIENTS ORDER BY INGREDIENT")
+                
+                
+                ''' Get ingredient conversion table but only results which should be converted '''
+                conn_cv = sqlite3.connect('static/db/ingredients.db')
+                conversions = conn_cv.execute("SELECT * FROM 'ingredients' WHERE Converted is not '' order by Converted").fetchall()
+                conn_cv.close()
+                
+                for element in conversions:
+                    conn.execute("UPDATE INGREDIENTS SET INGREDIENT = REPLACE(INGREDIENT,?,?) WHERE INGREDIENT = ?;",(element[0],element[1],element[0],))
+                conn.commit()
+                conn.close()
 
                     
             # Save image urls to file
