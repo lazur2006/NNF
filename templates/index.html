@@ -28,7 +28,49 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end w-max" tabindex="-1" id="offcanvasRightCheckout" aria-labelledby="offcanvasRightLabelCheckout">
+<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightVendor" aria-labelledby="offcanvasRightLabelVendor">
+
+  <div class="offcanvas-header bg-dark">
+    <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">
+      <!-- auto generated content -->
+    </h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body p-0">
+    <div class="mb-4 bg-light rounded-3">
+      <div class="container-fluid p-0">
+
+        <ul class="list-group p-0 m-0" id="vendor_ingredients">
+          <li class="text-center bg-white p-5">
+            <img src="/static/images/Picnic_logo.svg" id="img_vendor_basket" height="65em" style="text-align: center;">
+
+            <div class="alert alert-danger mt-5" id="vendor_missing_ingredients" role="alert" style="display: none">
+              <div class="m-3">
+                <i class="bi bi-exclamation-circle-fill align-top me-2"></i>
+                Some ingredients wasn't found
+              </div>
+              <ul class="list-group text-start" id="vendor_missing_ingredients_list">
+                <!-- auto generated content -->
+              </ul>
+            </div>
+
+          </li>
+          <!-- auto generated content -->
+        </ul>
+
+      </div>
+    </div>
+    <div class="btn-group bg-light p-1 shadow position-absolute top-0 start-50 translate-middle-x mt-5" role="group">
+      <button type="button" class="btn btn-dark" style="padding: 5px;width:7em;" id="push_vendor_basket" onclick="push_vendor_basket()">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinner_push_vendor_basket" style="display: none"></span><i class="bi bi-check-all align-bottom" style="display: none" id="check_push_vendor_basket"></i>
+        Proceed</button>
+      <button type="button" class="btn btn-outline-dark" id="baskets_total" style="width:7em;"></button>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightCheckout" aria-labelledby="offcanvasRightLabelCheckout">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Checkout</h5>
@@ -49,8 +91,15 @@
           <div class="card-body  text-center m-3">
             <p class="card-text text-start">After proceed, please go to your REWE shopping cart on the official REWE website or your mobile app.</p>
             <div class="d-grid gap-2 pt-3">
-              <span class="badge rounded-pill text-bg-success m-2" data-bs-toggle="tooltip" data-bs-placement="top">REWE<i class="bi bi-check-circle-fill ms-1 align-top"></i></span>
-              <button type="button" class="btn btn-outline-dark btn-lg" onclick="checkout('REWE')"><i class="bi bi-cart3 align-bottom"></i> Proceed
+
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE" data-bs-toggle="tooltip" data-bs-placement="top"> REWE
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
+              </span>
+
+              <button type="button" id="vendor_checkout_proceed_REWE" class="btn btn-outline-dark btn-lg" onclick="checkout('REWE')">
+                <i class="bi bi-cart3 align-bottom" id="spinner_REWE_carticon"></i>
+                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true" id="spinner_REWE" style="display: none"></span>
+                Proceed
               </button>
             </div>
           </div>
@@ -61,11 +110,15 @@
           <div class="card-body  text-center m-3">
             <p class="card-text text-start">If you continue with Picnic, please then go to your mobile app to continue and complete the offer.</p>
             <div class="d-grid gap-2 pt-3">
-              <span class="badge rounded-pill text-bg-success m-2" data-bs-toggle="tooltip" data-bs-placement="top">Picnic<i class="bi bi-check-circle-fill ms-1 align-top"></i></span>
-              <button type="button" class="btn btn-outline-dark btn-lg" onclick="checkout('Picnic')">
-                <i class="bi bi-cart3 align-bottom" id="spinner_picnic_carticon"></i>
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinner_picnic" style="display: none"></span>
-                 Proceed
+
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic" data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
+              </span>
+
+              <button type="button" id="vendor_checkout_proceed_Picnic" class="btn btn-outline-dark btn-lg" onclick="checkout('Picnic')">
+                <i class="bi bi-cart3 align-bottom" id="spinner_Picnic_carticon"></i>
+                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true" id="spinner_Picnic" style="display: none"></span>
+                Proceed
               </button>
             </div>
           </div>
@@ -89,7 +142,7 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end w-max" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Basket</h5>
@@ -97,7 +150,6 @@
   </div>
 
   <div class="offcanvas-body">
-
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold mb-3">Recipes</h1>
@@ -112,20 +164,16 @@
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold mb-3">Ingredients</h1>
-
         <ul class="list-group" style="padding-bottom:1em" id="ingredients-tab">
           <!-- script content section : populateTable() -->
         </ul>
-
-
-        <div class="btn-group bg-light p-1 shadow position-absolute top-0 start-50 translate-middle-x mt-5" role="group">
-          <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" style="padding: 5px;" data-bs-target="#offcanvasRightCheckout" aria-controls="offcanvasRightCheckout">Checkout</button>
-          <button type="button" class="btn btn-outline-dark" onclick="clearBasket()">Clear</button>
-        </div>
-
       </div>
     </div>
 
+  </div>
+  <div class="btn-group bg-light p-1 shadow position-absolute top-0 start-50 translate-middle-x mt-5" role="group">
+    <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" style="padding: 5px;" data-bs-target="#offcanvasRightCheckout" aria-controls="offcanvasRightCheckout">Checkout</button>
+    <button type="button" class="btn btn-outline-dark" onclick="clearBasket()">Clear</button>
   </div>
 </div>
 
@@ -179,8 +227,12 @@
       <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5">
           <h1 class="display-5 fw-bold" style="padding-bottom:.3em">Get the recent suggestions</h1>
-
-          <button class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent Week</button>
+          <div class="btn-group-vertical">
+            <span class="badge rounded-pill text-bg-success mb-2" id="login_status_badge_HelloFresh" data-bs-toggle="tooltip" data-bs-placement="top" style="width:100%"> HelloFresh
+              <i class="bi bi-check-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
+            </span>
+            <button class="btn btn-outline-dark" type="submit" id="btn" name="btn_hellofresh_recent_week" value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent Week</button>
+          </div>
         </div>
       </div>
     </form>

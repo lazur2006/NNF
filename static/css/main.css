@@ -7,6 +7,12 @@ body {
   background: linear-gradient(to right, #0062E6, #33AEFF);
 } */
 
+@media screen and (max-width: 500px) {
+  .fullwidth{
+    width: 100% !important;
+  }
+}
+
 .card-img-left {
   width: 45%;
   /* Link to your background image using in the property below! */

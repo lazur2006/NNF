@@ -270,4 +270,36 @@ class ReweMobileApi():
                 pass
                 
         self.basketVersion = r.json()['version']
+        
+    def search(self,ingredients):
+        
+        results = [self.searchItem(element) for element in ingredients['Ingredient']]
+          
+        retval = {'total':0,
+                  'missing':[],
+                  'vendorbasket':[{'search_term':ingredients['Ingredient'][idx],
+                   'search_amount':str(ingredients['Amount'][idx]) + str(ingredients['Unit'][idx]),
+                   'amount': 1, # just for initializing the default amount
+                   'selected': 0, # just for initializing the default selected item
+                   'selected_id': val[0].get('_embedded').get('articles')[0].get('_embedded').get('listing').get('id') if val else 'no_id', # just for initializing the default selected item
+                   'price': val[0].get('_embedded').get('articles')[0].get('_embedded').get('listing').get('pricing').get('currentRetailPrice')/100 if val else 0, # init is 0€
+                   'results':[{
+                    'product_id':arg.get('_embedded').get('articles')[0].get('_embedded').get('listing').get('id'),
+                    'name':arg.get('productName','noname'),
+                    'unit_quantity':arg.get('_embedded').get('articles')[0].get('_embedded').get('listing').get('pricing').get('grammage','noquant'),
+                    'price':arg.get('_embedded').get('articles')[0].get('_embedded').get('listing').get('pricing').get('currentRetailPrice',0)/100,
+                    'image_uri':self.getImageUri(arg.get('media').get('images')[0]['_links']['self']['href'])} for arg in val]} for idx,val in enumerate(results)]}
+        
+        retval.update({"total":round(sum([val['price'] for val in retval['vendorbasket']]),2)})
+        
+        retval.update({"missing":[val['search_term'] for val in retval['vendorbasket'] if not val['results']]})
+        
+        return(retval)
+    
+    def getImageUri(self,arg):
+        return(arg + "?output-format=jpg&output-quality=70&resize=320px:320px&im=BackgroundColor,color=ffffff")
+    
+    def push(self,vendorbasket):
+        _ = [self.addItem2Basket(productObj=arg['selected_id'], quantity=arg['amount']) if arg['selected_id'] != 'no_id' else 'None' for arg in vendorbasket['vendorbasket']]
+
     

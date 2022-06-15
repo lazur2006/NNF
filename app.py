@@ -189,7 +189,13 @@ class WebView(FlaskView):
             return(make_response(jsonify({'vendor':retval.get('vendor'),'status':status,'info':info}), 200))
         elif route == 'checkout':
             return(make_response(jsonify(self.vendor.handleCheckout(ingredients=Ingredients,vendor=retval.get('vendor'))), 200))
-        
+        elif route == 'mod':
+            return(make_response(jsonify(self.vendor.modify_basket(idx=retval.get('idx'),fnc=retval.get('f'))), 200))
+        elif route == 'push_vendor_basket':
+            self.vendor.push_basket(retval.get('vendor'))
+            return(make_response(jsonify({'status':'ok'}), 200))
+        elif route == 'getCurrentUserStatus':
+            return(make_response(jsonify(self.vendor.early), 200))
         
     
     @route('/choose', methods=['POST'])
@@ -197,10 +203,10 @@ class WebView(FlaskView):
         global recipes
         global basket
         
-        route = request.form['btn']
+        route = list(request.form.values())[1]
         
         if route == 'random':
-            recipes = self.obj_scrapedatabase.get_random(limit=int(request.form.getlist('range')[0]))
+            recipes = self.obj_scrapedatabase.get_random(limit=int(list(request.form.values())[0]))
         if route == 'recent':
             if not self.obj_scrapeweeklys:
                 self.obj_scrapeweeklys = wr_scrapeWeeklys(credentials = credentials)

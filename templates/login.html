@@ -15,9 +15,17 @@
             <h5 class="card-title text-center mb-5 fw-light fs-5">Set credentials</h5>
 
             <div class="d-flex justify-content-center mb-3">
-                {%for idx,(vendor,valid) in vendor%}
-                <span class="badge rounded-pill text-bg-{{'success' if valid else 'secondary'}} m-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{{'Successfully' if valid else 'Not'}} logged in">{{vendor}}<i class="bi {{'bi-check-circle-fill' if valid else 'bi-exclamation-circle-fill'}} ms-1 align-top"></i></span>
-                {%endfor%}
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE" data-bs-toggle="tooltip" data-bs-placement="top"> REWE
+              <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
+              </span>
+
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic" data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
+              <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
+              </span>
+
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_HelloFresh" data-bs-toggle="tooltip" data-bs-placement="top"> HelloFresh
+              <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
+              </span>
             </div>
 
             <div class="alert alert-primary d-flex align-items-center" role="alert">

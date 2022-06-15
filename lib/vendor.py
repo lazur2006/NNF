@@ -8,7 +8,7 @@ class vendor(object):
     classdocs
     '''
     global early_dic
-
+    global vendorbasket
 
     def __init__(self):
         '''
@@ -75,9 +75,10 @@ class vendor(object):
         return(info)
     
     def handleCheckout(self,ingredients,vendor):
+        global vendorbasket
         
         if vendor == 'REWE':
-            vendorbasket = ''
+            vendorbasket = self.REWE.search(ingredients)
             pass
         elif vendor == 'Picnic':
             vendorbasket = self.Picnic.search(ingredients)
@@ -87,5 +88,32 @@ class vendor(object):
             pass
         
         return(vendorbasket)
+    
+    def modify_basket(self,idx,fnc):
+        global vendorbasket
+        
+        if fnc == 'add':
+            vendorbasket['vendorbasket'][idx].update({"amount": (vendorbasket['vendorbasket'][idx].get("amount") + 1) if vendorbasket['vendorbasket'][idx].get("amount") < 99 else 99})
+        elif fnc == 'minus':
+            vendorbasket['vendorbasket'][idx].update({"amount": (vendorbasket['vendorbasket'][idx].get("amount") - 1) if vendorbasket['vendorbasket'][idx].get("amount") > 0 else 0})
+        elif fnc == 'next':
+            vendorbasket['vendorbasket'][idx].update({"selected": (vendorbasket['vendorbasket'][idx].get("selected") + 1) if vendorbasket['vendorbasket'][idx].get("selected") < len(vendorbasket['vendorbasket'][idx].get("results"))-1 else len(vendorbasket['vendorbasket'][idx].get("results"))-1})
+            vendorbasket['vendorbasket'][idx].update({"selected_id": vendorbasket['vendorbasket'][idx].get("results")[vendorbasket['vendorbasket'][idx].get("selected")].get("product_id")})
+        elif fnc == 'prev':
+            vendorbasket['vendorbasket'][idx].update({"selected": (vendorbasket['vendorbasket'][idx].get("selected") - 1) if vendorbasket['vendorbasket'][idx].get("selected") > 0 else 0})
+            vendorbasket['vendorbasket'][idx].update({"selected_id": vendorbasket['vendorbasket'][idx].get("results")[vendorbasket['vendorbasket'][idx].get("selected")].get("product_id")})
+        
+        vendorbasket['vendorbasket'][idx].update({"price": round(vendorbasket['vendorbasket'][idx].get("amount")*vendorbasket['vendorbasket'][idx].get("results")[vendorbasket['vendorbasket'][idx].get("selected")].get("price"),2)})
+        vendorbasket.update({"total":round(sum([val['price'] for val in vendorbasket['vendorbasket']]),2)})
+
+        return(vendorbasket)
+    
+    def push_basket(self,vendor):
+        global vendorbasket
+        
+        if vendor == 'REWE':
+            self.REWE.push(vendorbasket=vendorbasket)
+        elif vendor == 'Picnic':
+            self.Picnic.push(vendorbasket=vendorbasket)
     
     

@@ -11,10 +11,233 @@
 //     }
 //   });
 // });
+function build_vendor_basket(response){
+  var vendor_ingredients = document.querySelector("#vendor_ingredients");
+  var vendor_basket_total = document.querySelector("#baskets_total");
+  var vendor_missing_ingredients_list = document.querySelector("#vendor_missing_ingredients_list");
+
+  while (vendor_ingredients.children[1]) {
+    vendor_ingredients.removeChild(vendor_ingredients.children[1]);
+  }
+
+  while (vendor_missing_ingredients_list.children[0]) {
+    vendor_missing_ingredients_list.removeChild(vendor_missing_ingredients_list.children[0]);
+  }
+
+  vendor_basket_total.textContent = response.total + " €";
+  vendor_basket_total.disabled = true;
+
+  $.each(response.vendorbasket,function(idx,element) {
+    if(element.results.length != 0){
+      const li_vendor_ingredients = document.createElement("li");
+      const div_vendor = document.createElement("div");
+      const div_vendor_btn = document.createElement("div");
+      const img = document.createElement("img");
+      const div_btn_group = document.createElement("div");
+      const btn_minus = document.createElement("button");
+      const btn_cnt = document.createElement("button");
+      const btn_add = document.createElement("button");
+      const div_product = document.createElement("div");
+      const span_needed = document.createElement("span");
+      const div_name = document.createElement("div");
+      const div_price = document.createElement("div");
+      const div_amount = document.createElement("div");
+      const div_skip = document.createElement("div");
+      const i_prev = document.createElement("i");
+      const i_next = document.createElement("i");
+
+      search = element.search_amount + " " + element.search_term;
+      image_uri = element.results[element.selected].image_uri;
+      name = element.results[element.selected].name;
+      price = element.results[element.selected].price + "€";
+      product_id = element.results[element.selected].product_id;
+      unit_quantity = element.results[element.selected].unit_quantity;
+      amount = element.amount;
+
+      img.setAttribute("src", image_uri);
+      img.setAttribute("style", "height:5em;width:auto;max-width:4.5em;object-fit:contain;");
+      if(amount==0){
+        img.setAttribute("style", "height:5em;width:auto;max-width:4.5em;object-fit:contain;filter: grayscale(1) opacity(0.5);");
+      }
+      img.classList.add("m-3");
+
+      //li_vendor_ingredients.textContent = search + " " + name + " " + price + " " + product_id + " " + unit_quantity;
+      li_vendor_ingredients.classList.add("list-group-item");
+      li_vendor_ingredients.classList.add("d-flex");
+      li_vendor_ingredients.classList.add("align-items-center");
+
+      div_vendor.classList.add("d-flex");
+      div_vendor.classList.add("flex-column");
+      div_vendor.classList.add("mt-4");
+      div_vendor.classList.add("text-center");
+      div_vendor.classList.add("align-items-center");
+      div_vendor.appendChild(img);
+
+      btn_minus.classList.add("btn");
+      btn_minus.classList.add("btn-outline-dark");
+      btn_minus.classList.add("btn-sm");
+      btn_minus.setAttribute("onclick", "vendor_change_ingredient('minus'," + idx + ")");
+      btn_minus.setAttribute("style", "width:2em");
+      btn_minus.textContent = "-"
+
+      btn_cnt.classList.add("btn");
+      btn_cnt.classList.add("btn-outline-dark");
+      btn_cnt.classList.add("btn-sm");
+      btn_cnt.disabled = true;
+      btn_cnt.textContent = amount;
+      btn_cnt.setAttribute("style", "width:2.5em;");
+
+      btn_add.classList.add("btn");
+      btn_add.classList.add("btn-outline-dark");
+      btn_add.classList.add("btn-sm");
+      btn_add.setAttribute("onclick", "vendor_change_ingredient('add'," + idx + ")");
+      btn_add.setAttribute("style", "width:2em");
+      btn_add.textContent = "+"
+
+      div_btn_group.classList.add("btn-group");
+      div_btn_group.classList.add("m-3");
+      div_btn_group.appendChild(btn_minus);
+      div_btn_group.appendChild(btn_cnt);
+      div_btn_group.appendChild(btn_add);
+
+      span_needed.classList.add("badge");
+      span_needed.classList.add("bg-dark");
+      span_needed.classList.add("rounded-pill");
+      span_needed.classList.add("text-wrap");
+      span_needed.classList.add("text-break");
+      span_needed.classList.add("mb-3");
+      span_needed.textContent = search;
+
+      div_name.classList.add("fw-bold");
+      div_name.classList.add("text-wrap");
+      div_name.classList.add("text-break");
+      if(name.length > 60){
+        div_name.setAttribute("style", "font-size: 10pt;");
+      }
+      else {
+        div_name.setAttribute("style", "font-size: 13pt;");
+      }
+      if(amount==0){
+        div_name.classList.add("text-decoration-line-through");
+      }
+
+      div_name.textContent = name
+
+      div_price.classList.add("fw-lighter");
+      div_price.classList.add("text-wrap");
+      div_price.classList.add("fs-6");
+      div_price.textContent = price
+
+      div_amount.classList.add("fw-lighter");
+      div_amount.classList.add("text-wrap");
+      div_amount.classList.add("fs-6");
+      div_amount.textContent = unit_quantity
+
+      div_product.classList.add("d-flex");
+      div_product.classList.add("flex-column");
+      div_product.classList.add("justify-content-start");
+      div_product.classList.add("align-items-start");
+      div_product.classList.add("p-3");
+      div_product.setAttribute("style", "width:100%;");
+      div_product.appendChild(span_needed);
+      div_product.appendChild(div_name);
+      div_product.appendChild(div_price);
+      div_product.appendChild(div_amount);
+
+      div_skip.classList.add("d-flex");
+      div_skip.classList.add("flex-column");
+      div_skip.classList.add("justify-content-evenly");
+
+      i_prev.classList.add("bi");
+      i_prev.classList.add("bi-arrow-left-circle-fill");
+      i_prev.classList.add("text-dark");
+      i_prev.classList.add("fs-3");
+      i_prev.setAttribute("onclick", "vendor_change_ingredient('prev'," + idx + ")");
+
+      i_next.classList.add("bi");
+      i_next.classList.add("bi-arrow-right-circle-fill");
+      i_next.classList.add("text-dark");
+      i_next.classList.add("fs-3");
+      i_next.setAttribute("onclick", "vendor_change_ingredient('next'," + idx + ")");
+
+      div_skip.appendChild(i_prev);
+      div_skip.appendChild(i_next);
+
+      //div_vendor_btn.classList.add("mt-4");
+      div_vendor.appendChild(div_btn_group);
+
+      li_vendor_ingredients.appendChild(div_vendor);
+      li_vendor_ingredients.appendChild(div_product);
+      li_vendor_ingredients.appendChild(div_skip);
+
+      vendor_ingredients.appendChild(li_vendor_ingredients);
+    }
+    else {
+      //console.log(element.search_term)
+    }
+  })
+  if(response.missing.length > 0){
+    $.each(response.missing,function(idx,element) {
+
+      if(element != "Leitungswasser"){
+        const li_vendor_missing_ingredients_list = document.createElement("li");
+        li_vendor_missing_ingredients_list.classList.add("list-group-item");
+        li_vendor_missing_ingredients_list.classList.add("bg-transparent");
+        li_vendor_missing_ingredients_list.classList.add("text-dark");
+        li_vendor_missing_ingredients_list.classList.add("text-opacity-75");
+        li_vendor_missing_ingredients_list.classList.add("fs-6");
+        li_vendor_missing_ingredients_list.textContent = element;
+
+        vendor_missing_ingredients_list.appendChild(li_vendor_missing_ingredients_list);
+      }
+      $('#vendor_missing_ingredients').css({"display":"inline-block"});
+    })
+  }
+
+}
+function push_vendor_basket(vendor){
+  var spinner_push_vendor_basket = document.querySelector("#spinner_push_vendor_basket");
+
+  $('#spinner_push_vendor_basket').css({"display":"inline-block"});
+  $('#check_push_vendor_basket').css({"display":"none"});
+
+  $.ajax({
+    url: '/',
+    data: JSON.stringify({vendor: vendor,Route: 'push_vendor_basket'}),
+    contentType: 'application/json;charset=UTF-8',
+    type: 'POST',
+    success: function(response) {
+      console.log(response);
+      $('#spinner_push_vendor_basket').css({"display":"none"});
+      $('#check_push_vendor_basket').css({"display":"inline-block"});
+      $('#push_vendor_basket').prop( "disabled", true );
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  })
+}
+function vendor_change_ingredient(f,idx){
+  console.log(f);
+  console.log(idx);
+
+  $.ajax({
+    url: '/',
+    data: JSON.stringify({idx: idx,f: f,Route: 'mod'}),
+    contentType: 'application/json;charset=UTF-8',
+    type: 'POST',
+    success: function(response) {
+      build_vendor_basket(response);
+    },
+    error: function(error) {
+      console.log(error);
+    }
+  })
+}
 function checkout(vendor){
-  $('#spinner_picnic').css({"display":"inline-block"});
-  $('#spinner_picnic_carticon').css({"display":"none"});
-  $('.btn').addClass('disabled')
+  $("#spinner_" + vendor).css({"display":"inline-block"});
+  $("#spinner_" + vendor + "_carticon").css({"display":"none"});
+  $("#vendor_checkout_proceed_" + vendor).addClass('disabled');
 
   $.ajax({
     url: '/',
@@ -23,10 +246,24 @@ function checkout(vendor){
     type: 'POST',
     success: function(response) {
       console.log(response);
-      $('#spinner_picnic_carticon').css({"display":"inline-block"});
-      $('#spinner_picnic').css({"display":"none"});
-      $('.btn').removeClass('disabled')
-      //populateTable(response);
+      $("#spinner_" + vendor + "_carticon").css({"display":"inline-block"});
+      $("#spinner_" + vendor).css({"display":"none"});
+      $("#vendor_checkout_proceed_" + vendor).removeClass('disabled');
+      $('#push_vendor_basket').prop( "disabled", false );
+
+      build_vendor_basket(response);
+
+      bootstrap.Offcanvas.getOrCreateInstance($('#offcanvasRightCheckout')).hide();
+      bootstrap.Offcanvas.getOrCreateInstance($('#offcanvasRightVendor')).show();
+
+      $('#offcanvasRightLabel').text(vendor);
+      var push_vendor_basket = document.querySelector("#push_vendor_basket");
+      var img_vendor_basket = document.querySelector("#img_vendor_basket");
+      push_vendor_basket.setAttribute("onclick", "push_vendor_basket('" + vendor + "')");
+      img_vendor_basket.setAttribute("src","/static/images/" + vendor + "_logo.svg");
+
+       //data-bs-target="#offcanvasRightLabelVendor"
+
     },
     error: function(error) {
       console.log(error);
@@ -35,7 +272,7 @@ function checkout(vendor){
 }
 
 function startConn(type) {
-  $('.btn').prop('disabled', true);
+  $('#update_vendor_database').prop('disabled', true);
   var source = new EventSource("/progress?type="+ type +"");
   source.onmessage = function(event) {
     $('.progress-bar').css('width', event.data + '%').attr('aria-valuenow', event.data);
@@ -43,7 +280,7 @@ function startConn(type) {
 
     if (event.data == 100 || event.data == "close") {
       source.close()
-      $('.btn').prop('disabled', false);
+      $('#update_vendor_database').prop('disabled', false);
     }
   }
 }
@@ -255,7 +492,7 @@ $(document).on('submit', '#index-form', function(e) {
           btn.classList.replace("btn-outline-dark", "btn-danger");
           btn.classList.replace("btn-success", "btn-danger");
         }
-
+        setCurrentUserStatus();
       }
       else{
         populateTable(response);
@@ -297,25 +534,6 @@ function clearBasket() {
 };
 
 /*
-    Is called when the page is loaded completly
-*/
-$(document).ready(function() {
-   /*| Setup the IP input mask for Login page |*/
-  var ipv4_address = $('#floatingIPaddress');
-  ipv4_address.inputmask({
-      alias: "ip",
-      greedy: false
-  });
-
-  /*| Start progress connection for Update page |*/
-  startConn("retrieve");
-
-  /*| Setup tooltips in general |*/
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-});
-
-/*
     Will be called if the vendor on Login page is changed - Dropdown menu
 */
 function vendorChanged(vendor){
@@ -335,3 +553,87 @@ function vendorChanged(vendor){
   $('#bichecklogin').css({"display":"none"});
   $('#loginSaveText').css({"display":"inline-block"});
 }
+
+function setCurrentUserStatus(){
+  var login_status_badge_REWE = document.getElementById("login_status_badge_REWE");
+  var login_status_bi_REWE = document.getElementById("login_status_bi_REWE");
+  var login_status_badge_Picnic = document.getElementById("login_status_badge_Picnic");
+  var login_status_bi_Picnic = document.getElementById("login_status_bi_Picnic");
+  var login_status_badge_HelloFresh = document.getElementById("login_status_badge_HelloFresh");
+  var login_status_bi_HelloFresh = document.getElementById("login_status_bi_HelloFresh");
+  var vendor_checkout_proceed_REWE = document.getElementById("vendor_checkout_proceed_REWE");
+  var vendor_checkout_proceed_Picnic = document.getElementById("vendor_checkout_proceed_Picnic");
+
+  //var btn_hellofresh_recent_week = document.querySelector('[name="btn_hellofresh_recent_week"]');
+
+  $.ajax({
+    url: '/',
+    data: JSON.stringify({Route: "getCurrentUserStatus"}),
+    contentType: 'application/json;charset=UTF-8',
+    type: 'POST',
+    success: function(response) {
+      if(response.REWE){
+        try {vendor_checkout_proceed_REWE.disabled = false;} catch (e) {}
+        try {login_status_badge_REWE.classList.replace("text-bg-secondary", "text-bg-success");} catch (e) {}
+        try {login_status_badge_REWE.setAttribute("title", "Successfully logged in");} catch (e) {}
+        try {login_status_bi_REWE.classList.replace("bi-exclamation-circle-fill", "bi-check-circle-fill");} catch (e) {}
+      }
+      else {
+        try {vendor_checkout_proceed_REWE.disabled = true;} catch (e) {}
+        try {login_status_badge_REWE.classList.replace("text-bg-success", "text-bg-secondary");} catch (e) {}
+        try {login_status_badge_REWE.setAttribute("title", "Not logged in");} catch (e) {}
+        try {login_status_bi_REWE.classList.replace("bi-check-circle-fill", "bi-exclamation-circle-fill");} catch (e) {}
+      }
+      if(response.Picnic){
+        try {vendor_checkout_proceed_Picnic.disabled = false;} catch (e) {}
+        try {login_status_badge_Picnic.classList.replace("text-bg-secondary", "text-bg-success");} catch (e) {}
+        try {login_status_badge_Picnic.setAttribute("title", "Successfully logged in");} catch (e) {}
+        try {login_status_bi_Picnic.classList.replace("bi-exclamation-circle-fill", "bi-check-circle-fill");} catch (e) {}
+      }
+      else {
+        try {vendor_checkout_proceed_Picnic.disabled = true;} catch (e) {}
+        try {login_status_badge_Picnic.classList.replace("text-bg-success", "text-bg-secondary");} catch (e) {}
+        try {login_status_badge_Picnic.setAttribute("title", "Not logged in");} catch (e) {}
+        try {login_status_bi_Picnic.classList.replace("bi-check-circle-fill", "bi-exclamation-circle-fill");} catch (e) {}
+      }
+      if(response.HelloFresh){
+        try {document.querySelector('[name="btn_hellofresh_recent_week"]').disabled = false;} catch (e) {}
+        try {login_status_badge_HelloFresh.classList.replace("text-bg-secondary", "text-bg-success");} catch (e) {}
+        try {login_status_badge_HelloFresh.setAttribute("title", "Successfully logged in");} catch (e) {}
+        try {login_status_bi_HelloFresh.classList.replace("bi-exclamation-circle-fill", "bi-check-circle-fill");} catch (e) {}
+      }
+      else {
+        try {document.querySelector('[name="btn_hellofresh_recent_week"]').disabled = true;} catch (e) {}
+        try {login_status_badge_HelloFresh.classList.replace("text-bg-success", "text-bg-secondary");} catch (e) {}
+        try {login_status_badge_HelloFresh.setAttribute("title", "Not logged in");} catch (e) {}
+        try {login_status_bi_HelloFresh.classList.replace("bi-check-circle-fill", "bi-exclamation-circle-fill");} catch (e) {}
+      }
+    },
+    error: function(error) {
+      //console.log(error);
+    }
+  })
+}
+
+/*
+    Is called when the page is loaded completly
+*/
+$(document).ready(function() {
+   /*| Setup the IP input mask for Login page |*/
+  var ipv4_address = $('#floatingIPaddress');
+  ipv4_address.inputmask({
+      alias: "ip",
+      greedy: false
+  });
+
+  /*| Start progress connection for Update page |*/
+  startConn("retrieve");
+
+  setCurrentUserStatus();
+
+  /*| Setup tooltips in general |*/
+  var tooltipList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+
+
+});
