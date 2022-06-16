@@ -4,7 +4,7 @@ import urllib.request
 import time
 import base64
 from tqdm import tqdm
-from PyQt5.QtCore import QThread, pyqtSignal
+#from PyQt5.QtCore import QThread, pyqtSignal
 import sqlite3
 
 host = "https://gw.hellofresh.com"
@@ -20,10 +20,10 @@ class TQDM:
         remaining = time.strftime('%H:%M:%S', time.gmtime(remaining))
         return remaining    
 
-class Thread(QThread):
-    _signal = pyqtSignal(int)
-    _state_msg = pyqtSignal('QString')
-    _max = pyqtSignal(int)
+class Thread():
+    _signal = ""#pyqtSignal(int)
+    _state_msg = ""#pyqtSignal('QString')
+    _max = ""#pyqtSignal(int)
     def __init__(self):
         super(Thread, self).__init__()
         self._isRunning = True
