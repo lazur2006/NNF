@@ -47,6 +47,7 @@ class WebView(FlaskView):
         self.vendor = vendor()
         self.QR = QR()
         
+        
         print(" :: WebView :: successfully passed")
         
         #webbrowser.open(f"http://{self.QR.get_ip()}:5000", new=2)
