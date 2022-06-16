@@ -273,5 +273,7 @@ if __name__ == '__main__':
     
     QR = QR()
     app.secret_key = secrets.token_hex()
-    app.run(debug=True, host=QR.get_ip())
+    #app.run(debug=True, host=QR.get_ip())
+    app.run(debug=True, host="http://192.168.0.137:5000")
+    
     
