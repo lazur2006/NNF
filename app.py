@@ -1,6 +1,6 @@
 import secrets
 import operator
-import logging
+#import logging
 from flask import Flask, render_template, request, redirect, url_for, Response, jsonify, make_response
 from flask_classful import FlaskView, route
 from lib._wrapper_scrapedatabase import wr_scrapeDatabase
@@ -268,12 +268,12 @@ WebView._init()
 WebView.register(app)
 
 if __name__ == '__main__':
-    log = logging.getLogger('werkzeug')
-    log.setLevel(logging.ERROR)
+    #log = logging.getLogger('werkzeug')
+    #log.setLevel(logging.ERROR)
     
     QR = QR()
     app.secret_key = secrets.token_hex()
     #app.run(debug=True, host=QR.get_ip())
-    app.run(debug=True, host="http://192.168.0.137:5000")
+    app.run(host='0.0.0.0', port='8080', debug='true') # run the flask app
     
     
