@@ -231,7 +231,7 @@ def progress():
     args = request.args['type']
     
     def generate():
-        while thread.isRunning():
+        while thread.is_alive():
             perc = int((100*thread._tqdmObj.tq.n)/(thread._tqdmObj.tq.total+1))
             yield "data:" + str(perc) + "\n\n"
             time.sleep(0.1)
@@ -242,7 +242,7 @@ def progress():
         ''' start updater from here '''
         if 'thread' in globals():
             ''' thread object allready created '''
-            if not thread.isRunning():
+            if not thread.is_alive():
                 ''' Prevent restart when thread allready runs '''
                 thread = Thread()
                 thread.start()
@@ -254,7 +254,7 @@ def progress():
     elif(args == 'retrieve'):
         if 'thread' in globals():
             ''' thread object allready created '''
-            if thread.isRunning():
+            if thread.is_alive():
                 retval = generate()
             else:
                 retval = "data: close\n\n"
@@ -273,7 +273,6 @@ if __name__ == '__main__':
     
     QR = QR()
     app.secret_key = secrets.token_hex()
-    #app.run(debug=True, host=QR.get_ip())
-    app.run(debug=True, host="http://192.168.0.137:5000")
+    app.run(debug=True, host=QR.get_ip())
     
     

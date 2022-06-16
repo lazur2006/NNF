@@ -5,6 +5,7 @@ import time
 import base64
 from tqdm import tqdm
 #from PyQt5.QtCore import QThread, pyqtSignal
+import threading
 import sqlite3
 
 host = "https://gw.hellofresh.com"
@@ -20,10 +21,10 @@ class TQDM:
         remaining = time.strftime('%H:%M:%S', time.gmtime(remaining))
         return remaining    
 
-class Thread():
-    _signal = ""#pyqtSignal(int)
-    _state_msg = ""#pyqtSignal('QString')
-    _max = ""#pyqtSignal(int)
+class Thread(threading.Thread):
+    #_signal = ""#pyqtSignal(int)
+    #_state_msg = ""#pyqtSignal('QString')
+    #_max = ""#pyqtSignal(int)
     def __init__(self):
         super(Thread, self).__init__()
         self._isRunning = True
@@ -75,7 +76,7 @@ class Thread():
               "country": country
             }
             
-            self._state_msg.emit("Get fresh bearer auth token...")
+            #self._state_msg.emit("Get fresh bearer auth token...")
             # apply bearer
             headers = {
               'Authorization': f"Bearer {self.auth()}"
@@ -109,9 +110,9 @@ class Thread():
             for i in self._tqdmObj.tq:
                 if not self._isRunning:
                     break
-                self._max.emit(iterations)
-                self._signal.emit(i)
-                self._state_msg.emit("Step 1/8\n\nDownload "+str(i)+" of "+str(iterations)+" packages server\n\nRemaining Time "+self._tqdmObj.remaining())
+                #self._max.emit(iterations)
+                #self._signal.emit(i)
+                #self._state_msg.emit("Step 1/8\n\nDownload "+str(i)+" of "+str(iterations)+" packages server\n\nRemaining Time "+self._tqdmObj.remaining())
                 payload={
                     "offset": str(offset),
                     "limit": str(limit),
@@ -290,9 +291,9 @@ class Thread():
                 for i in self._tqdmObj.tq:
                     if not self._isRunning:
                         break
-                    self._max.emit(len(recipes))
-                    self._signal.emit(i)
-                    self._state_msg.emit("Step 3/8\n\nDownload recipe image "+str(i)+" of "+str(len(recipes))+"\n\nRemaining Time "+self._tqdmObj.remaining())
+                    #self._max.emit(len(recipes))
+                    #self._signal.emit(i)
+                    #self._state_msg.emit("Step 3/8\n\nDownload recipe image "+str(i)+" of "+str(len(recipes))+"\n\nRemaining Time "+self._tqdmObj.remaining())
                     try:
                         urllib.request.urlretrieve(recipes[i][4], "static/images/"+locale+"/"+str(i)+".jpg")
                     except:
