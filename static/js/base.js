@@ -24,6 +24,8 @@ function build_vendor_basket(response){
     vendor_missing_ingredients_list.removeChild(vendor_missing_ingredients_list.children[0]);
   }
 
+  $('#vendor_missing_ingredients').css({"display":"none"});
+
   vendor_basket_total.textContent = response.total + " €";
   vendor_basket_total.disabled = true;
 
