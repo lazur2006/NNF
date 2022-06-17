@@ -1,7 +1,10 @@
 import keyring
 import sqlite3
 
-import keyring_jeepney
+from getpass import getpass
+from os import getenv
+from keyrings.cryptfile.cryptfile import CryptFileKeyring
+
 
 
 class user(object):
@@ -14,8 +17,9 @@ class user(object):
         '''
         Constructor
         '''
-        #print("user")
-        keyring.set_keyring(keyring_jeepney.Keyring())
+        kr = CryptFileKeyring()
+        kr.keyring_key = getenv("KEYRING_CRYPTFILE_PASSWORD")
+        keyring.set_keyring(kr)
         print("STOP")
     
     def setCredentials(self,vendor,username,password,ipaddress):
