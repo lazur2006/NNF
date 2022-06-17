@@ -1,6 +1,8 @@
 import keyring
 import sqlite3
 
+import keyring_jeepney
+
 
 class user(object):
     '''
@@ -13,6 +15,8 @@ class user(object):
         Constructor
         '''
         #print("user")
+        keyring.set_keyring(keyring_jeepney.Keyring())
+        print("STOP")
     
     def setCredentials(self,vendor,username,password,ipaddress):
         try:
@@ -66,9 +70,5 @@ class user(object):
             username = ""
             password = ""
         return(dict({'username':username, 'password':password, 'ipaddress':ipaddress}))
-            
-            
-            
-            
-
+    
     
