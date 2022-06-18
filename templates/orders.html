@@ -7,32 +7,63 @@
   <div class="row">
     <div class="col-lg-10 col-xl-9 mx-auto">
       <div class="card mt-5 mb-5">
-        <h5 class="card-header text-light fw-light bg-dark">Basket</h5>
+        <h5 class="card-header text-light fw-light bg-dark">History</h5>
 
-        <div class="container-fluid py-5">
-          <h1 class="display-5 fw-bold p-3">THE Recipes</h1>
-
-          <ul class="list-group shadow-sm m-3">
-            <!-- START LIST -->
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div class="d-flex align-items-center justify-content-end">
-                <div class="p-2">
-                  <div
-                    style="background: scroll center url('https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_auto,w_2600/hellofresh_s3/image/pikantes-seelachsfilet-an-krautermarinade-819dce84.jpg'); height: 25vw; width: 25vw;max-width: 10em;max-height: 10em;border-radius: 100%;background-position: center;background-size: cover;">
-                    <div class="text-center">
-                      <span class="badge bg-danger rounded-pill text-wrap" style="margin-top:90%;">Family</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex justify-content-end align-items-center">
-                  <h3 class="p-2 text-dark fw-light text-wrap text-break" style="font-size: clamp(10px, 4vw, 30px);">Spaghetti mit würzigen Füßen</h3>
-                </div>
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+                Accordion Item #1
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
+                plugin adds the appropriate classes that we use to style each element. These classes control the overall
+                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
+                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
+                within the <code>.accordion-body</code>, though the transition does limit overflow.
               </div>
-              <button type="button" class="btn-close" aria-label="Close"></button>
-            </li>
-            <!-- STOP LIST -->
-          </ul>
-
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Accordion Item #2
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse
+                plugin adds the appropriate classes that we use to style each element. These classes control the overall
+                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
+                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
+                within the <code>.accordion-body</code>, though the transition does limit overflow.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Accordion Item #3
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse
+                plugin adds the appropriate classes that we use to style each element. These classes control the overall
+                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
+                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
+                within the <code>.accordion-body</code>, though the transition does limit overflow.
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -46,12 +77,14 @@
     <form method="post" enctype="multipart/form-data" id="index-form">
       <div class="btn-group" role="group" aria-label="Basic example">
 
-        <button type="submit" class="btn btn-dark" id="btn" name="btn" data-bs-toggle="offcanvas" value="basket" style="padding: 5px;" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+        <button type="submit" class="btn btn-dark" id="btn" name="btn" data-bs-toggle="offcanvas" value="basket"
+          style="padding: 5px;" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
           <i class="bi bi-cart-check-fill" style="font-size:15px; vertical-align: top;"></i>
           <span style="font-size:15px; vertical-align: center;">Checkout</span>
         </button>
 
-        <button type="submit" class="btn btn-outline-dark" style="padding: 5px;" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom">
+        <button type="submit" class="btn btn-outline-dark" style="padding: 5px;" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasBottom">
           <i class="bi bi-trash3-fill" style="font-size:30px; vertical-align: 10%;top:10%;"></i>
         </button>
 

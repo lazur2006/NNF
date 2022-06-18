@@ -193,8 +193,7 @@ class WebView(FlaskView):
         elif route == 'mod':
             return(make_response(jsonify(self.vendor.modify_basket(idx=retval.get('idx'),fnc=retval.get('f'))), 200))
         elif route == 'push_vendor_basket':
-            self.vendor.push_basket(retval.get('vendor'))
-            return(make_response(jsonify({'status':'ok'}), 200))
+            return(make_response(jsonify({'status':'ok','missing':self.vendor.push_basket(retval.get('vendor'))['missing']}), 200))
         elif route == 'getCurrentUserStatus':
             return(make_response(jsonify(self.vendor.early), 200))
         
@@ -273,6 +272,6 @@ if __name__ == '__main__':
     
     QR = QR()
     app.secret_key = secrets.token_hex()
-    app.run(debug=True, host=QR.get_ip())
+    app.run(debug=True, host=QR.get_ip(), port="8888")
     
     

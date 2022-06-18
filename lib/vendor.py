@@ -115,5 +115,7 @@ class vendor(object):
             self.REWE.push(vendorbasket=vendorbasket)
         elif vendor == 'Picnic':
             self.Picnic.push(vendorbasket=vendorbasket)
+
+        return({"missing":vendorbasket['missing']})
     
     

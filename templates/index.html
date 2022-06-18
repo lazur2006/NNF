@@ -10,12 +10,14 @@
       <div class="quiz_card_area">
         <input class="quiz_checkbox" type="checkbox" id="c_checkboxField" name="checkbox" value={{k}} />
         <div class="single_quiz_card">
-          <div class="bg-white rounded shadow-sm"><img src="{{filename[k]}}" alt="" class="img-fluid card-img-top rounded-top">
+          <div class="bg-white rounded shadow-sm"><img src="{{filename[k]}}" alt=""
+              class="img-fluid card-img-top rounded-top">
             <div class="p-4">
               <h5> <a href="#" class="text-dark">{{r_name[k]}}</a></h5>
               <p class="small text-muted mb-0">{{r_subtitle[k]}}</p>
               <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">{{r_type[k]}}</span></p>
+                <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span
+                    class="font-weight-bold">{{r_type[k]}}</span></p>
                 <div class="badge text-bg-primary">{{r_subtype[k]}}</div>
               </div>
             </div>
@@ -28,7 +30,8 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightVendor" aria-labelledby="offcanvasRightLabelVendor">
+<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightVendor"
+  aria-labelledby="offcanvasRightLabelVendor">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">
@@ -54,23 +57,32 @@
                 <!-- auto generated content -->
               </ul>
             </div>
-
           </li>
           <!-- auto generated content -->
         </ul>
 
+        <div class="d-flex justify-content-center bg-white">
+          <span class="badge rounded-pill text-bg-dark p-5 m-5" id="vendor_push_ingredients_success"
+          style="display: none"><i class="bi bi-patch-check text-light"
+              style="font-size:5em;"></i></span>
+        </div>
+
       </div>
     </div>
     <div class="btn-group bg-light p-1 shadow position-absolute top-0 start-50 translate-middle-x mt-5" role="group">
-      <button type="button" class="btn btn-dark" style="padding: 5px;width:7em;" id="push_vendor_basket" onclick="push_vendor_basket()">
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinner_push_vendor_basket" style="display: none"></span><i class="bi bi-check-all align-bottom" style="display: none" id="check_push_vendor_basket"></i>
+      <button type="button" class="btn btn-dark" style="padding: 5px;width:7em;" id="push_vendor_basket"
+        onclick="push_vendor_basket()">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="spinner_push_vendor_basket"
+          style="display: none"></span><i class="bi bi-check-all align-bottom" style="display: none"
+          id="check_push_vendor_basket"></i>
         Proceed</button>
       <button type="button" class="btn btn-outline-dark" id="baskets_total" style="width:7em;"></button>
     </div>
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightCheckout" aria-labelledby="offcanvasRightLabelCheckout">
+<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightCheckout"
+  aria-labelledby="offcanvasRightLabelCheckout">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Checkout</h5>
@@ -83,22 +95,27 @@
         <h1 class="display-5 fw-bold mb-3">Vendor</h1>
         <div class="alert alert-primary d-flex align-items-center" role="alert">
           <div>
-            <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>Before proceeding, make sure you have an account to use the Checkout by Vendor feature.
+            <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>Before
+            proceeding, make sure you have an account to use the Checkout by Vendor feature.
           </div>
         </div>
         <div class="card pt-5 mt-5">
           <img src="/static/images/REWE_logo.svg" height="45em" style="vertical-align: middle;">
           <div class="card-body  text-center m-3">
-            <p class="card-text text-start">After proceed, please go to your REWE shopping cart on the official REWE website or your mobile app.</p>
+            <p class="card-text text-start">After proceed, please go to your REWE shopping cart on the official REWE
+              website or your mobile app.</p>
             <div class="d-grid gap-2 pt-3">
 
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE" data-bs-toggle="tooltip" data-bs-placement="top"> REWE
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE"
+                data-bs-toggle="tooltip" data-bs-placement="top"> REWE
                 <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
               </span>
 
-              <button type="button" id="vendor_checkout_proceed_REWE" class="btn btn-outline-dark btn-lg" onclick="checkout('REWE')">
+              <button type="button" id="vendor_checkout_proceed_REWE" class="btn btn-outline-dark btn-lg"
+                onclick="checkout('REWE')">
                 <i class="bi bi-cart3 align-bottom" id="spinner_REWE_carticon"></i>
-                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true" id="spinner_REWE" style="display: none"></span>
+                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
+                  id="spinner_REWE" style="display: none"></span>
                 Proceed
               </button>
             </div>
@@ -108,16 +125,20 @@
         <div class="card pt-5 mt-5">
           <img src="/static/images/Picnic_logo.svg" height="65em" style="text-align: center;">
           <div class="card-body  text-center m-3">
-            <p class="card-text text-start">If you continue with Picnic, please then go to your mobile app to continue and complete the offer.</p>
+            <p class="card-text text-start">If you continue with Picnic, please then go to your mobile app to continue
+              and complete the offer.</p>
             <div class="d-grid gap-2 pt-3">
 
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic" data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic"
+                data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
                 <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
               </span>
 
-              <button type="button" id="vendor_checkout_proceed_Picnic" class="btn btn-outline-dark btn-lg" onclick="checkout('Picnic')">
+              <button type="button" id="vendor_checkout_proceed_Picnic" class="btn btn-outline-dark btn-lg"
+                onclick="checkout('Picnic')">
                 <i class="bi bi-cart3 align-bottom" id="spinner_Picnic_carticon"></i>
-                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true" id="spinner_Picnic" style="display: none"></span>
+                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
+                  id="spinner_Picnic" style="display: none"></span>
                 Proceed
               </button>
             </div>
@@ -131,11 +152,14 @@
         <h1 class="display-5 fw-bold mb-3">Recipe Card</h1>
         <div class="alert alert-primary d-flex align-items-center" role="alert">
           <div>
-            <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>Fortunately, if you don't want to go through vendor checkout, you can simply create the recipe card as a PDF file.
+            <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>
+            Fortunately, if you don't want to go through vendor checkout, you can simply create the recipe card as a PDF
+            file.
           </div>
         </div>
         <div class="d-flex flex-column mb-3">
-          <button type="button" class="btn btn-outline-dark btn-lg mt-4" onclick="checkout('PDF')"><i class="bi bi-file-earmark-pdf" style="vertical-align: top; filter: grayscale(1)"></i> Save</button>
+          <button type="button" class="btn btn-outline-dark btn-lg mt-4" onclick="checkout('PDF')"><i
+              class="bi bi-file-earmark-pdf" style="vertical-align: top; filter: grayscale(1)"></i> Save</button>
         </div>
       </div>
     </div>
@@ -172,7 +196,8 @@
 
   </div>
   <div class="btn-group bg-light p-1 shadow position-absolute top-0 start-50 translate-middle-x mt-5" role="group">
-    <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" style="padding: 5px;" data-bs-target="#offcanvasRightCheckout" aria-controls="offcanvasRightCheckout">Checkout</button>
+    <button type="button" class="btn btn-dark" data-bs-toggle="offcanvas" style="padding: 5px;"
+      data-bs-target="#offcanvasRightCheckout" aria-controls="offcanvasRightCheckout">Checkout</button>
     <button type="button" class="btn btn-outline-dark" onclick="clearBasket()">Clear</button>
   </div>
 </div>
@@ -183,12 +208,14 @@
     <form method="post" enctype="multipart/form-data" id="index-form">
       <div class="btn-group" role="group" aria-label="Basic example">
 
-        <button type="submit" class="btn btn-dark" id="btn" name="btn" data-bs-toggle="offcanvas" value="basket" style="padding: 5px;" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+        <button type="submit" class="btn btn-dark" id="btn" name="btn" data-bs-toggle="offcanvas" value="basket"
+          style="padding: 5px;" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
           <i class="bi bi-bag-plus-fill" style="font-size:15px; vertical-align: top;"></i>
           <span style="font-size:15px; vertical-align: center;">Add to Basket</span>
         </button>
 
-        <button type="button" class="btn btn-outline-dark" style="padding: 5px;" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom">
+        <button type="button" class="btn btn-outline-dark" style="padding: 5px;" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasBottom">
           <i class="bi bi-sliders2" style="font-size:30px; vertical-align: 10%;top:10%;"></i>
         </button>
 
@@ -203,7 +230,8 @@
 
 </div>
 
-<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
+  aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasBottomLabel">Recipe Setup</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -218,9 +246,11 @@
 
           <label for="customRange3" class="form-label">Recipes per page </label>
           <h1 id="toptitle">10</h1>
-          <input type="range" class="form-range" min="5" max="50" step="1" value="10" name="range" oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em">
+          <input type="range" class="form-range" min="5" max="50" step="1" value="10" name="range"
+            oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em">
 
-          <button class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle" style="font-size:15px; vertical-align: bottom;"></i> Random</button>
+          <button class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
+              style="font-size:15px; vertical-align: bottom;"></i> Random</button>
         </div>
       </div>
 
@@ -228,10 +258,13 @@
         <div class="container-fluid py-5">
           <h1 class="display-5 fw-bold" style="padding-bottom:.3em">Get the recent suggestions</h1>
           <div class="btn-group-vertical">
-            <span class="badge rounded-pill text-bg-success mb-2" id="login_status_badge_HelloFresh" data-bs-toggle="tooltip" data-bs-placement="top" style="width:100%"> HelloFresh
+            <span class="badge rounded-pill text-bg-success mb-2" id="login_status_badge_HelloFresh"
+              data-bs-toggle="tooltip" data-bs-placement="top" style="width:100%"> HelloFresh
               <i class="bi bi-check-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
             </span>
-            <button class="btn btn-outline-dark" type="submit" id="btn" name="btn_hellofresh_recent_week" value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent Week</button>
+            <button class="btn btn-outline-dark" type="submit" id="btn" name="btn_hellofresh_recent_week"
+              value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent
+              Week</button>
           </div>
         </div>
       </div>
