@@ -196,6 +196,10 @@ class WebView(FlaskView):
             return(make_response(jsonify({'status':'ok','missing':self.vendor.push_basket(retval.get('vendor'))['missing']}), 200))
         elif route == 'getCurrentUserStatus':
             return(make_response(jsonify(self.vendor.early), 200))
+        elif route == 'createCards':
+            # need the recipe IDs
+            # call database and retrieve IMG, Name, Subname, Ingredients + Ingredient IMGs, Instructions
+            return(make_response(jsonify({'status':'ok'}), 200))
         
     
     @route('/choose', methods=['POST'])
@@ -221,6 +225,9 @@ class WebView(FlaskView):
                                r_subtype=recipes[4],
                                amount=len(recipes[0])
                                ))
+@app.route('/cards')
+def cards():
+    return(render_template('cards.html'))
     
 @app.route('/progress')
 def progress():

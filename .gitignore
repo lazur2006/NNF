@@ -6,3 +6,5 @@ _cookies
 _misc
 _token
 __pycache__
+hist.txt
+.env
