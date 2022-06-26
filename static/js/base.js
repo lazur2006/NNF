@@ -11,6 +11,20 @@
 //     }
 //   });
 // });
+function logout_action(){
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ Route: "logout"}),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
 function orderhistory_btn_action(route, basket_uid) {
   $.ajax({
     url: "/",
@@ -18,11 +32,23 @@ function orderhistory_btn_action(route, basket_uid) {
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
-      $("#ordershistory_basket_" + basket_uid)
+      if (route == "ordershistory_basket") {
+        $("#ordershistory_basket_" + basket_uid)
         .addClass("btn-success")
         .removeClass("btn-outline-dark");
+      }
       if (route == "ordershistory_delete") {
         location.reload();
+      }
+      if (route == "ordershistory_cards") {
+        var win = window.open("/cards", "_blank");
+        if (win) {
+          //Browser has allowed it to be opened
+          win.focus();
+        } else {
+          //Browser has blocked it
+          alert("Please allow popups for this website");
+        }
       }
 
       console.log(response);

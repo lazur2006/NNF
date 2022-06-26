@@ -8,32 +8,43 @@
 
       <div class="col-lg-10 col-xl-9 mx-auto">
         <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
-          <div style="width: 45%;background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;">
+          <div
+            style="width: 45%;background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;">
             <!-- Background image for card set in CSS! -->
           </div>
           <div class="card-body p-4 p-sm-5">
             <h5 class="card-title text-center mb-5 fw-light fs-5">Set credentials</h5>
 
             <div class="d-flex justify-content-center mb-3">
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE" data-bs-toggle="tooltip" data-bs-placement="top"> REWE
-              <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE"
+                data-bs-toggle="tooltip" data-bs-placement="top"> REWE
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
               </span>
 
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic" data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
-              <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic"
+                data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
               </span>
 
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_HelloFresh" data-bs-toggle="tooltip" data-bs-placement="top"> HelloFresh
-              <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
+              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_HelloFresh"
+                data-bs-toggle="tooltip" data-bs-placement="top"> HelloFresh
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
               </span>
             </div>
 
             <div class="alert alert-primary d-flex align-items-center" role="alert">
               <div>
-                <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Security information</h4>
-                Your password is stored in your system keychain. Only your username and the corresponding vendor informations are stored in a database.
-                <br>More Infos <a type="button" class="btn btn-outline-primary pt-0 pb-0" style="border-radius: .2rem;font-size: .875rem;text-align: center;" href="https://docs.microsoft.com/en-us/windows/uwp/security/credential-locker" target="_blank">Windows</a>
-                or <a type="button" class="btn btn-outline-primary pt-0 pb-0" style="border-radius: .2rem;font-size: .875rem;text-align: center;" href="https://en.wikipedia.org/wiki/Keychain_%28software%29" target="_blank">Mac</a> Users.
+                <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Security information
+                </h4>
+                Your password is stored in your system keychain. Only your username and the corresponding vendor
+                informations are stored in a database.
+                <br>More Infos <a type="button" class="btn btn-outline-primary pt-0 pb-0"
+                  style="border-radius: .2rem;font-size: .875rem;text-align: center;"
+                  href="https://docs.microsoft.com/en-us/windows/uwp/security/credential-locker"
+                  target="_blank">Windows</a>
+                or <a type="button" class="btn btn-outline-primary pt-0 pb-0"
+                  style="border-radius: .2rem;font-size: .875rem;text-align: center;"
+                  href="https://en.wikipedia.org/wiki/Keychain_%28software%29" target="_blank">Mac</a> Users.
               </div>
             </div>
 
@@ -51,31 +62,41 @@
               <hr>
 
               <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInputEmail" placeholder="name@example.com" autocomplete="username" name="username" required>
+                <input type="email" class="form-control" id="floatingInputEmail" placeholder="name@example.com"
+                  autocomplete="username" name="username" required>
                 <label for="floatingInputEmail">Email address</label>
               </div>
 
               <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" autocomplete="current-password" name="password" required>
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                  autocomplete="current-password" name="password" required>
                 <label for="floatingPassword">Password</label>
               </div>
 
               <div class="form-floating mb-3" id="ipaddress_div">
-                <input type="text" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" class="form-control" id="floatingIPaddress" placeholder="e.g. 192.168.0.1" autocomplete="current-ipaddress" name="ipaddress" required>
+                <input type="text" minlength="7" maxlength="15" size="15"
+                  pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$"
+                  class="form-control" id="floatingIPaddress" placeholder="e.g. 192.168.0.1"
+                  autocomplete="current-ipaddress" name="ipaddress" required>
                 <label for="floatingIPaddress">Device IP-Address</label>
               </div>
 
-              <div class="d-grid mb-2">
+              <div class="d-grid mb-2 gap-2">
                 <button class="btn btn-outline-dark" type="submit" id="btn" value="saveCredentials">
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loginspinner" style="display: none"></span>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loginspinner"
+                    style="display: none"></span>
                   <span class="m-1" style="display: inline-block" id="loginSaveText">Save</span>
                   <span class="m-1" style="display: none" id="loginTryText">Login</span>
                   <i style="display: none" id="bichecklogin" class="bi bi-check-all m-1"></i>
                 </button>
+                <button class="btn btn-outline-warning" type="button" onclick="logout_action()">
+                  <span class="m-0" style="display: inline-block">Logout Everything</span>
+                </button>
               </div>
 
               <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center mt-4">
-                <div class="toast" style="width: 90%" id="ToastObject" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                <div class="toast" style="width: 90%" id="ToastObject" role="alert" aria-live="assertive"
+                  aria-atomic="true" data-bs-autohide="false">
                   <div class="toast-header">
                     <i class="bi bi-bell-fill me-2"></i>
                     <strong class="me-auto">Login Information</strong>

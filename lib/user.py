@@ -88,5 +88,3 @@ class user(object):
             password = ""
             ipaddress = ""
         return(dict({'username':username, 'password':password, 'ipaddress':ipaddress}))
-    
-    

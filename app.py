@@ -34,9 +34,11 @@ class WebView(FlaskView):
     global basket_ids
     global thread
     global basket_items
+    global cards_ids
     recipes = []
     basket_ids = ()
     basket_items = []
+    cards_ids = []
         
     @classmethod
     def _init(self):
@@ -130,6 +132,7 @@ class WebView(FlaskView):
         global recipes
         global basket_ids
         global basket_items
+        global cards_ids
 
         retval = request.get_json()
         route = retval.get('Route')
@@ -146,7 +149,7 @@ class WebView(FlaskView):
             return(make_response(jsonify(basket_items), 201))
         elif route == 'deleteItem':
             basket_list = list(basket_ids)
-            basket_list.remove(retval.get('deleteItem'))
+            basket_list.remove(str(retval.get('deleteItem')))
             basket_ids = tuple(basket_list)
             retval["Recipes"] = basket_list
             basket_items = self.handle_basket_action_relative_ids(retval)
@@ -172,6 +175,7 @@ class WebView(FlaskView):
             return(make_response(jsonify(self.vendor.early), 200))
         elif route == 'create_cards':
             self.ordershistory.set(basket_ids)
+            cards_ids = basket_ids
             return(redirect(url_for('WebView:cards')))
         elif route == 'ordershistory_basket':
             self.handle_basket_action_absolute_ids(self.ordershistory.get_recipe_ids(retval['basket_uid']))
@@ -179,6 +183,12 @@ class WebView(FlaskView):
         elif route == 'ordershistory_delete':
             self.ordershistory.delete_item(retval['basket_uid'])
             return(redirect(url_for('WebView:index')))
+        elif route == 'ordershistory_cards':
+            cards_ids = self.ordershistory.get_recipe_ids(retval['basket_uid'])
+            return(redirect(url_for('WebView:cards')))
+        elif route == 'logout':
+            self.vendor.logout()
+            return(make_response(jsonify({'none':'none'}), 200))
 
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
@@ -205,8 +215,8 @@ class WebView(FlaskView):
                                ))
     @route('/cards')
     def cards(self):
-        global basket_ids
-        return(render_template('cards.html',data=self.create_cards.get(basket_ids)))
+        global cards_ids
+        return(render_template('cards.html',data=self.create_cards.get(cards_ids)))
 
 @app.route('/progress')
 def progress():

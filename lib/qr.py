@@ -12,7 +12,7 @@ class QR(object):
         '''
         
         # Link for website
-        input_data = f"http://{self.get_ip()}:5000"
+        input_data = f"http://{self.get_ip()}:8888"
         #Creating an instance of qrcode
         qr = qrcode.QRCode(
                 version=1,

@@ -31,19 +31,25 @@
               </div>
               {%endfor%}
               <div class="d-flex justify-content-between align-items-center gap-2 p-3 bg-light rounded shadow-sm">
-                <div class="text-muted small fw-light" style="font-size:0.7em;">Add these to your basket again</div>
+                <div class="text-muted small fw-light" style="font-size:0.7em;">Options</div>
                 <div class="btn-group" role="group">
-                  <button type="button" class="btn btn-outline-dark btn-sm" id="ordershistory_basket_{{e['basket_uid']}}"
+                  <button type="button" class="btn btn-outline-dark btn-sm"
+                    id="ordershistory_basket_{{e['basket_uid']}}"
                     onclick="orderhistory_btn_action('ordershistory_basket',{{e['basket_uid']}})">
                     <i class="bi bi-bag-plus-fill align-top"></i> Add
                   </button>
-
-                  <button type="button" class="btn btn-danger btn-sm" id="ordershistory_delete{{e['basket_uid']}}"
+                  <button type="button" class="btn btn-outline-dark btn-sm" id="ordershistory_cards_{{e['basket_uid']}}"
+                    onclick="orderhistory_btn_action('ordershistory_cards',{{e['basket_uid']}})">
+                    <i class="bi bi-cloud-arrow-down-fill align-middle"></i> Recipe Cards
+                  </button>
+                  <button type="button" class="btn btn-outline-dark btn-sm" id="ordershistory_delete{{e['basket_uid']}}"
                     onclick="orderhistory_btn_action('ordershistory_delete',{{e['basket_uid']}})">
                     <i class="bi bi-trash3-fill"></i>
                   </button>
                 </div>
               </div>
+
+
             </div>
           </div>
           {%endfor%}

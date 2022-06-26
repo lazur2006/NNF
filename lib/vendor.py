@@ -2,6 +2,7 @@ from lib.user import user
 from lib.API__REWE import ReweMobileApi
 from lib.API__Picnic import picnicapi
 from lib.API__HelloFresh import hellofresh
+import os
 
 class vendor(object):
     '''
@@ -59,6 +60,15 @@ class vendor(object):
         self.early = early_dic
         
         return(auth)
+
+    def logout(self):
+        try:
+            os.remove("_cookies")
+            os.remove("_misc")
+            os.remove("_token")
+            os.remove("static/db/user.db")
+        except:
+            pass
     
     def getUserInfo(self,vendor):
         
