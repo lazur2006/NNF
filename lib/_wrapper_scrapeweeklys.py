@@ -39,15 +39,16 @@ class wr_scrapeWeeklys(object):
         
     def getDatabaseID(self,Recipes):
         conn = sqlite3.connect('static/db/recipe.db')
-        
         ID = [conn.execute(
             '''SELECT ID FROM 'RECIPE' WHERE RECIPE_NAME = ?;''',
-            (Recipe,)).fetchall() for Recipe in Recipes]
-        ID = list(zip(*ID))
-        
+            (Recipe,)).fetchall() for Recipe in Recipes if Recipe]
         conn.close()
-       
-        return(ID)
+        len_ID = len(ID)
+        ''' Drop empty cells '''
+        ID = [id for id in ID if id]
+        missed_recipes = True if len_ID != len(ID) else False
+
+        return(tuple([id[0] for id in list(zip(*ID))[0]]))
     
     
     

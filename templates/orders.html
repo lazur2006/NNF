@@ -8,63 +8,56 @@
     <div class="col-lg-10 col-xl-9 mx-auto">
       <div class="card mt-5 mb-5">
         <h5 class="card-header text-light fw-light bg-dark">History</h5>
+        {%if data['basket_uid'] != 'exception'%}
+        <div class="accordion accordion-flush" id="accordionExample">
 
-        <div class="accordion" id="accordionExample">
+          {%for e in data%}
           <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                aria-expanded="true" aria-controls="collapseOne">
-                Accordion Item #1
+            <h2 class="accordion-header" id="heading{{loop.index}}">
+              <button class="accordion-button bg-light text-dark" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse{{loop.index}}" aria-expanded="true" aria-controls="collapse{{loop.index}}">
+                Order {{e['date']}} | CW {{e['cw']}}
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body">
-                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
-                plugin adds the appropriate classes that we use to style each element. These classes control the overall
-                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
-                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
-                within the <code>.accordion-body</code>, though the transition does limit overflow.
+            <div id="collapse{{loop.index}}" class="accordion-collapse collapse m-4"
+              aria-labelledby="heading{{loop.index}}" data-bs-parent="#accordionExample">
+              {%for f in e['recipes']['recipe_img']%}
+              <div
+                class="accordion-body list-group-item d-flex justify-content-left align-items-center text-break text-wrap">
+                <div class="ms-1 mt-3 mb-3 me-3 p-5"
+                  style="background: url('{{f}}') center center / cover scroll; height: 10vw; width: 10vw; max-height: 7em; max-width: 7em; border-radius: 50%;">
+                </div>
+                {{e['recipes']['recipe_title'][loop.index-1]}}
+              </div>
+              {%endfor%}
+              <div class="d-flex justify-content-between align-items-center gap-2 p-3 bg-light rounded shadow-sm">
+                <div class="text-muted small fw-light" style="font-size:0.7em;">Add these to your basket again</div>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-outline-dark btn-sm" id="ordershistory_basket_{{e['basket_uid']}}"
+                    onclick="orderhistory_btn_action('ordershistory_basket',{{e['basket_uid']}})">
+                    <i class="bi bi-bag-plus-fill align-top"></i> Add
+                  </button>
+
+                  <button type="button" class="btn btn-danger btn-sm" id="ordershistory_delete{{e['basket_uid']}}"
+                    onclick="orderhistory_btn_action('ordershistory_delete',{{e['basket_uid']}})">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Accordion Item #2
-              </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body">
-                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse
-                plugin adds the appropriate classes that we use to style each element. These classes control the overall
-                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
-                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
-                within the <code>.accordion-body</code>, though the transition does limit overflow.
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThree">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                Accordion Item #3
-              </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body">
-                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse
-                plugin adds the appropriate classes that we use to style each element. These classes control the overall
-                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
-                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
-                within the <code>.accordion-body</code>, though the transition does limit overflow.
-              </div>
-            </div>
+          {%endfor%}
+        </div>
+        {%else%}
+        <div>
+          <div class="alert alert-primary d-flex m-5 justify-content-between" role="alert">
+
+            <i class="bi bi-exclamation-circle-fill align-top"></i>
+            <div class="w-100 text-center"> No Orders yet</div>
           </div>
         </div>
+
+        {%endif%}
 
       </div>
     </div>

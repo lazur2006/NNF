@@ -21,18 +21,88 @@
   <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+  
+
 </head>
 
 <body>
 
-  TEST
 
+  {%for i in range(0, data['recipe_amount'])%}
 
+  <div class="d-flex flex-column mb-3">
+    <div class="position-relative"
+      style="background: url('{{data['recipe_img'][i]}}');object-fit: cover;filter:opacity(0.2) blur(999px);min-height:220px;background-position: center;">
+
+    </div>
+    <div class="d-flex flex-row mb-3 align-items-center position-absolute">
+      <div class="p-2">
+        <div class="m-3"
+          style="background: url('{{data['recipe_img'][i]}}') center center / cover scroll; height: 30vw; width: 30vw; max-height: 10em; max-width: 10em; border-radius: 50%;">
+        </div>
+      </div>
+      <div class="p-2">
+        <div class="d-flex flex-column mb-3">
+          <div class="mt-2">
+            <h5 class="text-dark">{{data['recipe_title'][i]}}</h5>
+          </div>
+          <div class="m-0">
+            <p class="small text-muted mb-0">{{data['recipe_subtitle'][i]}}</p>
+          </div>
+          <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+            <p class="small mb-0"><span class="small fw-light">{{data['recipe_type'][i]}}</span></p>
+            <div class="badge bg-primary">{{data['recipe_tag'][i]}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex m-3">
+      <div class="row d-flex justify-content-start position-relative">
+
+        {%for j in data['recipe_ingredients'][i]%}
+         <!-- Ingredients item -->
+        <div class="col-xl-3 p-2 bg-light">
+          <div class="d-flex justify-content-start align-items-center">
+            <div class="m-0 p-3"
+              style="background: url('{{j[0]}}') center center / cover scroll; height: 10vw; width: 10vw; max-height: 3em; max-width: 3em; border-radius: 50%;">
+            </div>
+            <p class="small text-muted text-center mt-3 ms-5">{{j[1]|string + j[2]|string + " " + j[3]|string}}</p>
+          </div>
+        </div>
+        <!-- End -->
+        {%endfor%}
+
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="row d-flex justify-content-start m-3">
+
+        {%for k in data['recipe_instructions'][i]%}
+        <!-- Instructions item -->
+        <div class="col-md-4 mt-2 mb-3">
+          <div class="bg-light rounded border border-primary"><img
+              src="{{data['recipe_instructions_img'][i][loop.index-1]}}"
+              style="width: 100%; height: 5em; object-fit: cover;" class="rounded-top">
+            <div class="p-4">
+              <h5 class="text-dark">Step {{loop.index}}</h5>
+              <p class="small text-muted mb-0">{{k}}</p>
+            </div>
+          </div>
+        </div>
+        <!-- End -->
+        {%endfor%}
+
+      </div>
+    </div>
+  </div>
+  {%endfor%}
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
     crossorigin="anonymous"></script>
+
 </body>
 
 </html>

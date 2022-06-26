@@ -9,9 +9,13 @@ from lib.Scrape_Recipes import Thread
 from lib.user import user
 from lib.vendor import vendor
 from lib.qr import QR
+from lib.cards import create_cards
+from lib.ordershistory import ordershistory
+from lib.basket import basket_manager
 import sqlite3
 import time
 import numpy as np
+
 #import webbrowser
 
 app = Flask(__name__)
@@ -27,17 +31,17 @@ credentials = ["kai-schiffer@web.de","datpaM-dogxus-jofte3"]
 class WebView(FlaskView):
     route_base = '/'
     global recipes
-    global basket
+    global basket_ids
     global thread
-    global Ingredients
+    global basket_items
     recipes = []
-    basket = ()
-    Ingredients = []
+    basket_ids = ()
+    basket_items = []
         
     @classmethod
     def _init(self):
         global recipes
-        global basket
+        global basket_ids
         
         self.obj_scrapeweeklys = []
         self.obj_scrapedatabase = wr_scrapeDatabase()
@@ -46,138 +50,107 @@ class WebView(FlaskView):
         self.user = user()
         self.vendor = vendor()
         self.QR = QR()
-        
-        
+        self.create_cards = create_cards()
+        self.ordershistory = ordershistory()
+        self.basket_manager = basket_manager()
+
         print(" :: WebView :: successfully passed")
-        
-        #webbrowser.open(f"http://{self.QR.get_ip()}:5000", new=2)
-        
 
     @route('/')
     def index(self):
         global recipes
-        
+
         print(" :: index :: successfully passed")
         tags = self.recipeNames
-    
+
         return(render_template('index.html',
                                tags=tags,
-                               r_name=recipes[0],
-                               r_subtitle=recipes[1],
-                               filename=recipes[2],
-                               r_type=recipes[3],
-                               r_subtype=recipes[4],
-                               amount=len(recipes[0])
+                               r_name=recipes['recipe_title'],
+                               r_subtitle=recipes['recipe_subtitle'],
+                               filename=recipes['recipe_img'],
+                               r_type=recipes['recipe_type'],
+                               r_subtype=recipes['recipe_tag'],
+                               amount=len(recipes['recipe_title'])
                                ))
-        
+
     @route('/login')
     def login(self):
-        
+
         # vendor = enumerate(self.vendor.early.items())
         #
         # for idx,(vendor_,valid) in vendor:
         #     print(vendor_)
         #     print(valid)
-        
+
         return(render_template('login.html',
                                vendor = enumerate(self.vendor.early.items())))
-    
+
     @route('/settings')
     def settings(self):
         return(render_template('settings.html'))
-    
-    @route('/orders')
+
+    @route('/orders', methods=['GET'])
     def orders(self):
-        data = {'file_name': 'dd', 'set_min': 'hello world 1','rep_sec':'hello world 2'}
-        return(render_template('orders.html',data = data))
-    
-    def get_json_recipe_feed(self,retval):
+        return(render_template('orders.html',data = self.ordershistory.get()))
+
+    def handle_basket_action_relative_ids(self,retval):
         global recipes
-        global basket
-        global Ingredients
-        
+        global basket_ids
+        global basket_items
+
         try:
             ''' Try getting new basket elements '''
-            retval = operator.itemgetter(*list(map(int, retval.get('Recipes'))))(recipes[5])
+            retval = operator.itemgetter(*list(map(int, retval.get('Recipes'))))(recipes['recipe_id'])
             ''' Adding them to the existing basket items '''
-            basket = basket + (retval if isinstance(retval,tuple) else (retval,))
-            basket = tuple(np.unique(basket))
+            basket_ids = basket_ids + (retval if isinstance(retval,tuple) else (retval,))
+            basket_ids = tuple(np.unique(basket_ids))
         except:
-            # try:
-            #     ''' Elements were deleted try to update the basket '''
-            #     if basket > tuple(retval.get('Recipes')):
-            #         basket = tuple(retval.get('Recipes'))
-            # except:
-            #     ''' Otherwise no new elements to add. Pass with existing elements '''
             pass
-            
-        conn = sqlite3.connect('static/db/recipe.db')
-        if len(basket) != 1:
-            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
-            FROM RECIPE
-            JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID
-            WHERE INGREDIENTS.UID in {basket} ORDER BY INGREDIENT;""")
-        else:
-            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
-            FROM RECIPE
-            JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID
-            WHERE INGREDIENTS.UID in ({basket[0]}) ORDER BY INGREDIENT;""")
-        Ingredients =  conn.execute(query).fetchall()
-        Ingredients = list(map(list, zip(*Ingredients)))#[2:5]
-        Ingredients[0] = list(dict.fromkeys(Ingredients[0]))
-        Ingredients[1] = list(dict.fromkeys(Ingredients[1]))
-        
-        #Ingredients = [[],['2','3','4','5'],["Stk","St","Stk","Stk"],["APFEL","APFEL","BANANE","APFEL"]]
-        
-        Ingredients[2] = [0.0 if x=='None' else x for x in Ingredients[2]]
-        Ingredients[2] = list(map(float, Ingredients[2]))
-        Ingredients[4], unq_inv, _ = np.unique(Ingredients[4], return_inverse=True, return_counts=True)
-        Ingredients[2] = [sum(np.array(Ingredients[2])[(unq_inv==idx[0])]) for idx in enumerate(Ingredients[4])]
-        Ingredients[3] = [np.array(Ingredients[3])[(unq_inv==idx[0])][0] for idx in enumerate(Ingredients[4])]
-        
-        Ingredients[2] = list(map(float, Ingredients[2]))
-        Ingredients[4] = Ingredients[4].tolist()
-        
-        ret = {"ID":Ingredients[0],
-               "Name":Ingredients[1],
-               "Amount":Ingredients[2],
-               "Unit":Ingredients[3],
-               "Ingredient":Ingredients[4]}
-        
-        Ingredients = ret
-        
-        conn.close()
-        
-        return(Ingredients)        
+
+        basket_items = self.basket_manager.modify(basket_ids)
+        return(basket_items)
     
+    def handle_basket_action_absolute_ids(self,retval):
+        global recipes
+        global basket_ids
+        global basket_items
+
+        try:
+            ''' Adding them to the existing basket items '''
+            basket_ids = basket_ids + tuple([e for e in retval])
+            basket_ids = tuple(np.unique(basket_ids))
+        except:
+            pass
+
+        basket_items = self.basket_manager.modify(basket_ids)
+        return(basket_items)
+
     @route('/', methods=['POST'])
     def post_route(self):
         global recipes
-        global basket
-        global Ingredients
-        
+        global basket_ids
+        global basket_items
+
         retval = request.get_json()
         route = retval.get('Route')
-        
+
         if route == 'basket':
-            if retval.get('Recipes') or basket:
-                Ingredients = self.get_json_recipe_feed(retval)                
+            if retval.get('Recipes') or basket_ids:
+                basket_items = self.handle_basket_action_relative_ids(retval)                
             else:
-                Ingredients = []
-            
-            
-            return(make_response(jsonify(Ingredients), 201))
+                basket_items = []
+            return(make_response(jsonify(basket_items), 201))
         elif route == 'clearBasket':
-            basket = ()
-            Ingredients = []
-            return(make_response(jsonify(Ingredients), 201))
+            basket_ids = ()
+            basket_items = []
+            return(make_response(jsonify(basket_items), 201))
         elif route == 'deleteItem':
-            basket_list = list(basket)
+            basket_list = list(basket_ids)
             basket_list.remove(retval.get('deleteItem'))
-            basket = tuple(basket_list)
+            basket_ids = tuple(basket_list)
             retval["Recipes"] = basket_list
-            Ingredients = self.get_json_recipe_feed(retval)
-            return(make_response(jsonify(Ingredients), 201))
+            basket_items = self.handle_basket_action_relative_ids(retval)
+            return(make_response(jsonify(basket_items), 201))
         elif route == 'saveCredentials':
             self.user.setCredentials(
                 vendor=retval.get('vendor'), 
@@ -189,26 +162,31 @@ class WebView(FlaskView):
             info = self.vendor.getUserInfo(retval.get('vendor'))
             return(make_response(jsonify({'vendor':retval.get('vendor'),'status':status,'info':info}), 200))
         elif route == 'checkout':
-            return(make_response(jsonify(self.vendor.handleCheckout(ingredients=Ingredients,vendor=retval.get('vendor'))), 200))
+            return(make_response(jsonify(self.vendor.handleCheckout(ingredients=basket_items,vendor=retval.get('vendor'))), 200))
         elif route == 'mod':
             return(make_response(jsonify(self.vendor.modify_basket(idx=retval.get('idx'),fnc=retval.get('f'))), 200))
         elif route == 'push_vendor_basket':
+            self.ordershistory.set(basket_ids)
             return(make_response(jsonify({'status':'ok','missing':self.vendor.push_basket(retval.get('vendor'))['missing']}), 200))
         elif route == 'getCurrentUserStatus':
             return(make_response(jsonify(self.vendor.early), 200))
-        elif route == 'createCards':
-            # need the recipe IDs
-            # call database and retrieve IMG, Name, Subname, Ingredients + Ingredient IMGs, Instructions
-            return(make_response(jsonify({'status':'ok'}), 200))
-        
-    
+        elif route == 'create_cards':
+            self.ordershistory.set(basket_ids)
+            return(redirect(url_for('WebView:cards')))
+        elif route == 'ordershistory_basket':
+            self.handle_basket_action_absolute_ids(self.ordershistory.get_recipe_ids(retval['basket_uid']))
+            return(redirect(url_for('WebView:index')))
+        elif route == 'ordershistory_delete':
+            self.ordershistory.delete_item(retval['basket_uid'])
+            return(redirect(url_for('WebView:index')))
+
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
         global recipes
-        global basket
-        
+        global basket_ids
+
         route = list(request.form.values())[1]
-        
+
         if route == 'random':
             recipes = self.obj_scrapedatabase.get_random(limit=int(list(request.form.values())[0]))
         if route == 'recent':
@@ -216,26 +194,27 @@ class WebView(FlaskView):
                 self.obj_scrapeweeklys = wr_scrapeWeeklys(credentials = credentials)
             recipes = self.obj_scrapedatabase.get_byID(self.obj_scrapeweeklys.get())
             pass
-        
+
         return(render_template('index.html',
-                               r_name=recipes[0],
-                               r_subtitle=recipes[1],
-                               filename=recipes[2],
-                               r_type=recipes[3],
-                               r_subtype=recipes[4],
-                               amount=len(recipes[0])
+                               r_name=recipes['recipe_title'],
+                               r_subtitle=recipes['recipe_subtitle'],
+                               filename=recipes['recipe_img'],
+                               r_type=recipes['recipe_type'],
+                               r_subtype=recipes['recipe_tag'],
+                               amount=len(recipes['recipe_title'])
                                ))
-@app.route('/cards')
-def cards():
-    return(render_template('cards.html'))
-    
+    @route('/cards')
+    def cards(self):
+        global basket_ids
+        return(render_template('cards.html',data=self.create_cards.get(basket_ids)))
+
 @app.route('/progress')
 def progress():
     global thread
-    
+
     ''' args : start or retrieve '''
     args = request.args['type']
-    
+
     def generate():
         while thread.is_alive():
             perc = int((100*thread._tqdmObj.tq.n)/(thread._tqdmObj.tq.total+1))
@@ -243,7 +222,7 @@ def progress():
             time.sleep(0.1)
             if not thread._isRunning:
                 yield "data:" + str(100) + "\n\n"
-    
+
     if(args == 'start'):
         ''' start updater from here '''
         if 'thread' in globals():
@@ -266,9 +245,8 @@ def progress():
                 retval = "data: close\n\n"
         else:
             retval = "data: close\n\n"
-    
-    return Response(retval, mimetype= 'text/event-stream')
 
+    return Response(retval, mimetype= 'text/event-stream')
 
 WebView._init()
 WebView.register(app)
@@ -276,7 +254,7 @@ WebView.register(app)
 if __name__ == '__main__':
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
-    
+
     QR = QR()
     app.secret_key = secrets.token_hex()
     app.run(debug=True, host=QR.get_ip(), port="8888")

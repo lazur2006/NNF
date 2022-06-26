@@ -23,49 +23,52 @@ class wr_scrapeDatabase(object):
         except IndexError:
             return default
     
-    def get(self,cmd):
-        ''' SQlite connection ------------------------------------------ '''
-        
-        ''' create SQlite db file '''
+    def __get(self,cmd):
         conn = sqlite3.connect('static/db/recipe.db')
+        retval = list(map(list, zip(*conn.execute(cmd).fetchall())))
+        try:
+            recipes = {
+                "recipe_amount":len(retval[0]),
+                "recipe_id":retval[0],
+                "recipe_title":retval[1],
+                "recipe_link":retval[2],
+                "recipe_subtitle":retval[3],
+                "recipe_tag":retval[4],
+                #"recipe_img":["static/images/de-DE/" + str(s) + ".jpg" for s in retval[0]] # OFFLINE VERSION
+                "recipe_img":retval[5], #  ONLINE VERSION
+                "recipe_type":[self.safe_list_get(conn.execute('''SELECT TAG FROM 'TAGS' WHERE UID=?;''',(id,)).fetchall(),0,[''])[0] for id in retval[0]],
+                "recipe_instructions":[list(map(list, zip(*conn.execute('''SELECT INSTRUCTION FROM 'INSTRUCTIONS' WHERE UID=?;''',(id,)).fetchall())))[0] for id in retval[0]],
+                "recipe_instructions_img":[list(map(list, zip(*conn.execute('''SELECT IMG FROM 'INSTRUCTIONS' WHERE UID=?;''',(id,)).fetchall())))[0] for id in retval[0]],
+                "recipe_ingredients":[conn.execute('''SELECT INGREDIENTS.IMG,INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT FROM RECIPE JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID WHERE INGREDIENTS.UID in (?) ORDER BY INGREDIENT;''',(id,)).fetchall() for id in retval[0]]
+                }
+        except:
+            recipes = {
+                "recipe_amount":0,
+                "recipe_id":"",
+                "recipe_title":"",
+                "recipe_link":"",
+                "recipe_subtitle":"",
+                "recipe_tag":"",
+                "recipe_img":"",
+                "recipe_type":"",
+                "recipe_instructions":"",
+                "recipe_instructions_img":"",
+                "recipe_ingredients":""
+                }
         
-        RECIPES = conn.execute(cmd).fetchall()
-        RECIPES = list(map(list, zip(*RECIPES)))
         
-        INGREDIENTS = []
-        INSTRUCTIONS = []
-        TAGS = []
-        for i in range(len(RECIPES[0])):
-            arg = conn.execute('''SELECT * FROM 'INGREDIENTS' WHERE UID=?;''',(RECIPES[0][i],)).fetchall()
-            INGREDIENTS.append(list(map(list, zip(*arg))))
-
-            arg = conn.execute('''SELECT * FROM 'INSTRUCTIONS' WHERE UID=?;''',(RECIPES[0][i],)).fetchall()
-            INSTRUCTIONS.append(list(map(list, zip(*arg))))
             
-            arg = conn.execute('''SELECT * FROM 'TAGS' WHERE UID=?;''',(RECIPES[0][i],)).fetchall()
-            TAGS.append(list(map(list, zip(*arg))))
-        
-        
         conn.close()
-        
-        tags = [self.safe_list_get(t, 2, ['']) for t in TAGS]
-        tags = list(list(zip(*tags))[0])
-        
-        array_recipes_sep = [RECIPES[1],
-                             RECIPES[3],
-                             ["static/images/de-DE/" + str(s) + ".jpg" for s in RECIPES[0]],
-                             tags,
-                             RECIPES[4],
-                             RECIPES[0]
-                              ]
-        ''' unzip array in terms of combined to types'''
-        return(array_recipes_sep)
+        return(recipes)
      
     def get_random(self,limit):
-        return(self.get(f"SELECT * FROM 'RECIPE' ORDER BY RANDOM() LIMIT {limit};"))
+        return(self.__get(f"SELECT * FROM 'RECIPE' ORDER BY RANDOM() LIMIT {limit};"))
     
     def get_byID(self,ID):
-        return(self.get(f"SELECT * FROM 'RECIPE' WHERE ID IN ({','.join([str(e[0]) for e in ID[0]])}) ORDER BY ID;"))
+        if len(ID) != 1:
+            return(self.__get(f"SELECT * FROM 'RECIPE' WHERE ID IN {tuple(ID)} ORDER BY ID;"))
+        else:
+            return(self.__get(f"SELECT * FROM 'RECIPE' WHERE ID IN ({ID[0]}) ORDER BY ID;"))
     
     def get_allNames(self):
         conn = sqlite3.connect('static/db/recipe.db')

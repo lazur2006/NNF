@@ -11,6 +11,49 @@
 //     }
 //   });
 // });
+function orderhistory_btn_action(route, basket_uid) {
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ Route: route, basket_uid: basket_uid }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      $("#ordershistory_basket_" + basket_uid)
+        .addClass("btn-success")
+        .removeClass("btn-outline-dark");
+      if (route == "ordershistory_delete") {
+        location.reload();
+      }
+
+      console.log(response);
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
+function create_recipe_cards() {
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ Route: "create_cards" }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      console.log(response);
+      var win = window.open("/cards", "_blank");
+      if (win) {
+        //Browser has allowed it to be opened
+        win.focus();
+      } else {
+        //Browser has blocked it
+        alert("Please allow popups for this website");
+      }
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
 function build_vendor_basket(response) {
   var vendor_ingredients = document.querySelector("#vendor_ingredients");
   var vendor_basket_total = document.querySelector("#baskets_total");
@@ -252,18 +295,22 @@ function push_vendor_basket(vendor) {
         vendor_ingredients.removeChild(vendor_ingredients.children[1]);
       }
 
-      if(response.missing.length < 2){
-        if(response.missing.length == 1 && response.missing[0] == "Leitungswasser"){
-          $("#vendor_push_ingredients_success").css({ display: "inline-block" });
+      if (response.missing.length < 2) {
+        if (
+          response.missing.length == 1 &&
+          response.missing[0] == "Leitungswasser"
+        ) {
+          $("#vendor_push_ingredients_success").css({
+            display: "inline-block",
+          });
+        } else if (response.missing.length == 0) {
+          $("#vendor_push_ingredients_success").css({
+            display: "inline-block",
+          });
         }
-        else if(response.missing.length == 0){
-          $("#vendor_push_ingredients_success").css({ display: "inline-block" });
-        }
-        
       }
-      
-      
 
+      create_recipe_cards();
     },
     error: function (error) {
       console.log(error);
@@ -398,8 +445,8 @@ function populateTable(json) {
       div_img.classList.add("p-5");
       //div_img.classList.add('p-5');
 
-      div_img.style.background =
-        "url('static/images/de-DE/" + json["ID"][row] + ".jpg') scroll center";
+      div_img.style.background = "url(" + json.img_uri[row] + ") scroll center";
+      //"url('static/images/de-DE/" + json["ID"][row] + ".jpg') scroll center";
       div_img.style.height = "10vw";
       div_img.style.width = "10vw";
       div_img.style.maxHeight = "7em";

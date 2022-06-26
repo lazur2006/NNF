@@ -61,7 +61,8 @@ class Thread(threading.Thread):
             minIngredientAmount = 3
             # Should also are the images saved?
             saveImg=False
-            saveFiles=False
+            saveFiles=True
+            demo_mode=False
             
             LOCALE=["de-DE","en-US"]
             COUNTRY=["de","us"]
@@ -137,7 +138,7 @@ class Thread(threading.Thread):
                         cnt = cnt + 1
                 recipes.extend(response.json()['items'])
             
-            if not saveImg:
+            if not saveImg and demo_mode:
                 self._tqdmObj = TQDM(range(10))
                 for i in self._tqdmObj.tq:
                     time.sleep(1)
@@ -168,18 +169,29 @@ class Thread(threading.Thread):
             print(">> Build final dict container")
             recipesFinal=[]
             ingredients=[]
+            ingredients_img=[]
             steps=[]
+            steps_img=[]
             tags=[]
             label=[]
             headline=[]
             for i in range(len(recipesFiltred)):
                 for j in range(len(recipesFiltred[i]['ingredients'])):
                     ingredient=str(recipesFiltred[i]['ingredients'][j]['name'])
+                    try:
+                        ingredients_img="https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_100,q_auto,w_auto/hellofresh_s3" + str(recipesFiltred[i]['ingredients'][j]['imagePath'])
+                    except:
+                        ingredients_img=""
                     amount=str(recipesFiltred[i]['yields'][0]['ingredients'][j]['amount'])
                     unit=str(recipesFiltred[i]['yields'][0]['ingredients'][j]['unit'])
-                    ingredients.append([amount,unit,ingredient])
+                    ingredients.append([amount,unit,ingredient,ingredients_img])
                 for k in range(len(recipesFiltred[i]['steps'])):
-                    steps.append(recipesFiltred[i]['steps'][k]['instructionsMarkdown'])
+                    step=recipesFiltred[i]['steps'][k]['instructions']
+                    try:
+                        steps_img="https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_400,q_auto,w_auto/hellofresh_s3" + str(recipesFiltred[i]['steps'][k]['images'][0]['path'])
+                    except:
+                        steps_img=""
+                    steps.append([step,steps_img])       
                 for item in recipesFiltred[i]['tags']:
                     tags.append(item['name'])
                     
@@ -227,7 +239,8 @@ class Thread(threading.Thread):
                              RECIPE_NAME TEXT NOT NULL,
                              RECIPE_LINK TEXT NOT NULL,
                              RECIPE_SUBTITLE TEXT NOT NULL,
-                             RECIPE_LABEL TEXT NOT NULL
+                             RECIPE_LABEL TEXT NOT NULL,
+                             RECIPE_IMG TEXT NOT NULL
                              )
                              ;''')
                 conn.execute('''CREATE TABLE INGREDIENTS
@@ -235,13 +248,15 @@ class Thread(threading.Thread):
                              UID INT NOT NULL,
                              AMOUNT REAL NOT NULL,
                              UNIT TEXT NOT NULL,
-                             INGREDIENT TEXT NOT NULL
+                             INGREDIENT TEXT NOT NULL,
+                             IMG TEXT NOT NULL
                              )
                              ;''')
                 conn.execute('''CREATE TABLE INSTRUCTIONS
                              (ID INT PRIMARY KEY NOT NULL,
                              UID INT NOT NULL,
-                             INSTRUCTION TEXT NOT NULL
+                             INSTRUCTION TEXT NOT NULL,
+                             IMG TEXT NOT NULL
                              )
                              ;''')
                 conn.execute('''CREATE TABLE TAGS
@@ -252,18 +267,19 @@ class Thread(threading.Thread):
                              ;''')
                 cnt = [0,0,0]
                 for i in range(len(listRecipes[0])):
-                    conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL) VALUES (?,?,?,?,?)",
+                    conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL,RECIPE_IMG) VALUES (?,?,?,?,?,?)",
                                  (i,
                                   listRecipes[0][i],
                                   listRecipes[2][i],
                                   listRecipes[7][i][0],
-                                  listRecipes[6][i][0]
+                                  listRecipes[6][i][0],
+                                  listRecipes[4][i]
                                   ));
                     for j,ingredient in enumerate(listRecipes[1][i]):
-                        conn.execute("INSERT INTO INGREDIENTS (ID,UID,AMOUNT,UNIT,INGREDIENT) VALUES (?,?,?,?,?)",(cnt[0],i,ingredient[0],ingredient[1],ingredient[2]))
+                        conn.execute("INSERT INTO INGREDIENTS (ID,UID,AMOUNT,UNIT,INGREDIENT,IMG) VALUES (?,?,?,?,?,?)",(cnt[0],i,ingredient[0],ingredient[1],ingredient[2],ingredient[3]))
                         cnt[0] = cnt[0] + 1
                     for j,instruction in enumerate(listRecipes[3][i]):
-                        conn.execute("INSERT INTO INSTRUCTIONS (ID,UID,INSTRUCTION) VALUES (?,?,?)",(cnt[1],i,instruction))
+                        conn.execute("INSERT INTO INSTRUCTIONS (ID,UID,INSTRUCTION,IMG) VALUES (?,?,?,?)",(cnt[1],i,instruction[0],instruction[1]))
                         cnt[1] = cnt[1] + 1
                     for j,tag in enumerate(listRecipes[5][i]):
                         conn.execute("INSERT INTO TAGS (ID,UID,TAG) VALUES (?,?,?)",(cnt[2],i,tag))

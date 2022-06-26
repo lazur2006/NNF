@@ -83,9 +83,6 @@ class vendor(object):
         elif vendor == 'Picnic':
             vendorbasket = self.Picnic.search(ingredients)
             pass
-        elif vendor == 'PDF':
-            vendorbasket = ''
-            pass
         
         return(vendorbasket)
     
