@@ -218,16 +218,8 @@ class WebView(FlaskView):
         if route == 'btn_favorites_show':
             recipes = self.obj_scrapedatabase.get_byID(self.favorites_manager.get_fav_recipe_ids())
 
-        return(render_template('index.html',
-                               r_name=recipes['recipe_title'],
-                               r_subtitle=recipes['recipe_subtitle'],
-                               filename=recipes['recipe_img'],
-                               r_type=recipes['recipe_type'],
-                               r_subtype=recipes['recipe_tag'],
-                               r_id=recipes['recipe_id'],
-                               r_fav_status= [self.favorites_manager.get_fav_status(e) for e in recipes['recipe_id']],
-                               amount=len(recipes['recipe_title'])
-                               ))
+        return(redirect(url_for('WebView:index')))
+
     @route('/cards')
     def cards(self):
         global cards_ids
