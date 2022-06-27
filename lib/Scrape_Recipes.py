@@ -209,7 +209,17 @@ class Thread(threading.Thread):
                     headline.append("")
 
                 
-                recipesFinal.append([recipesFiltred[i]['name'],ingredients,recipesFiltred[i]['websiteUrl'],steps,"https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_auto,w_2600/hellofresh_s3"+recipesFiltred[i]['imagePath'],tags,label,headline])
+                recipesFinal.append([
+                    recipesFiltred[i]['name'],
+                    ingredients,
+                    recipesFiltred[i]['websiteUrl'],
+                    steps,
+                    "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_auto,w_2600/hellofresh_s3"+recipesFiltred[i]['imagePath'],
+                    tags,
+                    label,
+                    headline,
+                    recipesFiltred[i].get('id','no_uid') if recipesFiltred[i].get('id','no_uid') != None else 'no_uid'
+                    ])
                 ingredients=[]
                 steps=[]
                 tags=[]
@@ -240,7 +250,8 @@ class Thread(threading.Thread):
                              RECIPE_LINK TEXT NOT NULL,
                              RECIPE_SUBTITLE TEXT NOT NULL,
                              RECIPE_LABEL TEXT NOT NULL,
-                             RECIPE_IMG TEXT NOT NULL
+                             RECIPE_IMG TEXT NOT NULL,
+                             RECIPE_UID TEXT NOT NULL
                              )
                              ;''')
                 conn.execute('''CREATE TABLE INGREDIENTS
@@ -267,13 +278,14 @@ class Thread(threading.Thread):
                              ;''')
                 cnt = [0,0,0]
                 for i in range(len(listRecipes[0])):
-                    conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL,RECIPE_IMG) VALUES (?,?,?,?,?,?)",
+                    conn.execute("INSERT INTO RECIPE (ID,RECIPE_NAME,RECIPE_LINK,RECIPE_SUBTITLE,RECIPE_LABEL,RECIPE_IMG,RECIPE_UID) VALUES (?,?,?,?,?,?,?)",
                                  (i,
                                   listRecipes[0][i],
                                   listRecipes[2][i],
                                   listRecipes[7][i][0],
                                   listRecipes[6][i][0],
-                                  listRecipes[4][i]
+                                  listRecipes[4][i],
+                                  listRecipes[8][i]
                                   ));
                     for j,ingredient in enumerate(listRecipes[1][i]):
                         conn.execute("INSERT INTO INGREDIENTS (ID,UID,AMOUNT,UNIT,INGREDIENT,IMG) VALUES (?,?,?,?,?,?)",(cnt[0],i,ingredient[0],ingredient[1],ingredient[2],ingredient[3]))

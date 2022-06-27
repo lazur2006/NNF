@@ -96,15 +96,14 @@
 
   <!-- Vertically centered modal -->
   <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    style="background-color: rgba(64, 0, 255, 0.9);" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-body text-center"><img src="/static/images/qrcode.png" height="400"
-            class="d-inline-block align-text-top" style="filter: invert(1)"></div>
+    style="background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;filter: invert(0.07)"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered align-center">
+      <div class="modal-content rounded position-absolute top-50 start-50 translate-middle shadow"
+      style="width:15em;height:15em;background: linear-gradient(0deg, rgba(108, 156, 28, 0.4), rgba(108, 156, 28, 0.4)), url(/static/images/qrcode.png);filter: contrast(0.5);background-size: cover;">
       </div>
     </div>
   </div>
-
 
   <div class="text-white text-center jumbotron specialjum shadow-sm"
     style="background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;filter: invert(0.07)">

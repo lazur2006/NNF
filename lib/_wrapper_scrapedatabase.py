@@ -30,6 +30,7 @@ class wr_scrapeDatabase(object):
             recipes = {
                 "recipe_amount":len(retval[0]),
                 "recipe_id":retval[0],
+                "recipe_uid":retval[6],
                 "recipe_title":retval[1],
                 "recipe_link":retval[2],
                 "recipe_subtitle":retval[3],
@@ -45,6 +46,7 @@ class wr_scrapeDatabase(object):
             recipes = {
                 "recipe_amount":0,
                 "recipe_id":"",
+                "recipe_uid":"",
                 "recipe_title":"",
                 "recipe_link":"",
                 "recipe_subtitle":"",

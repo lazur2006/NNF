@@ -12,6 +12,7 @@ from lib.qr import QR
 from lib.cards import create_cards
 from lib.ordershistory import ordershistory
 from lib.basket import basket_manager
+from lib.favorites import favorites_manager
 import sqlite3
 import time
 import numpy as np
@@ -55,6 +56,7 @@ class WebView(FlaskView):
         self.create_cards = create_cards()
         self.ordershistory = ordershistory()
         self.basket_manager = basket_manager()
+        self.favorites_manager = favorites_manager()
 
         print(" :: WebView :: successfully passed")
 
@@ -65,6 +67,7 @@ class WebView(FlaskView):
         print(" :: index :: successfully passed")
         tags = self.recipeNames
 
+
         return(render_template('index.html',
                                tags=tags,
                                r_name=recipes['recipe_title'],
@@ -72,6 +75,8 @@ class WebView(FlaskView):
                                filename=recipes['recipe_img'],
                                r_type=recipes['recipe_type'],
                                r_subtype=recipes['recipe_tag'],
+                               r_id=recipes['recipe_id'],
+                               r_fav_status= [self.favorites_manager.get_fav_status(e) for e in recipes['recipe_id']],
                                amount=len(recipes['recipe_title'])
                                ))
 
@@ -149,7 +154,7 @@ class WebView(FlaskView):
             return(make_response(jsonify(basket_items), 201))
         elif route == 'deleteItem':
             basket_list = list(basket_ids)
-            basket_list.remove(str(retval.get('deleteItem')))
+            basket_list.remove(retval.get('deleteItem'))
             basket_ids = tuple(basket_list)
             retval["Recipes"] = basket_list
             basket_items = self.handle_basket_action_relative_ids(retval)
@@ -189,21 +194,29 @@ class WebView(FlaskView):
         elif route == 'logout':
             self.vendor.logout()
             return(make_response(jsonify({'none':'none'}), 200))
+        elif route == 'favorite_set':
+            self.favorites_manager.set(retval['recipe_id'])
+            return(make_response(jsonify({'none':'none'}), 200))
+        elif route == 'favorite_unset':
+            self.favorites_manager.unset(retval['recipe_id'])
+            return(make_response(jsonify({'none':'none'}), 200))
 
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
         global recipes
         global basket_ids
 
-        route = list(request.form.values())[1]
+        route = dict(request.form)['btn']
 
         if route == 'random':
-            recipes = self.obj_scrapedatabase.get_random(limit=int(list(request.form.values())[0]))
+            recipes = self.obj_scrapedatabase.get_random(limit=int(dict(request.form)['range']))
         if route == 'recent':
             if not self.obj_scrapeweeklys:
                 self.obj_scrapeweeklys = wr_scrapeWeeklys(credentials = credentials)
             recipes = self.obj_scrapedatabase.get_byID(self.obj_scrapeweeklys.get())
             pass
+        if route == 'btn_favorites_show':
+            recipes = self.obj_scrapedatabase.get_byID(self.favorites_manager.get_fav_recipe_ids())
 
         return(render_template('index.html',
                                r_name=recipes['recipe_title'],
@@ -211,12 +224,18 @@ class WebView(FlaskView):
                                filename=recipes['recipe_img'],
                                r_type=recipes['recipe_type'],
                                r_subtype=recipes['recipe_tag'],
+                               r_id=recipes['recipe_id'],
+                               r_fav_status= [self.favorites_manager.get_fav_status(e) for e in recipes['recipe_id']],
                                amount=len(recipes['recipe_title'])
                                ))
     @route('/cards')
     def cards(self):
         global cards_ids
         return(render_template('cards.html',data=self.create_cards.get(cards_ids)))
+
+    @route('/favorites')
+    def favorites(self):
+        return(render_template('favorites.html'))
 
 @app.route('/progress')
 def progress():

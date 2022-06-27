@@ -11,6 +11,34 @@
 //     }
 //   });
 // });
+function favorite(recipe_id){
+  if($('#fav_btn_'+recipe_id).parent().hasClass("text-secondary")){
+    var fav_status = "favorite_set";
+  }
+  else{
+    var fav_status = "favorite_unset";
+  }
+
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ Route: fav_status, recipe_id: recipe_id}),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      if($('#fav_btn_'+recipe_id).parent().hasClass("text-secondary")){
+        $('#fav_btn_'+recipe_id).parent().addClass("text-danger").removeClass("text-secondary");
+      }
+      else{
+        $('#fav_btn_'+recipe_id).parent().addClass("text-secondary").removeClass("text-danger");
+      }
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+
+  
+}
 function logout_action(){
   $.ajax({
     url: "/",
@@ -809,7 +837,7 @@ function setCurrentUserStatus() {
       if (response.HelloFresh) {
         try {
           document.querySelector(
-            '[name="btn_hellofresh_recent_week"]'
+            '[id="btn_hellofresh_recent_week"]'
           ).disabled = false;
         } catch (e) {}
         try {
@@ -833,7 +861,7 @@ function setCurrentUserStatus() {
       } else {
         try {
           document.querySelector(
-            '[name="btn_hellofresh_recent_week"]'
+            '[id="btn_hellofresh_recent_week"]'
           ).disabled = true;
         } catch (e) {}
         try {

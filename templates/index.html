@@ -15,16 +15,15 @@
             <div class="p-4">
               <h5> <a href="#" class="text-dark">{{r_name[k]}}</a></h5>
               <p class="small text-muted mb-0">{{r_subtitle[k]}}</p>
-              
-              <!-- <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span
-                    class="font-weight-bold">{{r_type[k]}}</span></p>
-                <div class="badge text-bg-primary">{{r_subtype[k]}}</div>
-              </div> -->
-
               <div class="badge bg-light shadow-sm text-dark position-absolute top-0 start-50 translate-middle">
-                <span class="">{{r_type[k]}}</span>
+                <span class="fw-light text-muted align-text-bottom">{{r_type[k]}}</span>
                 <div class="badge bg-primary">{{r_subtype[k]}}</div>
+              </div>
+
+              <div class="badge bg-light {{r_fav_status[k]}} position-absolute translate-middle m-2"
+                style="right:0%;bottom:0%;transform: rotate(0);">
+                <a onclick="favorite({{r_id[k]}})" id="fav_btn_{{r_id[k]}}" class="stretched-link">
+                </a><i class="bi bi-heart-fill"></i>
               </div>
 
             </div>
@@ -70,8 +69,7 @@
 
         <div class="d-flex justify-content-center bg-white">
           <span class="badge rounded-pill text-bg-dark p-5 m-5" id="vendor_push_ingredients_success"
-          style="display: none"><i class="bi bi-patch-check text-light"
-              style="font-size:5em;"></i></span>
+            style="display: none"><i class="bi bi-patch-check text-light" style="font-size:5em;"></i></span>
         </div>
 
       </div>
@@ -237,45 +235,44 @@
 
 </div>
 
-<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
+<div class="offcanvas bg-light offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
   aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasBottomLabel">Recipe Setup</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
+  <form method="post" enctype="multipart/form-data" id="recipe-form" action="choose">
 
-    <form method="post" enctype="multipart/form-data" id="recipe-form" action="choose">
-      <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-          <h1 class="display-5 fw-bold">Make it Random</h1>
+    <div class="offcanvas-body d-flex flex-row">
 
+      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
+        <h1 class="display-5 fw-bold">Get the recent suggestions</h1>
 
-          <label for="customRange3" class="form-label">Recipes per page </label>
-          <h1 id="toptitle">10</h1>
-          <input type="range" class="form-range" min="5" max="50" step="1" value="10" name="range"
-            oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em">
-
-          <button class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
-              style="font-size:15px; vertical-align: bottom;"></i> Random</button>
+        <div class="align-middle">
+          <span class="badge rounded-pill text-bg-success me-4 mb-3" id="login_status_badge_HelloFresh"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Successfully logged in"> HelloFresh
+            <i class="bi bi-check-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
+          </span>
+          <button class="btn btn-outline-dark" type="submit" id="btn_hellofresh_recent_week" name="btn"
+            value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent
+            Week
+          </button>
         </div>
-      </div>
 
-      <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-          <h1 class="display-5 fw-bold" style="padding-bottom:.3em">Get the recent suggestions</h1>
-          <div class="btn-group-vertical">
-            <span class="badge rounded-pill text-bg-success mb-2" id="login_status_badge_HelloFresh"
-              data-bs-toggle="tooltip" data-bs-placement="top" style="width:100%"> HelloFresh
-              <i class="bi bi-check-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
-            </span>
-            <button class="btn btn-outline-dark" type="submit" id="btn" name="btn_hellofresh_recent_week"
-              value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent
-              Week</button>
-          </div>
-        </div>
       </div>
-    </form>
-  </div>
-
+      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
+        <h1 class="display-5 fw-bold">Make it Random</h1><label for="customRange3" class="form-label">Recipes per page
+        </label>
+        <h1 id="toptitle">10</h1><input type="range" class="form-range" min="5" max="50" step="1" value="10"
+          name="range" oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em"><button
+          class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
+            style="font-size:15px; vertical-align: bottom;"></i> Random</button>
+      </div>
+      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
+        <h1 class="display-5 fw-bold">Show your Favorites</h1><button class="btn btn-outline-dark" type="submit"
+          id="btn" name="btn" value="btn_favorites_show"><i class="bi bi-heart-fill"
+            style="font-size:15px; vertical-align: bottom;"></i> Favorites</button>
+      </div>
+    </div>
+  </form>
   {% endblock %}
