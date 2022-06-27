@@ -22,7 +22,7 @@
   <script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
-  
+
 
 </head>
 
@@ -33,35 +33,71 @@
 
   <div class="d-flex flex-column mb-3">
     <div class="position-relative"
-      style="background: url('{{data['recipe_img'][i]}}');object-fit: cover;filter:opacity(0.2) blur(999px);min-height:220px;background-position: center;">
-
+      style="background: url('{{data['recipe_img'][i]}}');object-fit: cover;filter:opacity(0.2) blur(999px);background-position: center;">
+      <!-- DUMMY FOR SIZING START -->
+      <div class="d-flex flex-row mb-3 align-items-center">
+        <div class="">
+          <div class="m-3"
+            style="background: url('{{data['recipe_img'][i]}}') center center / cover scroll; height: 30vw; width: 30vw; max-height: 10em; max-width: 10em; border-radius: 50%;">
+          </div>
+        </div>
+        <div class="">
+          <div class="d-flex flex-column">
+            <div class="m-3">
+              <h5 class="text-dark">{{data['recipe_title'][i]}}</h5>
+            </div>
+            <div class="ms-3 me-3">
+              <p class="small text-muted">{{data['recipe_subtitle'][i]}}</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-between rounded-pill bg-light p-2 m-3">
+              <p style="font-size: clamp(13px, 3vw, 10px)" class="m-0"><span
+                  class="small fw-light">{{data['recipe_type'][i]}}</span></p>
+              <div style="font-size: clamp(3px, 2.5vw, 10px)" class="badge bg-primary m-0">{{data['recipe_tag'][i]}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- DUMMY FOR SIZING END -->
     </div>
+
     <div class="d-flex flex-row mb-3 align-items-center position-absolute">
-      <div class="p-2">
+      <div class="">
         <div class="m-3"
           style="background: url('{{data['recipe_img'][i]}}') center center / cover scroll; height: 30vw; width: 30vw; max-height: 10em; max-width: 10em; border-radius: 50%;">
         </div>
       </div>
-      <div class="p-2">
-        <div class="d-flex flex-column mb-3">
-          <div class="mt-2">
+      <div class="">
+        <div class="d-flex flex-column">
+          <div class="m-3">
             <h5 class="text-dark">{{data['recipe_title'][i]}}</h5>
           </div>
-          <div class="m-0">
-            <p class="small text-muted mb-0">{{data['recipe_subtitle'][i]}}</p>
+          <div class="ms-3 me-3">
+            <p class="small text-muted">{{data['recipe_subtitle'][i]}}</p>
           </div>
-          <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-            <p class="small mb-0"><span class="small fw-light">{{data['recipe_type'][i]}}</span></p>
-            <div class="badge bg-primary">{{data['recipe_tag'][i]}}</div>
+
+          <div class="d-flex ms-3">
+            <div class="badge bg-light text-dark">
+              <span class="small fw-light">{{data['recipe_type'][i]}}</span>
+              <div class="badge bg-primary">{{data['recipe_tag'][i]}}</div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
     <div class="d-flex m-3">
-      <div class="row d-flex justify-content-start position-relative">
+      <div class="row d-flex justify-content-start position-relative bg-light">
 
         {%for j in data['recipe_ingredients'][i]%}
-         <!-- Ingredients item -->
+        <!-- Ingredients item -->
         <div class="col-xl-3 p-2 bg-light">
           <div class="d-flex justify-content-start align-items-center">
             <div class="m-0 p-3"
@@ -76,12 +112,12 @@
       </div>
     </div>
     <div class="container-fluid">
-      <div class="row d-flex justify-content-start m-3">
+      <div class="row d-flex justify-content-start mt-3 mb-5">
 
         {%for k in data['recipe_instructions'][i]%}
         <!-- Instructions item -->
         <div class="col-md-4 mt-2 mb-3">
-          <div class="bg-light rounded border border-primary"><img
+          <div class="bg-light rounded border border-primary h-100"><img
               src="{{data['recipe_instructions_img'][i][loop.index-1]}}"
               style="width: 100%; height: 5em; object-fit: cover;" class="rounded-top">
             <div class="p-4">
