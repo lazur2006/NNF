@@ -20,11 +20,17 @@
                 <div class="badge bg-primary">{{r_subtype[k]}}</div>
               </div>
 
-              <div class="badge bg-light {{r_fav_status[k]}} position-absolute translate-middle m-2"
+              <div class="badge bg-light shadow-sm fs-6 {{r_fav_status[k]}} position-absolute translate-middle m-2"
                 style="right:0%;bottom:0%;transform: rotate(0);">
                 <a onclick="favorite({{r_id[k]}})" id="fav_btn_{{r_id[k]}}" class="stretched-link">
                 </a><i class="bi bi-heart-fill"></i>
               </div>
+
+              <!-- <div class="badge fs-6 bg-light position-absolute text-secondary"
+                style="left:85%;bottom:39%;box-shadow: rgba(0, 0, 0, 1) 0px 25px 20px -20px;">
+                <a onclick="favorite({{r_id[k]}})" id="fav_btn_{{r_id[k]}}" class="stretched-link">
+                </a><i class="bi bi-heart-fill"></i>
+              </div> -->
 
             </div>
           </div>
