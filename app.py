@@ -4,7 +4,6 @@ import logging
 from flask import Flask, render_template, request, redirect, url_for, Response, jsonify, make_response
 from flask_classful import FlaskView, route
 from lib._wrapper_scrapedatabase import wr_scrapeDatabase
-from lib._wrapper_scrapeweeklys import wr_scrapeWeeklys
 from lib.Scrape_Recipes import Thread
 from lib.user import user
 from lib.vendor import vendor
@@ -202,7 +201,7 @@ class WebView(FlaskView):
             recipes = self.obj_scrapedatabase.get_random(limit=int(dict(request.form)['range']))
         if route == 'recent':
             if not self.obj_scrapeweeklys:
-                self.obj_scrapeweeklys = wr_scrapeWeeklys(credentials = credentials)
+                self.obj_scrapeweeklys = self.vendor.handleWeeklys()
             recipes = self.obj_scrapedatabase.get_byID(self.obj_scrapeweeklys.get())
             pass
         if route == 'btn_favorites_show':
@@ -213,7 +212,8 @@ class WebView(FlaskView):
     @route('/cards')
     def cards(self):
         global cards_ids
-        return(render_template('cards.html',data=self.create_cards.get(cards_ids)))
+        global basket_items
+        return(render_template('cards.html',data=self.create_cards.get(cards_ids),basket_items=basket_items))
 
     @route('/favorites')
     def favorites(self):

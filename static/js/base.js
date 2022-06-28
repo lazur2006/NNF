@@ -1,16 +1,3 @@
-// $(function() {
-//   var availableTags = [
-//     {%for tags in tags %}
-//     "{{tags}}",
-//     {% endfor %}
-//   ];
-//   $("#tags").autocomplete({
-//     source: function(request, response) {
-//       var results = $.ui.autocomplete.filter(availableTags, request.term);
-//       response(results.slice(0, 10));
-//     }
-//   });
-// });
 function favorite(recipe_id){
   if($('#fav_btn_'+recipe_id).parent().hasClass("text-secondary")){
     var fav_status = "favorite_set";
