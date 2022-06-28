@@ -9,7 +9,6 @@ _cookies
 _misc
 _token
 favorites.db
-ingredients.db
 orderhistory.db
 recipe.db
 user.db
