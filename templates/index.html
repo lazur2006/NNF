@@ -7,7 +7,8 @@
     {%if amount == 0%}
     <div class="mx-auto" style="width: 25em;">
       <div class="alert alert-primary shadow" role="alert">
-        Pretty quiet here... Start your journey with a fresh <a href="{{ url_for('WebView:settings')}}">Update</a>.<br><br>Btw, Don't forget to setup
+        Pretty quiet here... Start your journey with a fresh <a
+          href="{{ url_for('WebView:settings')}}">Update</a>.<br><br>Btw, Don't forget to setup
         your vendor accounts.
       </div>
     </div>
@@ -47,6 +48,37 @@
     </div>
     {%endfor%}
     <!-- End -->
+  </div>
+</div>
+
+<div class="modal fade modal-lg" id="shopping_list_modal" tabindex="-1" aria-labelledby="shopping_list_modal_title"
+  style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shopping_list_modal_title">Shopping List</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-light">
+        <div class="row d-flex justify-content-start position-relative bg-light">
+
+          <div class="d-flex col-xl-3 p-2 bg-light align-middle">
+            <div class="d-flex justify-content-start align-items-center">
+              <div class="p-4"
+                style="background: url('https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_100,q_auto,w_auto/hellofresh_s3/image/555da9624dab71591b8b4567.png') center center / cover scroll; height: 10vw; width: 10vw; max-height: 3em; max-width: 3em; border-radius: 50%;">
+              </div>
+              <p class="small text-muted text-center m-2">1.0Stück Birne</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-outline-dark btn-sm"><i
+            class="bi bi-share-fill"></i></button>
+      </div>
+
+    </div>
+
   </div>
 </div>
 
@@ -179,6 +211,8 @@
         <div class="d-flex flex-column mb-3">
           <button type="button" class="btn btn-outline-dark btn-lg mt-4" onclick="create_recipe_cards()"><i
               class="bi bi-file-earmark-pdf" style="vertical-align: top; filter: grayscale(1)"></i> Save</button>
+          <button type="button" class="btn btn-outline-dark btn-lg mt-4" onclick="create_shopping_list()"><i
+              class="bi bi-cart2" style="vertical-align: top;"></i> Shopping List</button>
         </div>
       </div>
     </div>
@@ -289,4 +323,5 @@
       </div>
     </div>
   </form>
+
   {% endblock %}

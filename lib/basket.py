@@ -21,12 +21,12 @@ class basket_manager(object):
 
         conn = sqlite3.connect('static/db/recipe.db')
         if len(basket_ids) != 1:
-            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, RECIPE.RECIPE_IMG, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
+            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, RECIPE.RECIPE_IMG, INGREDIENTS.IMG, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
             FROM RECIPE
             JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID
             WHERE INGREDIENTS.UID in {basket_ids} ORDER BY INGREDIENT;""")
         else:
-            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, RECIPE.RECIPE_IMG, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
+            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, RECIPE.RECIPE_IMG, INGREDIENTS.IMG, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
             FROM RECIPE
             JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID
             WHERE INGREDIENTS.UID in ({basket_ids[0]}) ORDER BY INGREDIENT;""")
@@ -38,21 +38,23 @@ class basket_manager(object):
         
         #Ingredients = [[],['2','3','4','5'],["Stk","St","Stk","Stk"],["APFEL","APFEL","BANANE","APFEL"]]
         
-        Ingredients[3] = [0.0 if x=='None' else x for x in Ingredients[3]]
-        Ingredients[3] = list(map(float, Ingredients[3]))
-        Ingredients[5], unq_inv, _ = np.unique(Ingredients[5], return_inverse=True, return_counts=True)
-        Ingredients[3] = [sum(np.array(Ingredients[3])[(unq_inv==idx[0])]) for idx in enumerate(Ingredients[5])]
-        Ingredients[4] = [np.array(Ingredients[4])[(unq_inv==idx[0])][0] for idx in enumerate(Ingredients[5])]
+        Ingredients[4] = [0.0 if x=='None' else x for x in Ingredients[4]]
+        Ingredients[4] = list(map(float, Ingredients[4]))
+        Ingredients[6], unq_inv, _ = np.unique(Ingredients[6], return_inverse=True, return_counts=True)
+        Ingredients[3] = [np.array(Ingredients[3])[(unq_inv==idx[0])].tolist()[0] for idx in enumerate(Ingredients[6])]
+        Ingredients[4] = [sum(np.array(Ingredients[4])[(unq_inv==idx[0])]) for idx in enumerate(Ingredients[6])]
+        Ingredients[5] = [np.array(Ingredients[5])[(unq_inv==idx[0])][0] for idx in enumerate(Ingredients[6])]
         
-        Ingredients[3] = list(map(float, Ingredients[3]))
-        Ingredients[5] = Ingredients[5].tolist()
+        Ingredients[4] = list(map(float, Ingredients[4]))
+        Ingredients[6] = Ingredients[6].tolist()
         
         ret = {"ID":Ingredients[0],
                "Name":Ingredients[1],
                "img_uri":Ingredients[2],
-               "Amount":Ingredients[3],
-               "Unit":Ingredients[4],
-               "Ingredient":Ingredients[5]
+               "ingredient_img":Ingredients[3],
+               "Amount":Ingredients[4],
+               "Unit":Ingredients[5],
+               "Ingredient":Ingredients[6]
                }
         
         Ingredients = ret
@@ -60,3 +62,7 @@ class basket_manager(object):
         conn.close()
         
         return(Ingredients)
+
+    def acc_ingredients(self,basket_ids):
+
+        pass

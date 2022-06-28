@@ -2,6 +2,7 @@ from lib.user import user
 from lib.API__REWE import ReweMobileApi
 from lib.API__Picnic import picnicapi
 from lib.API__HelloFresh import hellofresh
+from lib._wrapper_scrapeweeklys import wr_scrapeWeeklys
 import os
 
 class vendor(object):
@@ -83,6 +84,9 @@ class vendor(object):
             info = self.HelloFresh.hellofresh.stream.get('LOGIN').get('user_data')
         
         return(info)
+
+    def handleWeeklys(self):
+        return(wr_scrapeWeeklys(credentials = [self.user.getCredentials('HelloFresh')['username'],self.user.getCredentials('HelloFresh')['password']]))
     
     def handleCheckout(self,ingredients,vendor):
         global vendorbasket
