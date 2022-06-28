@@ -1,8 +1,3 @@
-'''
-Created on 21.05.2022
-
-@author: n00b
-'''
 from lib.Scrape_Weeklys import scrapeWeeklys
 import sqlite3
 
