@@ -2,9 +2,14 @@
 instructions_mac
 instructions_pi
 venv
-_cookies
-_misc
-_token
 __pycache__
 hist.txt
 .env
+_cookies
+_misc
+_token
+favorites.db
+ingredients.db
+orderhistory.db
+recipe.db
+user.db
