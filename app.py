@@ -21,8 +21,6 @@ import numpy as np
 
 app = Flask(__name__)
 
-credentials = ["kai-schiffer@web.de","datpaM-dogxus-jofte3"]
-
 '''    NOTES
             #SELECT * FROM 'RECIPE' WHERE RECIPE_LABEL='' ORDER BY RANDOM() LIMIT 10
             #SELECT * FROM 'INSTRUCTIONS' WHERE UID = '15'
