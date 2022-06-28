@@ -4,6 +4,14 @@
 
 <div class="container-fluid">
   <div class="row py-xl-5 py-lg-5 py-md-5 py-sm-5 py-3">
+    {%if amount == 0%}
+    <div class="mx-auto" style="width: 25em;">
+      <div class="alert alert-primary shadow" role="alert">
+        Pretty quiet here... Start your journey with a fresh <a href="{{ url_for('WebView:settings')}}">Update</a>.<br><br>Btw, Don't forget to setup
+        your vendor accounts.
+      </div>
+    </div>
+    {%endif%}
     {%for k in range(0, amount)%}
     <!-- Gallery item -->
     <div class="col-xl-3 col-lg-4 col-md-6 mb-4">

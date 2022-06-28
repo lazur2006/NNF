@@ -25,8 +25,9 @@ class wr_scrapeDatabase(object):
     
     def __get(self,cmd):
         conn = sqlite3.connect('static/db/recipe.db')
-        retval = list(map(list, zip(*conn.execute(cmd).fetchall())))
+        
         try:
+            retval = list(map(list, zip(*conn.execute(cmd).fetchall())))
             recipes = {
                 "recipe_amount":len(retval[0]),
                 "recipe_id":retval[0],
@@ -74,8 +75,11 @@ class wr_scrapeDatabase(object):
     
     def get_allNames(self):
         conn = sqlite3.connect('static/db/recipe.db')
-        ret = conn.execute("SELECT RECIPE_NAME FROM 'RECIPE'").fetchall()
-        ret = list(list(zip(*ret))[0])
+        try:
+            ret = conn.execute("SELECT RECIPE_NAME FROM 'RECIPE'").fetchall()
+            ret = list(list(zip(*ret))[0])
+        except:
+            ret = []
         conn.close()
         return(ret)
 
