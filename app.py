@@ -17,15 +17,7 @@ import sqlite3
 import time
 import numpy as np
 
-#import webbrowser
-
 app = Flask(__name__)
-
-'''    NOTES
-            #SELECT * FROM 'RECIPE' WHERE RECIPE_LABEL='' ORDER BY RANDOM() LIMIT 10
-            #SELECT * FROM 'INSTRUCTIONS' WHERE UID = '15'
-            #SELECT * FROM 'RECIPE' WHERE RECIPE_LABEL = 'fresh summer'
-'''
 
 class WebView(FlaskView):
     route_base = '/'
