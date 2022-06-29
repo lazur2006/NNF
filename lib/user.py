@@ -1,4 +1,3 @@
-import keyring
 import sqlite3
 import hashlib
 import secrets
@@ -35,12 +34,6 @@ class user(object):
     def setCredentials(self,vendor,username,password,ipaddress):
 
         password = self.encrypt(password.encode(), bytes(dotenv.get_key(self.dotenv_file, "salt"),"UTF-8"))
-
-        # try:
-        #     keyring.delete_password(vendor, username)
-        # except:
-        #     pass  
-        # keyring.set_password(vendor, username, password)
         
         ''' create SQlite db file '''
         conn = sqlite3.connect('static/db/user.db')
@@ -75,7 +68,6 @@ class user(object):
         return(userdata)
     
     def getPassword(self,vendor,username):
-        #return(keyring.get_credential(vendor, username).password)
         return(self.decrypt(self.getUserData(vendor)[0][2], bytes(dotenv.get_key(self.dotenv_file, "salt"),"UTF-8")).decode())
     
     def getCredentials(self,vendor):

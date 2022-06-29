@@ -62,7 +62,3 @@ class basket_manager(object):
         conn.close()
         
         return(Ingredients)
-
-    def acc_ingredients(self,basket_ids):
-
-        pass
