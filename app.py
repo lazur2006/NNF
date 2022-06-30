@@ -12,7 +12,8 @@ from lib.cards import create_cards
 from lib.ordershistory import ordershistory
 from lib.basket import basket_manager
 from lib.favorites import favorites_manager
-import sqlite3
+from lib.search import search
+
 import time
 import numpy as np
 
@@ -46,6 +47,7 @@ class WebView(FlaskView):
         self.ordershistory = ordershistory()
         self.basket_manager = basket_manager()
         self.favorites_manager = favorites_manager()
+        self.search = search()
 
         print(" :: WebView :: successfully passed")
 
@@ -189,6 +191,8 @@ class WebView(FlaskView):
         elif route == 'favorite_unset':
             self.favorites_manager.unset(retval['recipe_id'])
             return(make_response(jsonify({'none':'none'}), 200))
+        elif route == 'search_autocomplete_action':
+            return(make_response(jsonify(self.search.search_autocomplete_action(retval.get('query'))), 200))
 
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
@@ -206,6 +210,8 @@ class WebView(FlaskView):
             pass
         if route == 'btn_favorites_show':
             recipes = self.obj_scrapedatabase.get_byID(self.favorites_manager.get_fav_recipe_ids())
+        if route == 'search_action':
+            recipes = self.search.search_by_ingredient(dict(request.form).get('query'))
 
         return(redirect(url_for('WebView:index')))
 

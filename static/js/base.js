@@ -1,3 +1,19 @@
+function search_autocomplete_action(){
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ Route: 'search_autocomplete_action', query: $("#search_ingredient_input").val()}),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      console.log(response);
+      $("#search_ingredient_input").autocomplete({source: response.found_ingredients, position: {of: $("#search_ingredient_input"),my: "center top",at: "center bottom",collision: "flip flip"} });
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
+
 function favorite(recipe_id){
   if($('#fav_btn_'+recipe_id).parent().hasClass("text-secondary")){
     var fav_status = "favorite_set";
@@ -584,6 +600,7 @@ $(document).on("submit", "#index-form", function (e) {
   var selection = new Object();
   selection.Recipes = [];
   selection.Route = $("#btn").val();
+  selection.Query = $("#search_ingredient_input").val();
 
   $("#loginspinner").css({ display: "inline-block" });
   $("#loginTryText").css({ display: "inline-block" });

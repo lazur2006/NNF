@@ -35,12 +35,6 @@
                 </a><i class="bi bi-heart-fill"></i>
               </div>
 
-              <!-- <div class="badge fs-6 bg-light position-absolute text-secondary"
-                style="left:85%;bottom:39%;box-shadow: rgba(0, 0, 0, 1) 0px 25px 20px -20px;">
-                <a onclick="favorite({{r_id[k]}})" id="fav_btn_{{r_id[k]}}" class="stretched-link">
-                </a><i class="bi bi-heart-fill"></i>
-              </div> -->
-
             </div>
           </div>
         </div>
@@ -293,7 +287,6 @@
 
       <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
         <h1 class="display-5 fw-bold">Get the recent suggestions</h1>
-
         <div class="align-middle">
           <span class="badge rounded-pill text-bg-success me-4 mb-3" id="login_status_badge_HelloFresh"
             data-bs-toggle="tooltip" data-bs-placement="top" title="Successfully logged in"> HelloFresh
@@ -304,8 +297,17 @@
             Week
           </button>
         </div>
-
       </div>
+
+      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3" style="min-width:20em;">
+        <h1 class="display-5 fw-bold">Search by Ingredient</h1>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" id="search_ingredient_input" name="query" placeholder="Ingredient"
+            oninput="search_autocomplete_action()" style="z-index:4999;">
+          <button class="btn btn-outline-secondary" type="submit" name="btn" value="search_action">Search</button>
+        </div>
+      </div>
+
       <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
         <h1 class="display-5 fw-bold">Make it Random</h1><label for="customRange3" class="form-label">Recipes per page
         </label>
@@ -314,11 +316,13 @@
           class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
             style="font-size:15px; vertical-align: bottom;"></i> Random</button>
       </div>
+
       <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
         <h1 class="display-5 fw-bold">Show your Favorites</h1><button class="btn btn-outline-dark" type="submit"
           id="btn" name="btn" value="btn_favorites_show"><i class="bi bi-heart-fill"
             style="font-size:15px; vertical-align: bottom;"></i> Favorites</button>
       </div>
+
     </div>
   </form>
 
