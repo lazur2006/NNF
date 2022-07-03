@@ -38,7 +38,9 @@ class WebView(FlaskView):
         
         self.obj_scrapeweeklys = []
         self.obj_scrapedatabase = wr_scrapeDatabase()
+
         recipes = self.obj_scrapedatabase.get_random(limit=10)
+
         self.recipeNames = self.obj_scrapedatabase.get_allNames()
         self.user = user()
         self.vendor = vendor()
@@ -56,8 +58,7 @@ class WebView(FlaskView):
         global recipes
 
         print(" :: index :: successfully passed")
-        tags = self.recipeNames
-
+        tags = self.obj_scrapedatabase.get_all_tags()
 
         return(render_template('index.html',
                                tags=tags,
@@ -73,15 +74,7 @@ class WebView(FlaskView):
 
     @route('/login')
     def login(self):
-
-        # vendor = enumerate(self.vendor.early.items())
-        #
-        # for idx,(vendor_,valid) in vendor:
-        #     print(vendor_)
-        #     print(valid)
-
-        return(render_template('login.html',
-                               vendor = enumerate(self.vendor.early.items())))
+        return(render_template('login.html', vendor = enumerate(self.vendor.early.items())))
 
     @route('/settings')
     def settings(self):
@@ -115,7 +108,7 @@ class WebView(FlaskView):
 
         try:
             ''' Adding them to the existing basket items '''
-            basket_ids = basket_ids + tuple([e for e in retval])
+            basket_ids = basket_ids + tuple([int(e) for e in retval])
             basket_ids = tuple(np.unique(basket_ids))
         except:
             pass
@@ -193,6 +186,9 @@ class WebView(FlaskView):
             return(make_response(jsonify({'none':'none'}), 200))
         elif route == 'search_autocomplete_action':
             return(make_response(jsonify(self.search.search_autocomplete_action(retval.get('query'))), 200))
+        elif route == 'show_recipes_by_tag':
+            recipes = self.obj_scrapedatabase.get_by_tag(retval.get('tag'))
+            return(redirect(url_for('WebView:index')))
 
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
@@ -218,8 +214,8 @@ class WebView(FlaskView):
     @route('/cards')
     def cards(self):
         global cards_ids
-        global basket_items
-        return(render_template('cards.html',data=self.create_cards.get(cards_ids),basket_items=basket_items))
+        #global basket_items
+        return(render_template('cards.html',data=self.create_cards.get(cards_ids),basket_items=self.basket_manager.modify(cards_ids)))
 
     @route('/favorites')
     def favorites(self):

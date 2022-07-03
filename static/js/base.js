@@ -1,3 +1,20 @@
+function show_recipes_by_tag(tag){
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({
+      Route: "show_recipes_by_tag",
+      tag: tag,
+    }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      location.reload();
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
 function search_autocomplete_action() {
   $.ajax({
     url: "/",
@@ -123,10 +140,12 @@ function create_recipe_cards() {
       if (win) {
         //Browser has allowed it to be opened
         win.focus();
+        clearBasket()
       } else {
         //Browser has blocked it
         alert("Please allow popups for this website");
       }
+
     },
     error: function (error) {
       console.log(error);
@@ -620,6 +639,7 @@ function populateTable(json) {
       ingredientsTab.appendChild(ul_ingredients);
     });
   }
+  $(".quiz_checkbox").prop('checked',false)
 }
 
 $(document).on("submit", "#index-form", function (e) {
@@ -721,6 +741,7 @@ function clearBasket() {
           recipesTab.removeChild(recipesTab.firstChild);
         }
       }
+      $(".quiz_checkbox").prop('checked',false)
       bootstrap.Offcanvas.getOrCreateInstance($("#offcanvasRight")).hide();
     },
     error: function (error) {

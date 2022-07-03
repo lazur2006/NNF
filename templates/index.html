@@ -267,6 +267,21 @@
   </div>
 </div>
 
+<div class="position-fixed shadow border border-2 border-dark rounded-5" style="bottom:50%;right:0%;">
+  <div class="bg-white rounded-4">
+    <div class="text-dark text-center pt-2 fw-light" style="height:3em;width:auto;font-size:.7em;">
+      1/10
+    </div>
+    <div class="btn-group-vertical" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-dark btn-lg" style="padding: 5px;">
+        <i class="bi bi-chevron-double-left" style="font-size:15px; vertical-align: top;"></i>
+      </button><button type="button" class="btn btn-dark btn-lg" style="padding: 5px;">
+        <i class="bi bi-chevron-double-right" style="font-size:15px; vertical-align: top;"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="d-grid gap-2 position-fixed start-50 translate-middle-x" style="bottom:2%">
   <div class="container-fluid bg-light rounded shadow bg-opacity-70" style="padding: .25em; white-space: nowrap;">
 
@@ -286,13 +301,7 @@
 
       </div>
     </form>
-
-
-
   </div>
-
-
-
 </div>
 
 <div class="offcanvas bg-light offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
@@ -325,6 +334,21 @@
           <input type="text" class="form-control" id="search_ingredient_input" name="query" placeholder="Ingredient"
             oninput="search_autocomplete_action()" style="z-index:4999;">
           <button class="btn btn-outline-secondary" type="submit" name="btn" value="search_action">Search</button>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3" style="min-width:20em;">
+        <h1 class="display-5 fw-bold">Give me some tags</h1>
+        <div class="overflow-auto" style="height:11em;">
+          <div class="row p-0 m-0 text-start">
+            {%for tag in tags%}
+            <div class="col-auto p-0" style="margin: 1px 1px 0px 1px;">
+              <!-- <span class="badge rounded-pill text-bg-primary">{{tag}}</span> -->
+              <button type="button" class="btn btn-primary rounded-pill" onclick="show_recipes_by_tag('{{tag}}')"
+                style="padding:2px 8px 2px 8px;margin:0px;font-size:12px;">{{tag}}</button>
+            </div>
+            {%endfor%}
+          </div>
         </div>
       </div>
 

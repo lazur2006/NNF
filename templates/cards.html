@@ -26,7 +26,7 @@
 <body>
 
   {%for i in range(0, data['recipe_amount'])%}
-  <div class="d-flex flex-column mb-3">
+  <div class="d-flex flex-column mb-0">
     <div class="position-relative"
       style="background: url('{{data['recipe_img'][i]}}');object-fit: cover;filter:opacity(0.4) blur(150px);background-position: center;">
       <!-- DUMMY FOR SIZING START -->
@@ -97,11 +97,11 @@
       </div>
     </div>
     <div class="container-fluid">
-      <div class="row d-flex justify-content-start mt-3 mb-5">
+      <div class="row d-flex justify-content-start mt-3 mb-0">
 
         {%for k in data['recipe_instructions'][i]%}
         <!-- Instructions item -->
-        <div class="col-md-4 mt-2 mb-3">
+        <div class="col-md-4 mt-2 mb-3" style="min-height:20em;">
           <div class="bg-light rounded border border-primary h-100"><img
               src="{{data['recipe_instructions_img'][i][loop.index-1]}}"
               style="width: 100%; height: 5em; object-fit: cover;" class="rounded-top">

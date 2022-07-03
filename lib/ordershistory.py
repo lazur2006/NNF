@@ -65,7 +65,7 @@ class ordershistory(object):
 
     def get_recipe_ids(self,basket_uid):
         conn = sqlite3.connect('static/db/ordershistory.db')
-        retval = [e[0] for e in conn.execute("SELECT RECIPE FROM ORDERSHISTORY WHERE BASKET_UID is (?);",(basket_uid,)).fetchall()]
+        retval = tuple([int(e[0]) for e in conn.execute("SELECT RECIPE FROM ORDERSHISTORY WHERE BASKET_UID is (?);",(basket_uid,)).fetchall()])
         conn.close()
         return(retval)
 

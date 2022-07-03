@@ -1,9 +1,5 @@
-'''
-Created on 21.05.2022
-
-@author: n00b
-'''
 import sqlite3
+
 
 class wr_scrapeDatabase(object):
     '''
@@ -83,6 +79,14 @@ class wr_scrapeDatabase(object):
         conn.close()
         return(ret)
 
-# obj = wr_scrapeDatabase()
-# r = obj.get()
-# pass
+    def get_by_tag(self,tag):
+        conn = sqlite3.connect('static/db/recipe.db')
+        ret = self.get_byID([e[0] for e in conn.execute("SELECT UID FROM 'TAGS' WHERE TAG = ? LIMIT(52);",(tag,)).fetchall()])
+        conn.close()
+        return(ret)
+
+    def get_all_tags(self):
+        conn = sqlite3.connect('static/db/recipe.db')
+        ret = [e[0] for e in conn.execute("SELECT DISTINCT TAG FROM 'TAGS'").fetchall()]
+        conn.close()
+        return(ret)
