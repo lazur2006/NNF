@@ -1,11 +1,3 @@
-'''
-Created on 18.01.2022
-
-@author: lazur2006
-'''
-'''
-import requests module
-'''
 import requests
 import json
 '''

@@ -2,6 +2,7 @@ from lib.user import user
 from lib.API__REWE import ReweMobileApi
 from lib.API__Picnic import picnicapi
 from lib.API__HelloFresh import hellofresh
+from lib.API__Bring import bring
 from lib._wrapper_scrapeweeklys import wr_scrapeWeeklys
 import os
 
@@ -25,11 +26,12 @@ class vendor(object):
         self.REWE = ReweMobileApi()
         self.Picnic = picnicapi()
         self.HelloFresh = hellofresh()
-        #print("REWE early login successful :: " + str(self.REWE.earlylogin))
+        self.bring = bring()
         
         early_dic = dict({'REWE':self.login('REWE'),
                           'Picnic':self.login('Picnic'),
-                          'HelloFresh':self.login('HelloFresh')})
+                          'HelloFresh':self.login('HelloFresh'),
+                          'Bring':self.login('Bring')})
         self.early = early_dic
         
     def login(self,vendor):
@@ -44,9 +46,6 @@ class vendor(object):
                 credentials['password'],
                 credentials['ipaddress'])
             early_dic['REWE'] = auth
-            #search_results = self.REWE.searchItem("cola")
-            #searchresultID = search_results[0]['_embedded']['articles'][0]['_embedded']['listing']['id']
-            #self.REWE.addItem2Basket(searchresultID,2)
         elif vendor == 'Picnic':
             auth = self.Picnic.login(
                 credentials['username'],
@@ -57,6 +56,11 @@ class vendor(object):
                 credentials['username'],
                 credentials['password'])
             early_dic['HelloFresh'] = auth
+        elif vendor == 'Bring':
+            auth = self.bring.login(
+                credentials['username'],
+                credentials['password'])
+            early_dic['Bring'] = auth
             
         self.early = early_dic
         
@@ -82,6 +86,8 @@ class vendor(object):
             info = dict({'Status':'Welcome using Picnic'})
         elif vendor == 'HelloFresh':
             info = self.HelloFresh.hellofresh.stream.get('LOGIN').get('user_data')
+        elif vendor == 'Bring':
+            info = dict({'Status':'Welcome using Bring'})
         
         return(info)
 
@@ -93,10 +99,10 @@ class vendor(object):
         
         if vendor == 'REWE':
             vendorbasket = self.REWE.search(ingredients)
-            pass
         elif vendor == 'Picnic':
             vendorbasket = self.Picnic.search(ingredients)
-            pass
+        elif vendor == 'Bring':
+            vendorbasket = self.bring.search(ingredients)
         
         return(vendorbasket)
     

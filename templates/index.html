@@ -91,7 +91,7 @@
       <div class="container-fluid p-0">
 
         <ul class="list-group p-0 m-0" id="vendor_ingredients">
-          <li class="text-center bg-white p-5">
+          <li class="list-group-item text-center bg-white p-5">
             <img src="/static/images/Picnic_logo.svg" id="img_vendor_basket" height="65em" style="text-align: center;">
 
             <div class="alert alert-danger mt-5" id="vendor_missing_ingredients" role="alert" style="display: none">
@@ -134,11 +134,11 @@
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
 
-  <div class="offcanvas-body">
+  <div class="offcanvas-body p-0">
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold mb-3">Vendor</h1>
-        <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <div class="alert alert-dark d-flex align-items-center shadow-sm" role="alert">
           <div>
             <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>Before
             proceeding, make sure you have an account to use the Checkout by Vendor feature.
@@ -147,22 +147,21 @@
         <div class="card pt-5 mt-5">
           <img src="/static/images/REWE_logo.svg" height="45em" style="vertical-align: middle;">
           <div class="card-body  text-center m-3">
-            <p class="card-text text-start">After proceed, please go to your REWE shopping cart on the official REWE
+            <p class="card-text text-start fw-lighter">After proceed, please go to your REWE shopping cart on the
+              official REWE
               website or your mobile app.</p>
-            <div class="d-grid gap-2 pt-3">
-
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_REWE"
-                data-bs-toggle="tooltip" data-bs-placement="top"> REWE
-                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
-              </span>
-
-              <button type="button" id="vendor_checkout_proceed_REWE" class="btn btn-outline-dark btn-lg"
-                onclick="checkout('REWE')">
+            <div class="d-grid pt-3">
+              <button type="button" id="vendor_checkout_proceed_REWE" onclick="checkout('REWE')" disabled=""
+                class="btn btn-outline-dark btn-lg rounded-0 rounded-top">
                 <i class="bi bi-cart3 align-bottom" id="spinner_REWE_carticon"></i>
                 <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
                   id="spinner_REWE" style="display: none"></span>
                 Proceed
-              </button>
+              </button><span id="login_status_badge_REWE" data-bs-placement="top"
+                class="text-bg-secondary rounded-bottom fw-light" data-bs-toggle="tooltip" style="font-size:0.7em;">
+                REWE
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_REWE"></i>
+              </span>
             </div>
           </div>
         </div>
@@ -170,32 +169,53 @@
         <div class="card pt-5 mt-5">
           <img src="/static/images/Picnic_logo.svg" height="65em" style="text-align: center;">
           <div class="card-body  text-center m-3">
-            <p class="card-text text-start">If you continue with Picnic, please then go to your mobile app to continue
+            <p class="card-text text-start fw-lighter">If you continue with Picnic, please then go to your mobile app to
+              continue
               and complete the offer.</p>
-            <div class="d-grid gap-2 pt-3">
-
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Picnic"
-                data-bs-toggle="tooltip" data-bs-placement="top"> Picnic
-                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
-              </span>
-
-              <button type="button" id="vendor_checkout_proceed_Picnic" class="btn btn-outline-dark btn-lg"
-                onclick="checkout('Picnic')">
+            <div class="d-grid pt-3">
+              <button type="button" id="vendor_checkout_proceed_Picnic" onclick="checkout('Picnic')" disabled=""
+                class="btn btn-outline-dark btn-lg rounded-0 rounded-top">
                 <i class="bi bi-cart3 align-bottom" id="spinner_Picnic_carticon"></i>
                 <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
                   id="spinner_Picnic" style="display: none"></span>
                 Proceed
-              </button>
+              </button><span id="login_status_badge_Picnic" data-bs-placement="top"
+                class="text-bg-secondary rounded-bottom fw-light" data-bs-toggle="tooltip" style="font-size:0.7em;">
+                Picnic
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Picnic"></i>
+              </span>
             </div>
           </div>
         </div>
+
+        <div class="card pt-5 mt-5">
+          <a class="text-center">
+            <img src="/static/images/Bring_logo.svg" style="text-align: center;height:auto;width:8em;"></a>
+          <div class="card-body  text-center m-3">
+            <p class="card-text text-start fw-lighter">Transfer your Shopping List into your Bring! App.</p>
+            <div class="d-grid pt-3">
+              <button type="button" id="vendor_checkout_proceed_Bring" onclick="checkout('Bring')" disabled=""
+                class="btn btn-outline-dark btn-lg rounded-0 rounded-top">
+                <i class="bi bi-plus-circle-fill align-bottom" id="spinner_Bring_carticon"></i>
+                <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
+                  id="spinner_Bring" style="display: none"></span>
+                Add
+              </button><span id="login_status_badge_Bring" data-bs-placement="top"
+                class="text-bg-secondary rounded-bottom fw-light" data-bs-toggle="tooltip" style="font-size:0.7em;">
+                Bring!
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Bring"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold mb-3">Recipe Card</h1>
-        <div class="alert alert-primary d-flex align-items-center" role="alert">
+        <div class="alert alert-dark d-flex align-items-center shadow-sm" role="alert">
           <div>
             <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Quick Info</h4>
             Fortunately, if you don't want to go through vendor checkout, you can simply create the recipe card as a PDF
@@ -218,7 +238,7 @@
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
 
-  <div class="offcanvas-body">
+  <div class="offcanvas-body p-0">
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold mb-3">Recipes</h1>

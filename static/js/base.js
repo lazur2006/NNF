@@ -1,12 +1,24 @@
-function search_autocomplete_action(){
+function search_autocomplete_action() {
   $.ajax({
     url: "/",
-    data: JSON.stringify({ Route: 'search_autocomplete_action', query: $("#search_ingredient_input").val()}),
+    data: JSON.stringify({
+      Route: "search_autocomplete_action",
+      query: $("#search_ingredient_input").val(),
+    }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
       console.log(response);
-      $("#search_ingredient_input").autocomplete({source: response.found_ingredients, position: {of: $("#search_ingredient_input"),my: "center top",at: "center bottom",collision: "flip flip"} });
+      $("#search_ingredient_input").autocomplete({
+        source: response.found_ingredients,
+        position: {
+          of: $("#search_ingredient_input"),
+          my: "center top",
+          at: "center bottom",
+          collision: "flip flip",
+        },
+        minLength:2
+      });
     },
     error: function (error) {
       console.log(error);
@@ -14,38 +26,48 @@ function search_autocomplete_action(){
   });
 }
 
-function favorite(recipe_id){
-  if($('#fav_btn_'+recipe_id).parent().hasClass("text-secondary")){
+function favorite(recipe_id) {
+  if (
+    $("#fav_btn_" + recipe_id)
+      .parent()
+      .hasClass("text-secondary")
+  ) {
     var fav_status = "favorite_set";
-  }
-  else{
+  } else {
     var fav_status = "favorite_unset";
   }
 
   $.ajax({
     url: "/",
-    data: JSON.stringify({ Route: fav_status, recipe_id: recipe_id}),
+    data: JSON.stringify({ Route: fav_status, recipe_id: recipe_id }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
-      if($('#fav_btn_'+recipe_id).parent().hasClass("text-secondary")){
-        $('#fav_btn_'+recipe_id).parent().addClass("text-danger").removeClass("text-secondary");
-      }
-      else{
-        $('#fav_btn_'+recipe_id).parent().addClass("text-secondary").removeClass("text-danger");
+      if (
+        $("#fav_btn_" + recipe_id)
+          .parent()
+          .hasClass("text-secondary")
+      ) {
+        $("#fav_btn_" + recipe_id)
+          .parent()
+          .addClass("text-danger")
+          .removeClass("text-secondary");
+      } else {
+        $("#fav_btn_" + recipe_id)
+          .parent()
+          .addClass("text-secondary")
+          .removeClass("text-danger");
       }
     },
     error: function (error) {
       console.log(error);
     },
   });
-
-  
 }
-function logout_action(){
+function logout_action() {
   $.ajax({
     url: "/",
-    data: JSON.stringify({ Route: "logout"}),
+    data: JSON.stringify({ Route: "logout" }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
@@ -65,8 +87,8 @@ function orderhistory_btn_action(route, basket_uid) {
     success: function (response) {
       if (route == "ordershistory_basket") {
         $("#ordershistory_basket_" + basket_uid)
-        .addClass("btn-success")
-        .removeClass("btn-outline-dark");
+          .addClass("btn-success")
+          .removeClass("btn-outline-dark");
       }
       if (route == "ordershistory_delete") {
         location.reload();
@@ -408,26 +430,31 @@ function checkout(vendor) {
       $("#vendor_checkout_proceed_" + vendor).removeClass("disabled");
       $("#push_vendor_basket").prop("disabled", false);
 
-      build_vendor_basket(response);
+      if(response != "immediately_push_vendor_basket"){
+        build_vendor_basket(response);
 
-      bootstrap.Offcanvas.getOrCreateInstance(
-        $("#offcanvasRightCheckout")
-      ).hide();
-      bootstrap.Offcanvas.getOrCreateInstance(
-        $("#offcanvasRightVendor")
-      ).show();
+        bootstrap.Offcanvas.getOrCreateInstance(
+          $("#offcanvasRightCheckout")
+        ).hide();
+        bootstrap.Offcanvas.getOrCreateInstance(
+          $("#offcanvasRightVendor")
+        ).show();
 
-      $("#offcanvasRightLabel").text(vendor);
-      var push_vendor_basket = document.querySelector("#push_vendor_basket");
-      var img_vendor_basket = document.querySelector("#img_vendor_basket");
-      push_vendor_basket.setAttribute(
-        "onclick",
-        "push_vendor_basket('" + vendor + "')"
-      );
-      img_vendor_basket.setAttribute(
-        "src",
-        "/static/images/" + vendor + "_logo.svg"
-      );
+        $("#offcanvasRightLabel").text(vendor);
+        var push_vendor_basket = document.querySelector("#push_vendor_basket");
+        var img_vendor_basket = document.querySelector("#img_vendor_basket");
+        push_vendor_basket.setAttribute(
+          "onclick",
+          "push_vendor_basket('" + vendor + "')"
+        );
+        img_vendor_basket.setAttribute(
+          "src",
+          "/static/images/" + vendor + "_logo.svg"
+        );
+      }
+      else{
+        create_recipe_cards();
+      }
 
       //data-bs-target="#offcanvasRightLabelVendor"
     },
@@ -723,30 +750,19 @@ function vendorChanged(vendor) {
 }
 
 function setCurrentUserStatus() {
-  var login_status_badge_REWE = document.getElementById(
-    "login_status_badge_REWE"
-  );
+  var login_status_badge_REWE = document.getElementById("login_status_badge_REWE");
   var login_status_bi_REWE = document.getElementById("login_status_bi_REWE");
-  var login_status_badge_Picnic = document.getElementById(
-    "login_status_badge_Picnic"
-  );
-  var login_status_bi_Picnic = document.getElementById(
-    "login_status_bi_Picnic"
-  );
-  var login_status_badge_HelloFresh = document.getElementById(
-    "login_status_badge_HelloFresh"
-  );
-  var login_status_bi_HelloFresh = document.getElementById(
-    "login_status_bi_HelloFresh"
-  );
-  var vendor_checkout_proceed_REWE = document.getElementById(
-    "vendor_checkout_proceed_REWE"
-  );
-  var vendor_checkout_proceed_Picnic = document.getElementById(
-    "vendor_checkout_proceed_Picnic"
-  );
+  var login_status_badge_Picnic = document.getElementById("login_status_badge_Picnic");
+  var login_status_bi_Picnic = document.getElementById("login_status_bi_Picnic");
+  var login_status_badge_HelloFresh = document.getElementById("login_status_badge_HelloFresh");
+  var login_status_bi_HelloFresh = document.getElementById("login_status_bi_HelloFresh");
 
-  //var btn_hellofresh_recent_week = document.querySelector('[name="btn_hellofresh_recent_week"]');
+  var login_status_badge_Bring = document.getElementById("login_status_badge_Bring");
+  var login_status_bi_Bring = document.getElementById("login_status_bi_Bring");
+
+  var vendor_checkout_proceed_REWE = document.getElementById("vendor_checkout_proceed_REWE");
+  var vendor_checkout_proceed_Picnic = document.getElementById("vendor_checkout_proceed_Picnic");
+  var vendor_checkout_proceed_Bring = document.getElementById("vendor_checkout_proceed_Bring");
 
   $.ajax({
     url: "/",
@@ -879,6 +895,48 @@ function setCurrentUserStatus() {
         } catch (e) {}
         try {
           login_status_bi_HelloFresh.classList.replace(
+            "bi-check-circle-fill",
+            "bi-exclamation-circle-fill"
+          );
+        } catch (e) {}
+      }
+      if (response.Bring) {
+        try {
+          vendor_checkout_proceed_Bring.disabled = false;
+        } catch (e) {}
+        try {
+          login_status_badge_Bring.classList.replace(
+            "text-bg-secondary",
+            "text-bg-success"
+          );
+        } catch (e) {}
+        try {
+          login_status_badge_Bring.setAttribute(
+            "title",
+            "Successfully logged in"
+          );
+        } catch (e) {}
+        try {
+          login_status_bi_Bring.classList.replace(
+            "bi-exclamation-circle-fill",
+            "bi-check-circle-fill"
+          );
+        } catch (e) {}
+      } else {
+        try {
+          vendor_checkout_proceed_Bring.disabled = true;
+        } catch (e) {}
+        try {
+          login_status_badge_Bring.classList.replace(
+            "text-bg-success",
+            "text-bg-secondary"
+          );
+        } catch (e) {}
+        try {
+          login_status_badge_Bring.setAttribute("title", "Not logged in");
+        } catch (e) {}
+        try {
+          login_status_bi_Bring.classList.replace(
             "bi-check-circle-fill",
             "bi-exclamation-circle-fill"
           );
