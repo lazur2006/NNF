@@ -265,12 +265,12 @@ class ReweMobileApi():
         
     def search(self,ingredients):
         
-        results = [self.searchItem(element) for element in ingredients['Ingredient']]
+        results = [self.searchItem(element) for element in ingredients['name']]
           
         retval = {'total':0,
                   'missing':[],
-                  'vendorbasket':[{'search_term':ingredients['Ingredient'][idx],
-                   'search_amount':str(ingredients['Amount'][idx]) + str(ingredients['Unit'][idx]),
+                  'vendorbasket':[{'search_term':ingredients['name'][idx],
+                   'search_amount':str(ingredients['amount'][idx]) + str(ingredients['unit'][idx]),
                    'amount': 1, # just for initializing the default amount
                    'selected': 0, # just for initializing the default selected item
                    'selected_id': val[0].get('_embedded').get('articles')[0].get('_embedded').get('listing').get('id') if val else 'no_id', # just for initializing the default selected item

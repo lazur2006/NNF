@@ -77,5 +77,5 @@ class bring():
     def search(self,vendorbasket):
         list_name = f"Nice'n Fresh 🍜  {datetime.date.today()}"
         self.list_uuid = self.create_list(list_name)
-        [self.add_item(str(vendorbasket.get('Amount')[idx]) + str(vendorbasket.get('Unit')[idx]) + " " + e) for idx,e in enumerate(vendorbasket.get('Ingredient'))]
+        [self.add_item(str(vendorbasket.get('amount')[idx]) + str(vendorbasket.get('unit')[idx]) + " " + e) for idx,e in enumerate(vendorbasket.get('name'))]
         return("immediately_push_vendor_basket")

@@ -1,4 +1,4 @@
-function show_recipes_by_tag(tag){
+function show_recipes_by_tag(tag) {
   $.ajax({
     url: "/",
     data: JSON.stringify({
@@ -34,7 +34,7 @@ function search_autocomplete_action() {
           at: "center bottom",
           collision: "flip flip",
         },
-        minLength:2
+        minLength: 2,
       });
     },
     error: function (error) {
@@ -140,12 +140,12 @@ function create_recipe_cards() {
       if (win) {
         //Browser has allowed it to be opened
         win.focus();
-        clearBasket()
+        clearBasket();
+        bootstrap.Offcanvas.getOrCreateInstance($("#offcanvasRightCheckout")).hide();
       } else {
         //Browser has blocked it
         alert("Please allow popups for this website");
       }
-
     },
     error: function (error) {
       console.log(error);
@@ -449,7 +449,7 @@ function checkout(vendor) {
       $("#vendor_checkout_proceed_" + vendor).removeClass("disabled");
       $("#push_vendor_basket").prop("disabled", false);
 
-      if(response != "immediately_push_vendor_basket"){
+      if (response != "immediately_push_vendor_basket") {
         build_vendor_basket(response);
 
         bootstrap.Offcanvas.getOrCreateInstance(
@@ -470,8 +470,7 @@ function checkout(vendor) {
           "src",
           "/static/images/" + vendor + "_logo.svg"
         );
-      }
-      else{
+      } else {
         create_recipe_cards();
       }
 
@@ -521,125 +520,139 @@ function deleteItem(item) {
 }
 
 function populateTable(json) {
-  var ingredientsTab = document.querySelector("#ingredients-tab");
-  var recipesTab = document.querySelector("#recipes-tab");
+  if (!jQuery.isEmptyObject(json)) {
+    var ingredientsTab = document.querySelector("#ingredients-tab");
+    var recipesTab = document.querySelector("#recipes-tab");
 
-  if ($("#ingredients-tab").children().length > 0) {
-    while (ingredientsTab.firstChild) {
-      ingredientsTab.removeChild(ingredientsTab.firstChild);
-      recipesTab.removeChild(recipesTab.firstChild);
-    }
-  }
-
-  const ul_ingredients = document.createElement("ul");
-  const ul_recipes = document.createElement("ul");
-
-  ul_ingredients.classList.add("list-group");
-  ul_recipes.classList.add("list-group");
-
-  if (typeof json["Amount"] != "undefined") {
-    Object.keys(json["Name"]).forEach((row) => {
-      const div_img = document.createElement("div");
-
-      div_img.classList.add("ms-1");
-      div_img.classList.add("mt-3");
-      div_img.classList.add("mb-3");
-      div_img.classList.add("me-3");
-      div_img.classList.add("p-5");
-      //div_img.classList.add('p-5');
-
-      div_img.style.background = "url(" + json.img_uri[row] + ") scroll center";
-      //"url('static/images/de-DE/" + json["ID"][row] + ".jpg') scroll center";
-      div_img.style.height = "10vw";
-      div_img.style.width = "10vw";
-      div_img.style.maxHeight = "7em";
-      div_img.style.maxWidth = "7em";
-      div_img.style.borderRadius = "50%";
-      div_img.style.backgroundPosition = "center";
-      div_img.style.backgroundSize = "cover";
-
-      const div_close = document.createElement("div");
-      div_close.classList.add("position-absolute");
-      div_close.classList.add("top-50");
-      div_close.classList.add("start-100");
-      div_close.classList.add("translate-middle");
-      //div_close.classList.add('bg-warning');
-      div_close.classList.add("rounded");
-
-      const btn_close = document.createElement("div");
-      //btn_close.setAttribute("id", row);
-      btn_close.setAttribute("onclick", "deleteItem(" + json["ID"][row] + ")");
-
-      btn_close.classList.add("btn");
-      btn_close.classList.add("btn-outline-dark");
-      btn_close.classList.add("btn-sm");
-      btn_close.classList.add("rounded-circle");
-      btn_close.style.verticalAlign = "middle";
-
-      const i_close = document.createElement("div");
-      i_close.classList.add("bi");
-      i_close.classList.add("bi-x-circle-fill");
-
-      btn_close.appendChild(i_close);
-      div_close.appendChild(btn_close);
-
-      const li_recipes = document.createElement("li");
-      li_recipes.setAttribute("id", "recipe_id_" + json["ID"][row]);
-      li_recipes.classList.add("list-group-item");
-      li_recipes.classList.add("d-flex");
-      li_recipes.classList.add("justify-content-left");
-      li_recipes.classList.add("align-items-center");
-      li_recipes.classList.add("text-break");
-      li_recipes.classList.add("text-wrap");
-      li_recipes.classList.add("pe-4");
-      li_recipes.textContent = json["Name"][row];
-      ul_recipes.appendChild(li_recipes);
-
-      li_recipes.insertBefore(div_img, li_recipes.firstChild);
-      li_recipes.appendChild(div_close);
-      recipesTab.appendChild(ul_recipes);
-    });
-
-    Object.keys(json["Amount"]).forEach((row) => {
-      const li_ingredients = document.createElement("li");
-      li_ingredients.classList.add("list-group-item");
-      li_ingredients.classList.add("d-flex");
-      li_ingredients.classList.add("justify-content-between");
-      li_ingredients.classList.add("align-items-center");
-      li_ingredients.classList.add("text-break");
-      li_ingredients.textContent = json["Ingredient"][row];
-      ul_ingredients.appendChild(li_ingredients);
-
-      const span_ingredients = document.createElement("span");
-      span_ingredients.classList.add("badge");
-      span_ingredients.classList.add("rounded-pill");
-      span_ingredients.classList.add("text-bg-dark");
-      span_ingredients.classList.add("m-3");
-      if (json["Amount"][row] == 0) {
-        span_ingredients.textContent = json["Unit"][row];
-        if (
-          json["Unit"][row] == "None" ||
-          json["Unit"][row] == "Einheit" ||
-          json["Unit"][row] == "nach Geschmack"
-        ) {
-          span_ingredients.textContent = "-";
-        } else {
-          span_ingredients.textContent = json["Unit"][row];
-        }
-      } else {
-        span_ingredients.textContent =
-          json["Amount"][row] + " " + json["Unit"][row];
-        if (json["Amount"][row] == "None") {
-          span_ingredients.textContent =
-            json["Amount"][row] + " " + json["Ingredient"][row];
-        }
+    if ($("#ingredients-tab").children().length > 0) {
+      while (ingredientsTab.firstChild) {
+        ingredientsTab.removeChild(ingredientsTab.firstChild);
+        recipesTab.removeChild(recipesTab.firstChild);
       }
+    }
 
-      li_ingredients.appendChild(span_ingredients);
-      ingredientsTab.appendChild(ul_ingredients);
-    });
+    const ul_ingredients = document.createElement("ul");
+    const ul_recipes = document.createElement("ul");
+
+    ul_ingredients.classList.add("list-group");
+    ul_recipes.classList.add("list-group");
+
+    var recipe_id = json.basket_recipe_elements.recipe_id;
+    var recipe_name = json.basket_recipe_elements.recipe_name;
+    var recipe_img = json.basket_recipe_elements.recipe_img;
+    var unique_basket_elements_amount = json.unique_basket_elements.amount;
+    var unique_basket_elements_unit = json.unique_basket_elements.unit;
+    var unique_basket_elements_name = json.unique_basket_elements.name;
+    var unique_basket_elements_image = json.unique_basket_elements.image;
+
+    if (typeof unique_basket_elements_amount != "undefined") {
+      Object.keys(recipe_name).forEach((row) => {
+        const div_img = document.createElement("div");
+
+        div_img.classList.add("ms-1");
+        div_img.classList.add("mt-3");
+        div_img.classList.add("mb-3");
+        div_img.classList.add("me-3");
+        div_img.classList.add("p-5");
+        //div_img.classList.add('p-5');
+
+        div_img.style.background = "url(" + recipe_img[row] + ") scroll center";
+        //"url('static/images/de-DE/" + json["ID"][row] + ".jpg') scroll center";
+        div_img.style.height = "10vw";
+        div_img.style.width = "10vw";
+        div_img.style.maxHeight = "7em";
+        div_img.style.maxWidth = "7em";
+        div_img.style.borderRadius = "50%";
+        div_img.style.backgroundPosition = "center";
+        div_img.style.backgroundSize = "cover";
+
+        const div_close = document.createElement("div");
+        div_close.classList.add("position-absolute");
+        div_close.classList.add("top-50");
+        div_close.classList.add("start-100");
+        div_close.classList.add("translate-middle");
+        //div_close.classList.add('bg-warning');
+        div_close.classList.add("rounded");
+
+        const btn_close = document.createElement("div");
+        //btn_close.setAttribute("id", row);
+        btn_close.setAttribute("onclick", "deleteItem(" + recipe_id[row] + ")");
+
+        btn_close.classList.add("btn");
+        btn_close.classList.add("btn-outline-dark");
+        btn_close.classList.add("btn-sm");
+        btn_close.classList.add("rounded-circle");
+        btn_close.style.verticalAlign = "middle";
+
+        const i_close = document.createElement("div");
+        i_close.classList.add("bi");
+        i_close.classList.add("bi-x-circle-fill");
+
+        btn_close.appendChild(i_close);
+        div_close.appendChild(btn_close);
+
+        const li_recipes = document.createElement("li");
+        li_recipes.setAttribute("id", "recipe_id_" + recipe_id[row]);
+        li_recipes.classList.add("list-group-item");
+        li_recipes.classList.add("d-flex");
+        li_recipes.classList.add("justify-content-left");
+        li_recipes.classList.add("align-items-center");
+        li_recipes.classList.add("text-break");
+        li_recipes.classList.add("text-wrap");
+        li_recipes.classList.add("pe-4");
+        li_recipes.textContent = recipe_name[row];
+        ul_recipes.appendChild(li_recipes);
+
+        li_recipes.insertBefore(div_img, li_recipes.firstChild);
+        li_recipes.appendChild(div_close);
+        recipesTab.appendChild(ul_recipes);
+      });
+
+      Object.keys(unique_basket_elements_amount).forEach((row) => {
+        const li_ingredients = document.createElement("li");
+        li_ingredients.classList.add("list-group-item");
+        li_ingredients.classList.add("d-flex");
+        li_ingredients.classList.add("justify-content-between");
+        li_ingredients.classList.add("align-items-center");
+        li_ingredients.classList.add("text-break");
+        li_ingredients.textContent = unique_basket_elements_name[row];
+        ul_ingredients.appendChild(li_ingredients);
+
+        const span_ingredients = document.createElement("span");
+        span_ingredients.classList.add("badge");
+        span_ingredients.classList.add("rounded-pill");
+        span_ingredients.classList.add("text-bg-dark");
+        span_ingredients.classList.add("m-3");
+        if (unique_basket_elements_amount[row] == 0) {
+          span_ingredients.textContent = unique_basket_elements_unit[row];
+          if (
+            unique_basket_elements_unit[row] == "None" ||
+            unique_basket_elements_unit[row] == "Einheit" ||
+            unique_basket_elements_unit[row] == "nach Geschmack"
+          ) {
+            span_ingredients.textContent = "-";
+          } else {
+            span_ingredients.textContent = unique_basket_elements_unit[row];
+          }
+        } else {
+          span_ingredients.textContent =
+            unique_basket_elements_amount[row] +
+            " " +
+            unique_basket_elements_unit[row];
+          if (unique_basket_elements_amount[row] == "None") {
+            span_ingredients.textContent =
+              unique_basket_elements_amount[row] +
+              " " +
+              unique_basket_elements_name[row];
+          }
+        }
+
+        li_ingredients.appendChild(span_ingredients);
+        ingredientsTab.appendChild(ul_ingredients);
+      });
+    }
+    $(".quiz_checkbox").prop("checked", false);
   }
-  $(".quiz_checkbox").prop('checked',false)
 }
 
 $(document).on("submit", "#index-form", function (e) {
@@ -741,7 +754,7 @@ function clearBasket() {
           recipesTab.removeChild(recipesTab.firstChild);
         }
       }
-      $(".quiz_checkbox").prop('checked',false)
+      $(".quiz_checkbox").prop("checked", false);
       bootstrap.Offcanvas.getOrCreateInstance($("#offcanvasRight")).hide();
     },
     error: function (error) {
@@ -771,19 +784,37 @@ function vendorChanged(vendor) {
 }
 
 function setCurrentUserStatus() {
-  var login_status_badge_REWE = document.getElementById("login_status_badge_REWE");
+  var login_status_badge_REWE = document.getElementById(
+    "login_status_badge_REWE"
+  );
   var login_status_bi_REWE = document.getElementById("login_status_bi_REWE");
-  var login_status_badge_Picnic = document.getElementById("login_status_badge_Picnic");
-  var login_status_bi_Picnic = document.getElementById("login_status_bi_Picnic");
-  var login_status_badge_HelloFresh = document.getElementById("login_status_badge_HelloFresh");
-  var login_status_bi_HelloFresh = document.getElementById("login_status_bi_HelloFresh");
+  var login_status_badge_Picnic = document.getElementById(
+    "login_status_badge_Picnic"
+  );
+  var login_status_bi_Picnic = document.getElementById(
+    "login_status_bi_Picnic"
+  );
+  var login_status_badge_HelloFresh = document.getElementById(
+    "login_status_badge_HelloFresh"
+  );
+  var login_status_bi_HelloFresh = document.getElementById(
+    "login_status_bi_HelloFresh"
+  );
 
-  var login_status_badge_Bring = document.getElementById("login_status_badge_Bring");
+  var login_status_badge_Bring = document.getElementById(
+    "login_status_badge_Bring"
+  );
   var login_status_bi_Bring = document.getElementById("login_status_bi_Bring");
 
-  var vendor_checkout_proceed_REWE = document.getElementById("vendor_checkout_proceed_REWE");
-  var vendor_checkout_proceed_Picnic = document.getElementById("vendor_checkout_proceed_Picnic");
-  var vendor_checkout_proceed_Bring = document.getElementById("vendor_checkout_proceed_Bring");
+  var vendor_checkout_proceed_REWE = document.getElementById(
+    "vendor_checkout_proceed_REWE"
+  );
+  var vendor_checkout_proceed_Picnic = document.getElementById(
+    "vendor_checkout_proceed_Picnic"
+  );
+  var vendor_checkout_proceed_Bring = document.getElementById(
+    "vendor_checkout_proceed_Bring"
+  );
 
   $.ajax({
     url: "/",

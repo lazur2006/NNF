@@ -12,48 +12,32 @@ class basket_manager(object):
         '''
         #self.obj_scrapedatabase = wr_scrapeDatabase()
         pass
-    def modify(self,basket_ids):
 
+
+    def build_basket(self,basket_ids):
         conn = sqlite3.connect('static/db/recipe.db')
-        if len(basket_ids) != 1:
-            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, RECIPE.RECIPE_IMG, INGREDIENTS.IMG, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
-            FROM RECIPE
-            JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID
-            WHERE INGREDIENTS.UID in {basket_ids} ORDER BY INGREDIENT;""")
-        else:
-            query = (f"""SELECT RECIPE.ID, RECIPE.RECIPE_NAME, RECIPE.RECIPE_IMG, INGREDIENTS.IMG, INGREDIENTS.AMOUNT,INGREDIENTS.UNIT,INGREDIENTS.INGREDIENT as INGREDIENT
-            FROM RECIPE
-            JOIN INGREDIENTS ON RECIPE.ID = INGREDIENTS.UID
-            WHERE INGREDIENTS.UID in ({basket_ids[0]}) ORDER BY INGREDIENT;""")
-        Ingredients =  conn.execute(query).fetchall()
-        Ingredients = list(map(list, zip(*Ingredients)))#[2:5]
-        Ingredients[0] = list(dict.fromkeys(Ingredients[0]))
-        Ingredients[1] = list(dict.fromkeys(Ingredients[1]))
-        Ingredients[2] = list(dict.fromkeys(Ingredients[2]))
-        
-        #Ingredients = [[],['2','3','4','5'],["Stk","St","Stk","Stk"],["APFEL","APFEL","BANANE","APFEL"]]
-        
-        Ingredients[4] = [0.0 if x=='None' else x for x in Ingredients[4]]
-        Ingredients[4] = list(map(float, Ingredients[4]))
-        Ingredients[6], unq_inv, _ = np.unique(Ingredients[6], return_inverse=True, return_counts=True)
-        Ingredients[3] = [np.array(Ingredients[3])[(unq_inv==idx[0])].tolist()[0] for idx in enumerate(Ingredients[6])]
-        Ingredients[4] = [sum(np.array(Ingredients[4])[(unq_inv==idx[0])]) for idx in enumerate(Ingredients[6])]
-        Ingredients[5] = [np.array(Ingredients[5])[(unq_inv==idx[0])][0] for idx in enumerate(Ingredients[6])]
-        
-        Ingredients[4] = list(map(float, Ingredients[4]))
-        Ingredients[6] = Ingredients[6].tolist()
-        
-        ret = {"ID":Ingredients[0],
-               "Name":Ingredients[1],
-               "img_uri":Ingredients[2],
-               "ingredient_img":Ingredients[3],
-               "Amount":Ingredients[4],
-               "Unit":Ingredients[5],
-               "Ingredient":Ingredients[6]
-               }
-        
-        Ingredients = ret
-        
+
+        #get the desired uid,names,img with basket_ids
+        query = f"""SELECT ID, RECIPE_NAME, RECIPE_IMG FROM RECIPE WHERE ID in {e if len(e:=basket_ids) !=1 else "("+str(e[0])+")"} ORDER BY RECIPE_NAME;"""
+        basket_recipes = list(map(list, zip(*conn.execute(query).fetchall())))
+
+        query = f"""SELECT AMOUNT,UNIT,INGREDIENT,IMG FROM INGREDIENTS WHERE UID in {e if len(e:=basket_ids) !=1 else "("+str(e[0])+")"}"""
+        basket_ingredients = list(map(list, zip(*conn.execute(query).fetchall())))
+        unique_items, unique_item_ids, _ = np.unique(basket_ingredients[2], return_inverse=True, return_counts=True)
+
         conn.close()
-        
-        return(Ingredients)
+
+        return({"basket_recipe_elements":
+            {
+            "recipe_id":basket_recipes[0],
+            "recipe_name":basket_recipes[1],
+            "recipe_img":basket_recipes[2]
+            },
+            "unique_basket_elements":{
+                "amount":[np.array(basket_ingredients[0])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)],
+                "unit":[np.array(basket_ingredients[1])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)],
+                "name":[np.array(basket_ingredients[2])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)],
+                "image":[np.array(basket_ingredients[3])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)]
+                }
+        }
+        )
