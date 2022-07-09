@@ -87,7 +87,10 @@ class wr_scrapeDatabase(object):
 
     def get_all_tags(self):
         conn = sqlite3.connect('static/db/recipe.db')
-        ret = [e[0] for e in conn.execute("SELECT DISTINCT TAG FROM 'TAGS'").fetchall()]
+        try:
+            ret = [e[0] for e in conn.execute("SELECT DISTINCT TAG FROM 'TAGS'").fetchall()]
+        except:
+            ret = []
         conn.close()
         return(ret)
 
