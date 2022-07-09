@@ -90,3 +90,29 @@ class wr_scrapeDatabase(object):
         ret = [e[0] for e in conn.execute("SELECT DISTINCT TAG FROM 'TAGS'").fetchall()]
         conn.close()
         return(ret)
+
+    def search_autocomplete_action(self,query):
+        conn = sqlite3.connect('static/db/recipe.db')
+        retval = {'found_ingredients':
+        [e[0] for e in conn.execute("SELECT DISTINCT INGREDIENT FROM 'INGREDIENTS' WHERE INGREDIENT LIKE (?)",(query + '%',)).fetchall()]}
+        conn.close()
+        return(retval)
+
+    def search_by_ingredient(self,ingredient_list):
+        conn = sqlite3.connect('static/db/recipe.db')
+        #retval = self.wr_scrapeDatabase.get_byID([(e[0]) for e in conn.execute("SELECT DISTINCT UID FROM 'INGREDIENTS' WHERE INGREDIENT = (?)  LIMIT(52)",(ingredient,)).fetchall()])
+        #and search query
+        query=f"""SELECT UID FROM 'INGREDIENTS' WHERE INGREDIENT IN {tuple(ingredient_list) if len(ingredient_list)>1 else "('"+ingredient_list[0]+"')"} GROUP BY UID HAVING COUNT(*) > {len(ingredient_list)-1}"""
+        retval = self.get_byID([(e[0]) for e in conn.execute(query).fetchall()])
+        conn.close()
+        return(retval)
+
+    def count_search_by_ingredient(self,ingredient_list):
+        conn = sqlite3.connect('static/db/recipe.db')
+        if ingredient_list:
+            query=f"""SELECT UID FROM 'INGREDIENTS' WHERE INGREDIENT IN {tuple(ingredient_list) if len(ingredient_list)>1 else "('"+ingredient_list[0]+"')"} GROUP BY UID HAVING COUNT(*) > {len(ingredient_list)-1}"""
+            retval = len(conn.execute(query).fetchall())
+        else:
+            retval = 0
+        conn.close()
+        return(retval)

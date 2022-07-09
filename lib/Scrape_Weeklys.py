@@ -52,6 +52,7 @@ class scrapeWeeklys(object):
         self.adapter = TLSAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1)
         self.session.mount("https://", self.adapter)
         self.stream = dict()
+        self.week_num = 0
         
     def login(self,credentials):
         url = f"{host}/login?country=DE&locale=de-DE&scope=public%2Ccustomer"
@@ -91,10 +92,10 @@ class scrapeWeeklys(object):
         except:
             postcode = ""
         delivery_option = ""
-        
+
         my_date = datetime.date.today()
-        year, week_num, _ = my_date.isocalendar()
-        next_week = week_num + 1
+        year, self.week_num, _ = my_date.isocalendar()
+        next_week = self.week_num + 1
         url = f"{host}/my-deliveries/menu?delivery-option={delivery_option}&postcode={postcode}&preference={preference}&product-sku={product_sku}&servings={servings}&subscription={subscription}&week={str(year)}-W{str(next_week)}&locale=de-DE&country=DE"
         headers = {
           'authorization': f"Bearer {self.stream['LOGIN']['access_token']}"

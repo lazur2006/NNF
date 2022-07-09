@@ -60,9 +60,7 @@ class Thread(threading.Thread):
             # take only recipes in consideration if there ingredient amount is more than 3
             minIngredientAmount = 3
             # Should also are the images saved?
-            saveImg=False
             saveFiles=True
-            demo_mode=False
             
             LOCALE=["de-DE","en-US"]
             COUNTRY=["de","us"]
@@ -138,11 +136,6 @@ class Thread(threading.Thread):
                         cnt = cnt + 1
                 recipes.extend(response.json()['items'])
             
-            if not saveImg and demo_mode:
-                self._tqdmObj = TQDM(range(10))
-                for i in self._tqdmObj.tq:
-                    time.sleep(1)
-            
             # Drop recipes when
             # - ingredients list is empty
             # - thermomix classified
@@ -184,6 +177,12 @@ class Thread(threading.Thread):
                         ingredients_img=""
                     amount=str(recipesFiltred[i]['yields'][0]['ingredients'][j]['amount'])
                     unit=str(recipesFiltred[i]['yields'][0]['ingredients'][j]['unit'])
+
+                    if unit == 'nach Geschmack' or unit == 'None' or unit == 'Einheit':
+                        unit = ''
+                    if amount == 'None':
+                        amount = ''
+
                     ingredients.append([amount,unit,ingredient,ingredients_img])
                 for k in range(len(recipesFiltred[i]['steps'])):
                     step=recipesFiltred[i]['steps'][k]['instructions']
@@ -310,26 +309,5 @@ class Thread(threading.Thread):
                     conn.execute("UPDATE INGREDIENTS SET INGREDIENT = REPLACE(INGREDIENT,?,?) WHERE INGREDIENT = ?;",(element[0],element[1],element[0],))
                 conn.commit()
                 conn.close()
-
-                    
-            # Save image urls to file
-            if(saveImg):
-                print(">> Load and save recipe images")
-                self._tqdmObj = TQDM(range(len(recipes)))
-                for i in self._tqdmObj.tq:
-                    if not self._isRunning:
-                        break
-                    #self._max.emit(len(recipes))
-                    #self._signal.emit(i)
-                    #self._state_msg.emit("Step 3/8\n\nDownload recipe image "+str(i)+" of "+str(len(recipes))+"\n\nRemaining Time "+self._tqdmObj.remaining())
-                    try:
-                        urllib.request.urlretrieve(recipes[i][4], "static/images/"+locale+"/"+str(i)+".jpg")
-                    except:
-                        urllib.request.urlretrieve("https://help.ifttt.com/hc/article_attachments/360041394694/no_image_card.png", "static/images/"+locale+"/"+str(i)+".jpg")
-                    
             
             self._isRunning = False
-
-
-# t=Thread()
-# t.run()

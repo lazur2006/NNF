@@ -1,10 +1,5 @@
 import sqlite3
-import hashlib
-import secrets
 import dotenv
-import os
-from os.path import exists
-
 from cryptography.fernet import Fernet
 
 class user(object):

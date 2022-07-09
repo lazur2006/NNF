@@ -12,22 +12,25 @@ from lib.cards import create_cards
 from lib.ordershistory import ordershistory
 from lib.basket import basket_manager
 from lib.favorites import favorites_manager
-from lib.search import search
 import time
 import numpy as np
+from urllib.parse import quote
 
 app = Flask(__name__)
+app.jinja_env.filters['quote_plus'] = lambda u: quote(u)
 
 class static(object):
-    recipes, basket_items, basket_ids, cards_ids = [], [], (), []
+    recipes, basket_items, basket_ids, cards_ids, frun = [], [], (), [], False
 
 class WebView(FlaskView):
     route_base = '/'
 
     def __init__(self) -> None:
         super().__init__()
-        self.handle_recipes('handle_recipe_action_get_randoms',10)
-        print(" :: __INIT__ :: ")
+        if not static.frun:
+            static.frun = True
+            self.handle_recipes('handle_recipe_action_get_randoms',10)
+            print(" :: __INIT__ :: ")
 
     @classmethod
     def pre_init(self):
@@ -41,7 +44,6 @@ class WebView(FlaskView):
         self.ordershistory = ordershistory()
         self.basket_manager = basket_manager()
         self.favorites_manager = favorites_manager()
-        self.search = search()
         print(" :: SERVER STARTED :: ")
 
     @route('/')
@@ -84,7 +86,7 @@ class WebView(FlaskView):
         elif fcn=='handle_recipe_action_get_by_id':
             static.recipes = self.obj_scrapedatabase.get_byID(val)
         elif fcn=='handle_recipe_action_search_ingredient':
-            static.recipes = self.search.search_by_ingredient(val)
+            static.recipes = self.obj_scrapedatabase.search_by_ingredient(val)
         elif fcn=='return_recipes':
             pass
         return(static.recipes)
@@ -173,10 +175,17 @@ class WebView(FlaskView):
             self.favorites_manager.unset(retval['recipe_id'])
             return(make_response(jsonify({'none':'none'}), 200))
         elif route == 'search_autocomplete_action':
-            return(make_response(jsonify(self.search.search_autocomplete_action(retval.get('query'))), 200))
+            return(make_response(jsonify(self.obj_scrapedatabase.search_autocomplete_action(retval.get('query'))), 200))
         elif route == 'show_recipes_by_tag':
             self.handle_recipes('handle_recipe_action_get_by_tag',retval.get('tag'))
             return(redirect(url_for('WebView:index')))
+        elif route=='show_recipes_by_ingredient_search':
+            retval.get('search_method')
+            self.handle_recipes('handle_recipe_action_search_ingredient',retval.get('ingredient_list'))
+            return(redirect(url_for('WebView:index')))
+        elif route=='count_recipes_by_ingredient_search':
+            retval.get('search_method')
+            return(make_response(jsonify(self.obj_scrapedatabase.count_search_by_ingredient(retval.get('ingredient_list'))), 200))
 
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
@@ -191,8 +200,6 @@ class WebView(FlaskView):
             self.handle_recipes('handle_recipe_action_get_by_id',self.obj_scrapeweeklys.get())
         if route == 'btn_favorites_show':
             self.handle_recipes('handle_recipe_action_get_by_id',self.favorites_manager.get_fav_recipe_ids())
-        if route == 'search_action':
-            self.handle_recipes('handle_recipe_action_search_ingredient',dict(request.form).get('query'))
 
         return(redirect(url_for('WebView:index')))
 

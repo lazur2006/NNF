@@ -304,70 +304,76 @@
   </div>
 </div>
 
-<div class="offcanvas bg-light offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
+<div class="offcanvas text-white bg-black offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
   aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasBottomLabel">Recipe Setup</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <form method="post" enctype="multipart/form-data" id="recipe-form" action="choose">
-
     <div class="offcanvas-body d-flex flex-row">
-
-      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
-        <h1 class="display-5 fw-bold">Get the recent suggestions</h1>
-        <div class="align-middle">
-          <span class="badge rounded-pill text-bg-success me-4 mb-3" id="login_status_badge_HelloFresh"
-            data-bs-toggle="tooltip" data-bs-placement="top" title="Successfully logged in"> HelloFresh
-            <i class="bi bi-check-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
+      <div class="d-flex flex-column justify-content-start p-3 m-1 text-white"
+        style="min-width:12em;">
+        <h1 class="display-5 fw-bold">Quick Finder</h1>
+        <button class="btn btn-outline-light mt-4" type="submit" id="btn" name="btn" value="btn_favorites_show"><i
+            class="bi bi-heart-fill" style="font-size:15px; vertical-align: bottom;"></i> Favorites</button>
+        <div class="d-grid pt-3">
+          <button class="btn btn-outline-light btn-sm rounded-0 rounded-top text-nowrap" type="submit"
+            id="btn_hellofresh_recent_week" name="btn" value="recent">
+            <i class="bi bi-calendar-date align-bottom"></i>
+            Recent Week</button>
+          <span id="login_status_badge_HelloFresh" data-bs-placement="top"
+            class="text-bg-secondary rounded-bottom fw-light" data-bs-toggle="tooltip" style="font-size:0.7em;"
+            title="Successfully logged in">
+            <div class="text-center">HelloFresh<i class="bi bi-check-circle-fill ms-1 align-top"
+                id="login_status_bi_HelloFresh"></i></div>
           </span>
-          <button class="btn btn-outline-dark" type="submit" id="btn_hellofresh_recent_week" name="btn"
-            value="recent"><i class="bi bi-calendar-date" style="font-size:15px; vertical-align: bottom;"></i> Recent
-            Week
-          </button>
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3" style="min-width:20em;">
-        <h1 class="display-5 fw-bold">Search by Ingredient</h1>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" id="search_ingredient_input" name="query" placeholder="Ingredient"
-            oninput="search_autocomplete_action()" style="z-index:4999;">
-          <button class="btn btn-outline-secondary" type="submit" name="btn" value="search_action">Search</button>
+      <div class="d-flex flex-column p-3 m-1 text-white" style="min-width:15em;">
+        <h1 class="display-5 fw-bold">Ingredient Search</h1>
+        <div class="input-group">
+          <input type="text" class="form-control bg-black text-white ui-autocomplete-input mt-4"
+            id="search_ingredient_input" name="query" placeholder="Ingredient" oninput="search_autocomplete_action()"
+            style="z-index:4999;" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+          <button class="btn btn-outline-light mt-4" type="button" onclick="show_recipes_by_ingredient_search(list)" id="search_ingredient_button" disabled>go
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary"
+              id="search_ingredient_value_found_recipes">
+              0
+              <span class="visually-hidden">Recipes found</span>
+            </span></button>
+        </div>
+        <div class="mt-2" id="ingredient_search_item_list">
+          <!-- auto generated code section -->
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3" style="min-width:20em;">
-        <h1 class="display-5 fw-bold">Give me some tags</h1>
+      <div class="d-flex flex-column justify-content-between p-3 m-1 ms-4">
+        <h1 class="display-5 fw-bold">Make it Random</h1><label for="customRange3" class="form-label">Recipes
+          per page
+        </label>
+        <h1 id="toptitle">10</h1><input type="range" class="form-range" min="5" max="50" step="1" value="10"
+          name="range" oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em"><button
+          class="btn btn-outline-light" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
+            style="font-size:15px; vertical-align: bottom;"></i> Random</button>
+      </div>
+      <div class="d-flex flex-column justify-content-between p-3 m-1 me-3 ms-3"
+        style="min-width:20em;">
+        <h1 class="display-5 fw-bold">#tags</h1>
         <div class="overflow-auto" style="height:11em;">
           <div class="row p-0 m-0 text-start">
             {%for tag in tags%}
             <div class="col-auto p-0" style="margin: 1px 1px 0px 1px;">
-              <!-- <span class="badge rounded-pill text-bg-primary">{{tag}}</span> -->
-              <button type="button" class="btn btn-primary rounded-pill" onclick="show_recipes_by_tag('{{tag}}')"
+              <button type="button" class="btn btn-primary rounded-pill" onclick='show_recipes_by_tag("{{tag|quote_plus}}")'
                 style="padding:2px 8px 2px 8px;margin:0px;font-size:12px;">{{tag}}</button>
             </div>
             {%endfor%}
           </div>
         </div>
       </div>
-
-      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
-        <h1 class="display-5 fw-bold">Make it Random</h1><label for="customRange3" class="form-label">Recipes per page
-        </label>
-        <h1 id="toptitle">10</h1><input type="range" class="form-range" min="5" max="50" step="1" value="10"
-          name="range" oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em"><button
-          class="btn btn-outline-dark" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
-            style="font-size:15px; vertical-align: bottom;"></i> Random</button>
-      </div>
-
-      <div class="d-flex flex-column justify-content-between p-5 m-4 bg-white rounded-3">
-        <h1 class="display-5 fw-bold">Show your Favorites</h1><button class="btn btn-outline-dark" type="submit"
-          id="btn" name="btn" value="btn_favorites_show"><i class="bi bi-heart-fill"
-            style="font-size:15px; vertical-align: bottom;"></i> Favorites</button>
-      </div>
-
     </div>
   </form>
+</div>
 
-  {% endblock %}
+{% endblock %}

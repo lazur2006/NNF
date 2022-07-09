@@ -1,9 +1,15 @@
-function show_recipes_by_tag(tag) {
+function delete_search_item(element){
+  list = jQuery.grep(list, function(value) {return value != element.textContent;});
+  element.parentNode.removeChild(element);
+  count_recipes_by_ingredient_search();
+}
+function show_recipes_by_ingredient_search(ingredient_list){
   $.ajax({
     url: "/",
     data: JSON.stringify({
-      Route: "show_recipes_by_tag",
-      tag: tag,
+      Route: "show_recipes_by_ingredient_search",
+      ingredient_list: ingredient_list,
+      search_method: 'and'
     }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
@@ -15,6 +21,51 @@ function show_recipes_by_tag(tag) {
     },
   });
 }
+function count_recipes_by_ingredient_search(){
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({
+      Route: "count_recipes_by_ingredient_search",
+      ingredient_list: list,
+      search_method: 'and'
+    }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      if(response>0){
+        $('#search_ingredient_value_found_recipes').addClass('bg-success').removeClass('bg-secondary');
+        $('#search_ingredient_button').attr("disabled",false);
+      }
+      else{
+        $('#search_ingredient_value_found_recipes').addClass('bg-secondary').removeClass('bg-success');
+        $('#search_ingredient_button').attr("disabled",true);
+      }
+      $('#search_ingredient_value_found_recipes').text(response);
+      
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
+function show_recipes_by_tag(tag) {
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({
+      Route: "show_recipes_by_tag",
+      tag: decodeURIComponent(tag),
+    }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      location.reload();
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
+var list = []
 function search_autocomplete_action() {
   $.ajax({
     url: "/",
@@ -35,6 +86,22 @@ function search_autocomplete_action() {
           collision: "flip flip",
         },
         minLength: 2,
+        select: function(event, ui) {
+          list.push(ui.item.value);
+          var ingredient_search_item_list = document.querySelector("#ingredient_search_item_list");
+          const btn_ingredient_search_item_list = document.createElement("button");
+          btn_ingredient_search_item_list.classList.add("badge");
+          btn_ingredient_search_item_list.classList.add("rounded-pill");
+          btn_ingredient_search_item_list.classList.add("text-bg-primary");
+          btn_ingredient_search_item_list.classList.add("me-1");
+          btn_ingredient_search_item_list.setAttribute('style',"border:none;")
+          btn_ingredient_search_item_list.setAttribute('onclick',"delete_search_item(this)")
+          btn_ingredient_search_item_list.insertAdjacentHTML( 'beforeend', '<i class="bi bi-x me-1 yalign-bottom"></i>' + ui.item.value );
+          ingredient_search_item_list.appendChild(btn_ingredient_search_item_list);
+          $("#search_ingredient_input").val('');
+          count_recipes_by_ingredient_search();
+          return false;
+        }
       });
     },
     error: function (error) {

@@ -1,5 +1,5 @@
 from lib.Scrape_Weeklys import scrapeWeeklys
-
+        
 class hellofresh(object):
     '''
     classdocs
@@ -11,4 +11,7 @@ class hellofresh(object):
         
     def login(self, username, password):
         return(self.hellofresh.login([username,password]))
+
+    def repeat(self):
+        pass
         
