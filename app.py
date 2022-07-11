@@ -12,6 +12,7 @@ from lib.cards import create_cards
 from lib.ordershistory import ordershistory
 from lib.basket import basket_manager
 from lib.favorites import favorites_manager
+from lib.git_manager import git_manager
 import time
 import numpy as np
 from urllib.parse import quote
@@ -34,6 +35,12 @@ class WebView(FlaskView):
 
     @classmethod
     def pre_init(self):
+
+        ''' ### GIT TEST ### '''
+        self.git_manager = git_manager()
+        self.git_manager.update_repository()
+
+        
         self.obj_scrapeweeklys = []
         self.obj_scrapedatabase = wr_scrapeDatabase()
         self.recipeNames = self.obj_scrapedatabase.get_allNames()
