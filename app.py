@@ -39,6 +39,8 @@ class WebView(FlaskView):
         ''' ### GIT TEST ### '''
         self.git_manager = git_manager()
         self.git_manager.update_repository()
+        
+        print('I was here')
 
         
         self.obj_scrapeweeklys = []
