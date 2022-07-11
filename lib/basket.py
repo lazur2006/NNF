@@ -24,7 +24,7 @@ class basket_manager(object):
         query = f"""SELECT AMOUNT,UNIT,INGREDIENT,IMG FROM INGREDIENTS WHERE UID in {e if len(e:=basket_ids) !=1 else "("+str(e[0])+")"}"""
         basket_ingredients = list(map(list, zip(*conn.execute(query).fetchall())))
         unique_items, unique_item_ids, _ = np.unique(basket_ingredients[2], return_inverse=True, return_counts=True)
-
+        basket_ingredients[0] = [0.0 if e == '' else float(e) for e in basket_ingredients[0]]
         conn.close()
 
         return({"basket_recipe_elements":
@@ -34,7 +34,7 @@ class basket_manager(object):
             "recipe_img":basket_recipes[2]
             },
             "unique_basket_elements":{
-                "amount":[np.array(basket_ingredients[0])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)],
+                "amount":[sum(np.array(basket_ingredients[0])[(unique_item_ids==idx[0])]) for idx in enumerate(unique_items)],
                 "unit":[np.array(basket_ingredients[1])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)],
                 "name":[np.array(basket_ingredients[2])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)],
                 "image":[np.array(basket_ingredients[3])[(unique_item_ids==idx[0])].tolist()[0] for idx in enumerate(unique_items)]
