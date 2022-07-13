@@ -14,15 +14,14 @@ class git_manager():
 
     
     def handle_repository(self):
-        print('Before: ' + self.update_available())
+        print('Before: ' + str(self.update_available()))
 
         try:
             Repo.clone_from('https://github.com/lazur2006/NNF.git', '', branch='main')
         except:
-            
             self.repository.remotes.origin.pull()
 
-        print('After: ' + self.update_available())
+        print('After: ' + str(self.update_available()))
 
         print('')
 
