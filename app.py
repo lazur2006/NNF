@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import secrets
 import operator
 import logging
@@ -16,6 +17,7 @@ from lib.git_manager import git_manager
 import time
 import numpy as np
 from urllib.parse import quote
+import os, sys
 
 app = Flask(__name__)
 app.jinja_env.filters['quote_plus'] = lambda u: quote(u)
@@ -38,7 +40,6 @@ class WebView(FlaskView):
 
         ''' ### GIT TEST ### '''
         self.git_manager = git_manager()
-
 
         self.obj_scrapeweeklys = []
         self.obj_scrapedatabase = wr_scrapeDatabase()
@@ -199,7 +200,9 @@ class WebView(FlaskView):
         route = dict(request.form)['btn']
 
         if route == 'random':
-            self.handle_recipes('handle_recipe_action_get_randoms',int(dict(request.form)['range']))
+            #self.handle_recipes('handle_recipe_action_get_randoms',int(dict(request.form)['range']))
+            os.execv(__file__, sys.argv)
+        
         if route == 'recent':
             if not self.obj_scrapeweeklys:
                 self.obj_scrapeweeklys = self.vendor.handleWeeklys()            
@@ -256,6 +259,8 @@ def progress():
             retval = "data: close\n\n"
 
     return Response(retval, mimetype= 'text/event-stream')
+
+
 
 WebView.pre_init()
 WebView.register(app)
