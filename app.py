@@ -17,7 +17,6 @@ from lib.git_manager import git_manager
 import time
 import numpy as np
 from urllib.parse import quote
-import subprocess
 
 app = Flask(__name__)
 app.jinja_env.filters['quote_plus'] = lambda u: quote(u)
@@ -37,10 +36,6 @@ class WebView(FlaskView):
 
     @classmethod
     def pre_init(self):
-
-        ''' ### GIT TEST ### '''
-        self.git_manager = git_manager()
-
         self.obj_scrapeweeklys = []
         self.obj_scrapedatabase = wr_scrapeDatabase()
         self.recipeNames = self.obj_scrapedatabase.get_allNames()
@@ -51,6 +46,7 @@ class WebView(FlaskView):
         self.ordershistory = ordershistory()
         self.basket_manager = basket_manager()
         self.favorites_manager = favorites_manager()
+        self.git_manager = git_manager()
         print(" :: SERVER STARTED :: ")
 
     @route('/')
@@ -193,6 +189,9 @@ class WebView(FlaskView):
         elif route=='count_recipes_by_ingredient_search':
             retval.get('search_method')
             return(make_response(jsonify(self.obj_scrapedatabase.count_search_by_ingredient(retval.get('ingredient_list'))), 200))
+        elif route=='handle_update_app_action':
+            return(make_response(jsonify(self.git_manager.update_available()), 200))
+            
 
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
@@ -200,10 +199,7 @@ class WebView(FlaskView):
         route = dict(request.form)['btn']
 
         if route == 'random':
-            #self.handle_recipes('handle_recipe_action_get_randoms',int(dict(request.form)['range']))
-            #os.execv(__file__, sys.argv)
-            status = subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
-        
+            self.handle_recipes('handle_recipe_action_get_randoms',int(dict(request.form)['range']))      
         if route == 'recent':
             if not self.obj_scrapeweeklys:
                 self.obj_scrapeweeklys = self.vendor.handleWeeklys()            

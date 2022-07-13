@@ -1072,12 +1072,33 @@ function setCurrentUserStatus() {
     Is called when the page is loaded completly
 */
 $(document).ready(function () {
-  /*| Setup the IP input mask for Login page |*/
-  var ipv4_address = $("#floatingIPaddress");
-  ipv4_address.inputmask({
-    alias: "ip",
-    greedy: false,
+
+  // check if app is up to date
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({
+      Route: "handle_update_app_action",
+    }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    beforeSend: function () {
+      console.log('wait');
+    },
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (error) {
+      console.log('error');
+      console.log(error);
+    },
   });
+
+  /*| Setup the IP input mask for Login page |*/
+  // var ipv4_address = $("#floatingIPaddress");
+  // ipv4_address.inputmask({
+  //   alias: "ip",
+  //   greedy: false,
+  // });
 
   /*| Start progress connection for Update page |*/
   startConn("retrieve");

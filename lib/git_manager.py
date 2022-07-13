@@ -1,33 +1,29 @@
 import os
 from git import Repo
-from git import Git
 import git
+import subprocess
 
+repository = 'https://github.com/lazur2006/NNF.git'
+branch = 'main'
 
 class git_manager():
 
     def __init__(self) -> None:
-
         self.repository = git.Repo(os.getcwd())
-
-        self.handle_repository()
-
     
-    def handle_repository(self):
-        print('Before: ' + str(self.update_available()))
-
+    def update_repository(self):
         try:
-            Repo.clone_from('https://github.com/lazur2006/NNF.git', '', branch='main')
+            Repo.clone_from(repository, '', branch=branch)
         except:
             self.repository.remotes.origin.pull()
-
-        print('After: ' + str(self.update_available()))
-
-        print('')
+        self.__restart_server()
 
     def update_available(self):
         self.repository.remotes.origin.fetch()
         if(self.repository.git.diff('origin/main') != ''):
-            return(True)
+            return({'update_is_available':'true'})
         else:
-            return(False)
+            return({'update_is_available':'false'})
+
+    def __restart_server(self):
+        subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
