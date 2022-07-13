@@ -17,7 +17,7 @@ from lib.git_manager import git_manager
 import time
 import numpy as np
 from urllib.parse import quote
-import os, sys
+import subprocess
 
 app = Flask(__name__)
 app.jinja_env.filters['quote_plus'] = lambda u: quote(u)
@@ -201,7 +201,8 @@ class WebView(FlaskView):
 
         if route == 'random':
             #self.handle_recipes('handle_recipe_action_get_randoms',int(dict(request.form)['range']))
-            os.execv(__file__, sys.argv)
+            #os.execv(__file__, sys.argv)
+            status = subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
         
         if route == 'recent':
             if not self.obj_scrapeweeklys:
