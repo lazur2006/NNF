@@ -18,3 +18,4 @@ class git_manager():
             except:
                 self.repository = git.Repo(os.getcwd() + '/test')
                 self.repository.remotes.origin.pull()
+        print('')
