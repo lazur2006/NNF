@@ -37,8 +37,8 @@ class WebView(FlaskView):
     def pre_init(self):
 
         ''' ### GIT TEST ### '''
-        #self.git_manager = git_manager()
-        #self.git_manager.update_repository()
+        self.git_manager = git_manager()
+        self.git_manager.update_repository()
 
 
         self.obj_scrapeweeklys = []

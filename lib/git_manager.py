@@ -1,20 +1,20 @@
-import git
 import os
-
+from git import Repo
+from git import Git
+import git
 
 
 class git_manager():
 
     def __init__(self) -> None:
 
-        self.repository = git.Repo(os.getcwd())
+        git_ssh_identity_file = os.path.expanduser('id_rsa')
+        #git_ssh_identity_file = os.path.expanduser('git')
+        git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
 
-    def update_repository(self):
-        # check if any changes appeared to working copy
-        if self.repository.is_dirty(untracked_files=True):
-            print('Changes detected.')
-
-        # Pull from remote repo
-        print(self.repository.remotes.origin.pull())
-         
-        print('dd')
+        with Git().custom_environment(GIT_SSH_COMMAND=git_ssh_cmd):
+            try:
+                Repo.clone_from('git@github.com:lazur2006/NNF_releases.git', 'test', branch='main')
+            except:
+                self.repository = git.Repo(os.getcwd() + '/test')
+                self.repository.remotes.origin.pull()
