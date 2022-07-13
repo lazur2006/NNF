@@ -21,9 +21,9 @@ class git_manager():
     def update_available(self):
         self.repository.remotes.origin.fetch()
         if(self.repository.git.diff('origin/main') != ''):
-            return({'update_is_available':True})
+            return({'update_is_available':True,'diff':self.repository.git.diff('origin/main')})
         else:
-            return({'update_is_available':False})
+            return({'update_is_available':False,'diff':''})
 
     def __restart_server(self):
         subprocess.check_output("sudo systemctl restart my-server --now", shell=True)

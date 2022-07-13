@@ -1103,6 +1103,7 @@ $(document).ready(function () {
     },
     success: function (response) {
       if(response.update_is_available){
+        console.log(response.diff);
         $('#update_modal').show();
       }
       else{
