@@ -18,6 +18,6 @@ class git_manager():
             print('START :: try to clone the git')
             Repo.clone_from('https://github.com/lazur2006/NNF.git', '../test', branch='main')
         except:
-            self.repository = git.Repo(os.getcwd() + '/test')
+            self.repository = git.Repo(os.getcwd() + '/../test')
             self.repository.remotes.origin.pull()
         print('END')
