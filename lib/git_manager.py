@@ -14,7 +14,7 @@ class git_manager():
 
     
     def handle_repository(self):
-        print(self.update_available())
+        print('Before: ' + self.update_available())
 
         try:
             Repo.clone_from('https://github.com/lazur2006/NNF.git', '', branch='main')
@@ -22,7 +22,7 @@ class git_manager():
             
             self.repository.remotes.origin.pull()
 
-        print(self.update_available())
+        print('After: ' + self.update_available())
 
         print('')
 
