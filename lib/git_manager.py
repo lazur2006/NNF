@@ -26,6 +26,7 @@ class git_manager():
         print('')
 
     def update_available(self):
+        self.repository.remotes.origin.fetch()
         if(self.repository.git.diff('origin/main') != ''):
             return(True)
         else:
