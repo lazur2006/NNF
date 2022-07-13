@@ -8,16 +8,26 @@ class git_manager():
 
     def __init__(self) -> None:
 
-        # Repo.clone_from('https://github.com/lazur2006/NNF.git', 'test', branch='main')
-        # git_ssh_identity_file = os.path.expanduser('id_rsa')
-        # #git_ssh_identity_file = os.path.expanduser('git')
-        # git_ssh_cmd = 'ssh -i %s' % git_ssh_identity_file
+        self.repository = git.Repo(os.getcwd())
 
+        self.handle_repository()
+
+    
+    def handle_repository(self):
+        print(self.update_available())
 
         try:
-            print('START :: try to clone the git')
             Repo.clone_from('https://github.com/lazur2006/NNF.git', '', branch='main')
         except:
-            self.repository = git.Repo(os.getcwd())
+            
             self.repository.remotes.origin.pull()
-        print('END')
+
+        print(self.update_available())
+
+        print('')
+
+    def update_available(self):
+        if(self.repository.git.diff('origin/main') != ''):
+            return(True)
+        else:
+            return(False)
