@@ -378,4 +378,22 @@
   </form>
 </div>
 
+<div class="modal" id="update_modal" tabindex="-1" aria-labelledby="update_modalLabel"
+    style="background-color: black;"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">NNF Update is available!</h5>
+        </div>
+        <div class="modal-body">
+          Please start the update to make shure you will work without bugs.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" onclick="handle_update_restart_action()">UPDATE and RESTART</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

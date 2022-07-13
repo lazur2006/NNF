@@ -191,6 +191,9 @@ class WebView(FlaskView):
             return(make_response(jsonify(self.obj_scrapedatabase.count_search_by_ingredient(retval.get('ingredient_list'))), 200))
         elif route=='handle_update_app_action':
             return(make_response(jsonify(self.git_manager.update_available()), 200))
+        elif route=='start_application_update':
+            self.git_manager.update_repository()
+            return(make_response(jsonify({'':''}), 200))
             
 
     @route('/choose', methods=['POST'])

@@ -1,3 +1,19 @@
+function handle_update_restart_action(){
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({
+      Route: "start_application_update",
+    }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      console.log(response);
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
 function delete_search_item(element){
   list = jQuery.grep(list, function(value) {return value != element.textContent;});
   element.parentNode.removeChild(element);
@@ -1082,10 +1098,16 @@ $(document).ready(function () {
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     beforeSend: function () {
+      //starting wait state
       console.log('wait');
     },
     success: function (response) {
-      console.log(response);
+      if(response.update_is_available){
+        $('#update_modal').show();
+      }
+      else{
+        $('#update_modal').hide();
+      }
     },
     error: function (error) {
       console.log('error');
