@@ -41,7 +41,7 @@ class git_manager():
             return(True)
         elif platform == "darwin":
             # OS X
-            return(True)#False)
+            return(False)
         elif platform == "win32":
             # Windows...
-            return(True)#False)
+            return(False)

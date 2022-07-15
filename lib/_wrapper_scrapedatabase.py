@@ -65,9 +65,9 @@ class wr_scrapeDatabase(object):
     
     def get_byID(self,ID):
         if len(ID) != 1:
-            return(self.__get(f"SELECT * FROM 'RECIPE' WHERE ID IN {tuple(ID)} ORDER BY ID;"))
+            return(self.__get(f"SELECT * FROM 'RECIPE' WHERE ID IN {tuple(ID)} ORDER BY ID LIMIT(52);"))
         else:
-            return(self.__get(f"SELECT * FROM 'RECIPE' WHERE ID IN ({ID[0]}) ORDER BY ID;"))
+            return(self.__get(f"SELECT * FROM 'RECIPE' WHERE ID IN ({ID[0]}) ORDER BY ID LIMIT(52);"))
     
     def get_allNames(self):
         conn = sqlite3.connect('static/db/recipe.db')

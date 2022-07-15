@@ -183,11 +183,9 @@ class WebView(FlaskView):
             self.handle_recipes('handle_recipe_action_get_by_tag',retval.get('tag'))
             return(redirect(url_for('WebView:index')))
         elif route=='show_recipes_by_ingredient_search':
-            retval.get('search_method')
             self.handle_recipes('handle_recipe_action_search_ingredient',retval.get('ingredient_list'))
             return(redirect(url_for('WebView:index')))
         elif route=='count_recipes_by_ingredient_search':
-            retval.get('search_method')
             return(make_response(jsonify(self.obj_scrapedatabase.count_search_by_ingredient(retval.get('ingredient_list'))), 200))
         elif route=='handle_update_app_action':
             return(make_response(jsonify(self.git_manager.update_available()), 200))
