@@ -3,6 +3,7 @@ function poll_app_awakes(){
   source.onmessage = function (event) {
     if (event.data == "close") {
       source.close();
+      location.reload();
     }
   };
   source.onerror = function(event) {
