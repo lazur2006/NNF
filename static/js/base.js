@@ -11,7 +11,7 @@ function poll_app_awakes(){
     // reconnectFunc();
     console.log('retry...');
     console.log(event);
-    poll_app_awakes();
+    setTimeout(poll_app_awakes, 5000);
   };
 }
 function handle_update_action(){
