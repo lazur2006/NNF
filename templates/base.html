@@ -117,6 +117,27 @@
   {% block content %} {% endblock %}
   </div>
 
+  <div class="modal" id="update_modal" tabindex="-1" aria-labelledby="update_modalLabel"
+    style="background-color: rgb(255, 255, 255);"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-0 border-0">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">🎉 NNF Update is available!</h5>
+        </div>
+        <div class="modal-body">
+          Your app will be updated 🥳. Then the server will be restarted 🚀. This should only take a few seconds 💨.
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="update_loading_button" type="button" onclick="handle_update_action()">
+            <span class="spinner-border spinner-border-sm" id="update_loading_button_spinner" role="status" aria-hidden="true" style="display: none;"></span>
+            Update now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="b-example-divider"></div>
 
   <div class="container">
