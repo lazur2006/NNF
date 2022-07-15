@@ -10,6 +10,7 @@ function poll_app_awakes(){
     // reconnectFunc();
     console.log('retry...');
     console.log(event);
+    poll_app_awakes();
   };
 }
 function handle_update_action(){
