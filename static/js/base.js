@@ -5,6 +5,12 @@ function poll_app_awakes(){
       source.close();
     }
   };
+  source.onerror = function(event) {
+    // source.close();
+    // reconnectFunc();
+    console.log('retry...');
+    console.log(event);
+  };
 }
 function handle_update_action(){
   $.ajax({
