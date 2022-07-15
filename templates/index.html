@@ -387,12 +387,15 @@
           Please start the update to make shure you will work without bugs.
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning" onclick="handle_update_action()">UPDATE and RESTART</button>
+          <button class="btn btn-primary" id="update_loading_button" type="button" onclick="handle_update_action()">
+            <span class="spinner-border spinner-border-sm" id="update_loading_button_spinner" role="status" aria-hidden="true" style="display: none;"></span>
+            Update now
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-🙋‍♂️🙋‍♀️🥕🍜🔒
+
 
 {% endblock %}

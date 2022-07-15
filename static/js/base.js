@@ -7,10 +7,6 @@ function poll_app_awakes(){
     }
   };
   source.onerror = function(event) {
-    // source.close();
-    // reconnectFunc();
-    console.log('retry...');
-    console.log(event);
     setTimeout(poll_app_awakes, 5000);
   };
 }
@@ -23,8 +19,8 @@ function handle_update_action(){
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     beforeSend: function () {
-      //starting wait state
-      console.log('start update');
+      $('#update_loading_button').attr("disabled",true);
+      $('#update_loading_button_spinner').show();
     },
     success: function (response) {
       poll_app_awakes();
