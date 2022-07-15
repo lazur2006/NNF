@@ -220,6 +220,10 @@ class WebView(FlaskView):
     def favorites(self):
         return(render_template('favorites.html'))
 
+@app.route('/wake')
+def wake_state():
+    return(Response("data: close\n\n", mimetype= 'text/event-stream'))
+
 @app.route('/progress')
 def progress():
     global thread

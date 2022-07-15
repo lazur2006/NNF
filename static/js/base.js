@@ -1,4 +1,12 @@
-function handle_update_restart_action(){
+function poll_app_awakes(){
+  var source = new EventSource("/wake");
+  source.onmessage = function (event) {
+    if (event.data == "close") {
+      source.close();
+    }
+  };
+}
+function handle_update_action(){
   $.ajax({
     url: "/",
     data: JSON.stringify({
@@ -6,11 +14,15 @@ function handle_update_restart_action(){
     }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
+    beforeSend: function () {
+      //starting wait state
+      console.log('start update');
+    },
     success: function (response) {
-      console.log(response);
+      poll_app_awakes();
     },
     error: function (error) {
-      console.log(error);
+      poll_app_awakes();
     },
   });
 }
@@ -1097,10 +1109,6 @@ $(document).ready(function () {
     }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
-    beforeSend: function () {
-      //starting wait state
-      console.log('wait');
-    },
     success: function (response) {
       if(response.update_is_available){
         console.log(response.diff);
