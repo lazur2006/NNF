@@ -32,8 +32,8 @@ class bring():
             response = False
         return(response)
 
-    def add_item(self,item,specification):
-        url = f"{base_address}/v2/bringlists/{self.list_uuid}/items"
+    def add_item(self,list_uuid,item,specification):
+        url = f"{base_address}/v2/bringlists/{list_uuid}/items"
         payload = json.dumps(
             {"changes":
             [
@@ -77,6 +77,6 @@ class bring():
 
     def search(self,vendorbasket):
         list_name = f"Nice'n Fresh 🍜  {datetime.date.today()}"
-        self.list_uuid = self.create_list(list_name)
-        [self.add_item(e,str(vendorbasket.get('amount')[idx]) + " " + str(vendorbasket.get('unit')[idx])) for idx,e in enumerate(vendorbasket.get('name'))]
+        list_uuid = self.create_list(list_name)
+        [self.add_item(list_uuid,e,str(vendorbasket.get('amount')[idx]) + " " + str(vendorbasket.get('unit')[idx])) for idx,e in enumerate(vendorbasket.get('name'))]
         return("immediately_push_vendor_basket")

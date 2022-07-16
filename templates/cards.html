@@ -26,7 +26,7 @@
 <body>
 
   {%for i in range(0, data['recipe_amount'])%}
-  <div class="d-flex flex-column mb-0">
+  <div class="d-flex flex-column mb-0 mt-3 pagebreak" id="container_{{i}}">
     <div class="position-relative"
       style="background: url('{{data['recipe_img'][i]}}');object-fit: cover;filter:opacity(0.4) blur(150px);background-position: center;">
       <!-- DUMMY FOR SIZING START -->
@@ -101,13 +101,13 @@
 
         {%for k in data['recipe_instructions'][i]%}
         <!-- Instructions item -->
-        <div class="col-md-4 mt-2 mb-3" style="min-height:20em;">
+        <div class="col-md-4 mt-2 mb-3">
           <div class="bg-light rounded border border-primary h-100"><img
               src="{{data['recipe_instructions_img'][i][loop.index-1]}}"
               style="width: 100%; height: 5em; object-fit: cover;" class="rounded-top">
             <div class="p-4">
               <h5 class="text-dark">Step {{loop.index}}</h5>
-              <p class="small text-muted mb-0">{{k}}</p>
+              <p class="text-muted mb-0">{{k}}</p>
             </div>
           </div>
         </div>
@@ -116,11 +116,12 @@
 
       </div>
     </div>
+    <div style="min-height:0px;background-color: brown;" id="placeholder_{{i}}"></div>
   </div>
   {%endfor%}
 
 
-  <div class="card bg-light rounded border border-danger m-3 shadow">
+  <div class="card bg-light rounded border border-danger m-3 shadow pagebreak">
     <div class="card-header">Shopping List</div>
     <div class="">
       <div class="d-flex m-3">

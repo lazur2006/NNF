@@ -97,11 +97,10 @@
 
   <!-- Vertically centered modal -->
   <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    style="background-color: black;"
-    aria-hidden="true">
+    style="background-color: black;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered align-center">
       <div class="modal-content rounded position-absolute top-50 start-50 translate-middle shadow"
-      style="width:15em;height:15em;background: url(/static/images/qrcode.png);background-size: cover;">
+        style="width:15em;height:15em;background: url(/static/images/qrcode.png);background-size: cover;">
       </div>
     </div>
   </div>
@@ -118,8 +117,7 @@
   </div>
 
   <div class="modal" id="update_modal" tabindex="-1" aria-labelledby="update_modalLabel"
-    style="background-color: rgb(255, 255, 255);"
-    aria-hidden="true">
+    style="background-color: rgb(255, 255, 255);" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-0 border-0">
         <div class="modal-header">
@@ -130,7 +128,8 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" id="update_loading_button" type="button" onclick="handle_update_action()">
-            <span class="spinner-border spinner-border-sm" id="update_loading_button_spinner" role="status" aria-hidden="true" style="display: none;"></span>
+            <span class="spinner-border spinner-border-sm" id="update_loading_button_spinner" role="status"
+              aria-hidden="true" style="display: none;"></span>
             Update now
           </button>
         </div>
@@ -141,14 +140,12 @@
   <div class="b-example-divider"></div>
 
   <div class="container">
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <footer class="d-flex flex-column py-3 my-4 border-top">
       <div class="col-md-4 d-flex align-items-center">
-        <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
-          <svg class="bi" width="30" height="24">
-            <use xlink:href="#bootstrap" />
-          </svg>
-        </a>
-        <span class="mb-3 mb-md-0 text-muted">&copy; 2022, #stayniceandcrispy</span>
+        <span class="mb-3 mb-md-0 text-muted">© 2022, #stayniceandcrispy</span>
+      </div>
+      <div class="col-md-4 d-flex align-items-center">
+        <span>🧑🏻🍜👩🏻‍🦰</span>
       </div>
     </footer>
   </div>
