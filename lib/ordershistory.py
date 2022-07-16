@@ -1,6 +1,7 @@
 import datetime
 import sqlite3
 from lib._wrapper_scrapedatabase import wr_scrapeDatabase
+from lib.favorites import favorites_manager
 
 class ordershistory(object):
     '''
@@ -12,6 +13,7 @@ class ordershistory(object):
         Constructor
         '''
         self.wr_scrapeDatabase = wr_scrapeDatabase()
+        self.favorites_manager = favorites_manager()
 
     def set(self,basket):
         ''' create SQlite db file '''
@@ -31,7 +33,7 @@ class ordershistory(object):
 
         ''' Try insert the values '''
         for e in basket:
-            conn.execute("INSERT INTO ORDERSHISTORY (BASKET_UID, DATE, CW, RECIPE) VALUES (?,?,?,?)",(recent_id+1,today,cw,str(e)))  
+            conn.execute("INSERT INTO ORDERSHISTORY (BASKET_UID, DATE, CW, RECIPE) VALUES (?,?,?,?)",(recent_id+1,today,cw,self.favorites_manager.get_recipe_uid(e)))  
 
 
         conn.commit()
@@ -45,7 +47,7 @@ class ordershistory(object):
 
             # get all IDs
             ids = [id[0] for id in conn.execute("SELECT DISTINCT BASKET_UID FROM ORDERSHISTORY;").fetchall()]
-            recipe_ids = [[h[0] for h in conn.execute("SELECT RECIPE FROM ORDERSHISTORY WHERE BASKET_UID is (?);",(e,)).fetchall()]for e in ids]
+            recipe_ids = [[self.favorites_manager.get_recipe_id(h[0]) for h in conn.execute("SELECT RECIPE FROM ORDERSHISTORY WHERE BASKET_UID is (?);",(e,)).fetchall()]for e in ids]
 
             retval = [{
                 "basket_uid":e,
@@ -65,7 +67,7 @@ class ordershistory(object):
 
     def get_recipe_ids(self,basket_uid):
         conn = sqlite3.connect('static/db/ordershistory.db')
-        retval = tuple([int(e[0]) for e in conn.execute("SELECT RECIPE FROM ORDERSHISTORY WHERE BASKET_UID is (?);",(basket_uid,)).fetchall()])
+        retval = tuple([int(self.favorites_manager.get_recipe_id(e[0])) for e in conn.execute("SELECT RECIPE FROM ORDERSHISTORY WHERE BASKET_UID is (?);",(basket_uid,)).fetchall()])
         conn.close()
         return(retval)
 
