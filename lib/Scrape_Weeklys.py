@@ -81,7 +81,7 @@ class scrapeWeeklys(object):
         except:
             subscription = ""
             
-        servings = "2"
+        servings = "2" 
         try:
             product_sku = self.stream['ACCOUNT']['items'][0]['product']['sku']
         except:
