@@ -80,3 +80,11 @@ class bring():
         list_uuid = self.create_list(list_name)
         [self.add_item(list_uuid,e,str(vendorbasket.get('amount')[idx]) + " " + str(vendorbasket.get('unit')[idx])) for idx,e in enumerate(vendorbasket.get('name'))]
         return("immediately_push_vendor_basket")
+
+    def get_list_items(self,list_uuid):
+        url = f"{base_address}/v2/bringlists/{list_uuid}"
+        headers = {
+        'host': host,
+        'authorization': f'Bearer {self.bearer_token}'
+        }
+        return(self.session.request("GET", url, headers=headers).json())
