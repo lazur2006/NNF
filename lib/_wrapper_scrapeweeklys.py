@@ -31,7 +31,10 @@ class wr_scrapeWeeklys(object):
         ID = [id for id in ID if id]
         missed_recipes = True if len_ID != len(ID) else False
 
-        return(tuple([id[0] for id in list(zip(*ID))[0]]))
+        try:
+            return(tuple([id[0] for id in list(zip(*ID))[0]]))
+        except:
+            return(())
 
     def repeat_access(self):
         self.class_obj.login(credentials=[self.user.getCredentials('HelloFresh')['username'],self.user.getCredentials('HelloFresh')['password']])

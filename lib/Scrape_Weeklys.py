@@ -15,16 +15,16 @@ host = "https://gw.hellofresh.com"
 '''
 setup cipher suite
 '''
-ciphers = (
-'''ECDHE-ECDSA-AES128-GCM-SHA256:'''
-'''ECDHE-RSA-AES128-GCM-SHA256:'''
-'''ECDHE-ECDSA-AES256-GCM-SHA384:'''
-'''ECDHE-RSA-AES256-GCM-SHA384:'''
-'''ECDHE-ECDSA-CHACHA20-POLY1305:'''
-'''ECDHE-RSA-CHACHA20-POLY1305:'''
-'''DHE-RSA-AES128-GCM-SHA256:'''
-'''DHE-RSA-AES256-GCM-SHA384'''
-)
+# ciphers = (
+# '''ECDHE-ECDSA-AES128-GCM-SHA256:'''
+# '''ECDHE-RSA-AES128-GCM-SHA256:'''
+# '''ECDHE-ECDSA-AES256-GCM-SHA384:'''
+# '''ECDHE-RSA-AES256-GCM-SHA384:'''
+# '''ECDHE-ECDSA-CHACHA20-POLY1305:'''
+# '''ECDHE-RSA-CHACHA20-POLY1305:'''
+# '''DHE-RSA-AES128-GCM-SHA256:'''
+# '''DHE-RSA-AES256-GCM-SHA384'''
+# )
 
 
 class TLSAdapter(requests.adapters.HTTPAdapter):
@@ -34,7 +34,7 @@ class TLSAdapter(requests.adapters.HTTPAdapter):
         super(TLSAdapter, self).__init__(**kwargs)
 
     def init_poolmanager(self, *pool_args, **pool_kwargs):        
-        ctx = util.ssl_.create_urllib3_context(ciphers=ciphers, 
+        ctx = util.ssl_.create_urllib3_context(#ciphers=ciphers, 
                                           cert_reqs=ssl.CERT_REQUIRED, 
                                           options=self.ssl_options)
         self.poolmanager = urllib3.PoolManager(*pool_args,
@@ -49,7 +49,7 @@ class scrapeWeeklys(object):
         super(scrapeWeeklys, self).__init__()
         # Mount session due to cloudflare's TLS fingerprint protection
         self.session = requests.session()
-        self.adapter = TLSAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1)
+        self.adapter = TLSAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1 | ssl.OP_NO_TLSv1_3 | ssl.OP_NO_TICKET)
         self.session.mount("https://", self.adapter)
         self.stream = dict()
         self.week_num = 0
