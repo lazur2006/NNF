@@ -51,7 +51,7 @@ class ReweMobileApi():
         super(ReweMobileApi, self).__init__()
         # Mount session due to cloudflare's TLS fingerprint protection
         self.session = requests.session()
-        self.adapter = TLSAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1)
+        self.adapter = TLSAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1 | ssl.OP_NO_TLSv1_3 | ssl.OP_NO_TICKET)
         self.session.mount("https://", self.adapter)
         
         self.refreshToken = ""
