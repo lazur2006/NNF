@@ -98,7 +98,7 @@ class scrapeWeeklys(object):
 
         my_date = datetime.date.today()
         year, self.week_num, _ = my_date.isocalendar()
-        next_week = self.week_num + 2
+        next_week = self.week_num + 1
         url = f"{host}/my-deliveries/menu?delivery-option={delivery_option}&postcode={postcode}&preference={preference}&product-sku={product_sku}&servings={servings}&subscription={subscription}&week={str(year)}-W{str(next_week)}&locale=de-DE&country=DE"
         headers = {
           'authorization': f"Bearer {self.stream['LOGIN']['access_token']}"
