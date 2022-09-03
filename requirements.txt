@@ -11,4 +11,4 @@ gunicorn==20.1.0
 python-dotenv==0.20.0
 cryptography==37.0.2
 werkzeug==2.1.2
-python-git==2018.2.1
+gitpython
