@@ -20,8 +20,8 @@ class QR(object):
                 border=0)
         qr.add_data(input_data)
         qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
-        img.save('static/images/qrcode.png')
+        #img = qr.make_image(fill='black', back_color='white')
+        #img.save('static/images/qrcode.png')
 
     
 
