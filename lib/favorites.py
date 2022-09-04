@@ -28,7 +28,10 @@ class favorites_manager(object):
 
     def get_recipe_id(self,recipe_uid):
         conn = sqlite3.connect('static/db/recipe.db')
-        retval = conn.execute("SELECT ID FROM RECIPE WHERE RECIPE_UID is (?);",(recipe_uid,)).fetchall()[0][0]
+        try:
+            retval = conn.execute("SELECT ID FROM RECIPE WHERE RECIPE_UID is (?);",(recipe_uid,)).fetchall()[0][0]
+        except:
+            retval = []
         conn.close()
         return(retval)
 
@@ -46,9 +49,12 @@ class favorites_manager(object):
         conn.close()
 
     def get_fav_status(self,recipe_id):
-        recipe_uid = self.get_recipe_uid(recipe_id)
+        #recipe_uid = self.get_recipe_uid(recipe_id)
         conn = sqlite3.connect('static/db/favorites.db')
-        retval = conn.execute("SELECT COUNT(RECIPE_UID) FROM FAVORITES WHERE RECIPE_UID = ?;",(self.get_recipe_uid(recipe_id),)).fetchall()[0][0]
+        try:
+            retval = conn.execute("SELECT COUNT(RECIPE_UID) FROM FAVORITES WHERE RECIPE_UID = ?;",(self.get_recipe_uid(recipe_id),)).fetchall()[0][0]
+        except:
+            retval = []
         conn.close()
         if(bool(retval)):
             return('text-danger')

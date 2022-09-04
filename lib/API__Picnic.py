@@ -36,7 +36,7 @@ class picnicapi(object):
                     'product_id':arg.get('id'),
                     'name':arg.get('name','noname'),
                     'unit_quantity':arg.get('unit_quantity','noquant'),
-                    'price':arg.get('price',0)/100,
+                    'price':arg.get('price',arg.get('display_price',0))/100,
                     'image_uri':self.getImageUri(arg.get('image_id'))} for arg in val[:-1]]} for idx,val in enumerate(results)]}
         
         retval.update({"total":round(sum([val['price'] for val in retval['vendorbasket']]),2)})
@@ -50,5 +50,3 @@ class picnicapi(object):
     
     def push(self,vendorbasket):
         _ = [self.picnic.add_product(product_id=arg['selected_id'], count=arg['amount']) if arg['selected_id'] != 'no_id' else 'None' for arg in vendorbasket['vendorbasket']]
-
-        
