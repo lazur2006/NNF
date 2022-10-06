@@ -33,7 +33,8 @@ class git_manager():
             return({'update_is_available':False,'diff':'OS: unix isn''t used'})
 
     def __restart_server(self):
-        subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
+        #subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
+        print('restart')
 
     def __allow_update_by_os_type(self):
         if platform == "linux" or platform == "linux2":
