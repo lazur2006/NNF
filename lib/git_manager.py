@@ -5,7 +5,7 @@ import subprocess
 from sys import platform
 
 repository = 'https://github.com/lazur2006/NNF.git'
-branch = 'main'
+branch = 'unstable_beta_2_0_0'
 
 class git_manager():
 
@@ -25,8 +25,8 @@ class git_manager():
     def update_available(self):
         if self.__allow_update_by_os_type():
             self.repository.remotes.origin.fetch()
-            if(self.repository.git.diff('origin/main') != ''):
-                return({'update_is_available':True,'diff':self.repository.git.diff('origin/main')})
+            if(self.repository.git.diff('origin/unstable_beta_2_0_0') != ''):
+                return({'update_is_available':True,'diff':self.repository.git.diff('origin/unstable_beta_2_0_0')})
             else:
                 return({'update_is_available':False,'diff':''})
         else:
@@ -41,7 +41,7 @@ class git_manager():
             return(True)
         elif platform == "darwin":
             # OS X
-            return(False)
+            return(True)
         elif platform == "win32":
             # Windows...
             return(False)
