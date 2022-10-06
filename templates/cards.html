@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-
+  <div class="text-center"><span class="badge rounded-pill text-bg-dark p-3 m-2">ℹ️ Ingredient is only needed for this meal</span></div>
   {%for i in range(0, data['recipe_amount'])%}
   <div class="d-flex flex-column mb-0 mt-3 pagebreak" id="container_{{i}}">
     <div class="position-relative"
@@ -86,8 +86,9 @@
         <!-- Ingredients item -->
         <div class="col-xl-3 p-2 bg-light">
           <div class="d-flex justify-content-start align-items-center">
-            <div class="m-0 p-3"
+            <div class="m-0 p-3 position-relative"
               style="background: url('{{j[0]}}') center center / cover scroll; height: 10vw; width: 10vw; max-height: 3em; max-width: 3em; border-radius: 50%;">
+              <span class="position-absolute bottom-0 start-100" title="Ingredient is only needed for this meal">{{j[4]|string}}</span>
             </div>
             <p class="small text-muted text-center mt-3 ms-5">{{j[1]|string + j[2]|string + " " + j[3]|string}}</p>
           </div>
@@ -133,7 +134,7 @@
               <div class="m-0 p-3"
                 style="background: url('{{basket_items['unique_basket_elements']['image'][loop.index-1]}}') center center / cover scroll; height: 10vw; width: 10vw; max-height: 3em; max-width: 3em; border-radius: 50%;">
               </div>
-              <p class="small text-muted text-center mt-3 ms-5">{{basket_items['unique_basket_elements']['amount'][loop.index-1]}}{{basket_items['unique_basket_elements']['unit'][loop.index-1]}} {{e}}</p>
+              <p class="small text-muted text-center mt-3 ms-5">{{basket_items['unique_basket_elements']['printable_unit_amounts'][loop.index-1]}} {{e}}</p>
             </div>
           </div>
           <!-- End -->

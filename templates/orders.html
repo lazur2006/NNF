@@ -3,10 +3,10 @@
 {% block content %}
 
 <!-- This snippet uses Font Awesome 5 Free as a dependency. You can download it at fontawesome.io! -->
-<div class="container">
+<div class="container" style="z-index: 9;margin-top:15em;">
   <div class="row">
     <div class="col-lg-10 col-xl-9 mx-auto">
-      <div class="card mt-5 mb-5">
+      <div class="card border-0 mt-5 mb-5">
         <h5 class="card-header text-light fw-light bg-dark">History</h5>
         {%if data['basket_uid'] != 'exception'%}
         <div class="accordion accordion-flush" id="accordionExample">
@@ -32,7 +32,47 @@
                 {{e['recipes']['recipe_title'][loop.index-1]}}
               </div>
               {%endfor%}
-              <div class="d-flex justify-content-between align-items-center gap-2 p-3 bg-light rounded shadow-sm">
+
+
+
+
+
+
+              <div class="d-flex justify-content-center mt-5">
+                <span class="badge rounded-pill text-bg-dark p-3">Persons
+                  <div class="btn-group ms-4">
+                    <button class="btn btn-light btn-sm" onclick="modify_recipe_portions('minus')"
+                      style="width:2em">-</button>
+                    <button class="btn btn-light btn-sm num_recipe_portions" disabled=""
+                      style="width:2.5em;">X</button>
+                    <button class="btn btn-light btn-sm" onclick="modify_recipe_portions('plus')"
+                      style="width:2em">+</button>
+                      <button type="button" class="btn btn-light btn-sm"
+                      id="ordershistory_cards_{{e['basket_uid']}}"
+                      onclick="orderhistory_btn_action('ordershistory_cards',{{e['basket_uid']}})">
+                      <i class="bi bi-cloud-arrow-down-fill align-middle"></i> Recipe Cards
+                    </button>
+                  </div>
+                </span>
+              </div>
+
+              <div class="d-flex justify-content-center mt-2">
+                <span class="p-3">
+                  <div class="btn-group ms-4">
+                    <button type="button" class="btn btn-light btn-sm" id="ordershistory_basket_{{e['basket_uid']}}"
+                      onclick="orderhistory_btn_action('ordershistory_basket',{{e['basket_uid']}})">
+                      <i class="bi bi-bag-plus-fill align-top"></i> Basket</button>
+                      <button type="button"
+                      class="btn btn-light btn-sm" id="ordershistory_delete{{e['basket_uid']}}"
+                      onclick="orderhistory_btn_action('ordershistory_delete',{{e['basket_uid']}})">
+                      <i class="bi bi-trash3-fill"></i>
+                    </button>
+                  </div>
+                </span>
+              </div>
+
+
+              <!-- <div class="d-flex justify-content-between align-items-center gap-2 p-3 bg-light rounded shadow-sm">
                 <div class="text-muted small fw-light" style="font-size:0.7em;">Options</div>
                 <div class="btn-group" role="group">
                   <button type="button" class="btn btn-outline-dark btn-sm"
@@ -49,7 +89,7 @@
                     <i class="bi bi-trash3-fill"></i>
                   </button>
                 </div>
-              </div>
+              </div> -->
 
 
             </div>

@@ -97,7 +97,7 @@ class wr_scrapeDatabase(object):
     def search_autocomplete_action(self,query):
         conn = sqlite3.connect('static/db/recipe.db')
         retval = {'found_ingredients':
-        [e[0] for e in conn.execute("SELECT DISTINCT INGREDIENT FROM 'INGREDIENTS' WHERE INGREDIENT LIKE (?)",(query + '%',)).fetchall()]}
+        [e[0] for e in conn.execute("SELECT DISTINCT INGREDIENT FROM 'INGREDIENTS' WHERE INGREDIENT LIKE (?)",('%' + query + '%',)).fetchall()]}
         conn.close()
         return(retval)
 

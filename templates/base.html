@@ -41,59 +41,103 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100" style="padding-bottom: 200px;">
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow" aria-label="Offcanvas navbar large">
-    <div class="container-fluid">
-      <a class="navbar-brand fs-6 fw-light" href="#"><i class="bi bi-boxes"
-          style="font-size:15px; vertical-align: bottom;"></i> Built v1.0.1</a>
-      <button type="button" class="btn btn-outline-light btn-sm d-none d-lg-block" data-bs-toggle="modal"
-        data-bs-target="#exampleModal"><i class="bi bi-qr-code-scan"></i> App</button>
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2"
-        aria-controls="offcanvasNavbar2">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="offcanvas offcanvas-end text-white bg-dark fullwidth" tabindex="-1" id="offcanvasNavbar2"
-        aria-labelledby="offcanvasNavbar2Label">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title fw-lighter">
-            <i class="bi bi-arrow-down-right-square-fill" style="font-size:15px; vertical-align: middle;"></i>
-            <span style="font-size:15px; vertical-align: center;">Nice'n Fresh</span>
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-            aria-label="Close"></button>
+  <div class="position-relative">
+    <div class="position-absolute start-50 translate-middle" style="left:23vw !important;top:8em;z-index:20;height:clamp(180px, 17vw, 300px);width: clamp(180px, 17vw, 300px);background: scroll center url(/static/images/logo_.svg);background-size: 100% 100%;">
+      <!-- Background image for card set in CSS! -->
+    </div>
+    <div class="position-absolute rounded" style="min-width:clamp(10em,50vw,80em);right:4vw;margin-top:5em;box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;z-index:20;">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-top" aria-label="Offcanvas navbar large">
+        <div class="container-fluid">
+          <a class="navbar-brand fs-6 fw-light" href="#"><i class="bi bi-boxes"
+              style="font-size:15px; vertical-align: bottom;"></i> Built v1.0.1</a>
+          <div class="menu d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2"
+            aria-controls="offcanvasNavbar2"
+            onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened'))"
+            aria-label="Main Menu" aria-expanded="false" style="z-index:9999;">
+            <svg width="30" height="30" viewBox="0 0 100 100">
+              <path class="line line1"
+                d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058">
+              </path>
+              <path class="line line2" d="M 20,50 H 80"></path>
+              <path class="line line3"
+                d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942">
+              </path>
+            </svg>
+          </div>
+
+          <div class="offcanvas offcanvas-end bg-light fullwidth" tabindex="-1" id="offcanvasNavbar2"
+            aria-labelledby="offcanvasNavbar2Label">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title fw-lighter">
+                <i class="bi bi-arrow-down-right-square-fill" style="font-size:15px; vertical-align: middle;"></i>
+                <span style="font-size:15px; vertical-align: center;">Nice'n Fresh</span>
+              </h5>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link m-0 p-0 ms-1 me-1" aria-current="page" href="/"><button type="button"
+                      class="btn btn-outline-dark position-relative btn-sm mt-1">
+                      Home
+                    </button></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link m-0 p-0 ms-1 me-1" href="/login"><button type="button"
+                      class="btn btn-outline-dark position-relative btn-sm mt-1">
+                      Account
+                    </button></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link m-0 p-0 ms-1 me-1" href="/orders"><button type="button"
+                      class="btn btn-outline-dark position-relative btn-sm mt-1">
+                      Orders
+                    </button></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link m-0 p-0 ms-1 me-1" href="/settings"><button type="button"
+                      class="btn btn-outline-dark position-relative btn-sm mt-1">
+                      Update
+                    </button></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link m-0 p-0 ms-1 me-1"><button type="button"
+                      class="btn btn-outline-pimary position-relative btn-sm mt-1 d-none d-lg-block"
+                      style="font-size:9pt;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      <i class="bi bi-qr-code-scan"></i> App
+                    </button></a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link m-0 p-0 ms-1 me-1" aria-current="page" href="{{ url_for('WebView:index')}}"><button
-                  type="button" class="btn btn-dark position-relative btn-sm">
-                  Home
-                </button></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link m-0 p-0 ms-1 me-1" href="{{ url_for('WebView:login')}}"><button type="button"
-                  class="btn btn-dark position-relative btn-sm">
-                  Account
-                </button></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link m-0 p-0 ms-1 me-1" href="{{ url_for('WebView:orders')}}"><button type="button"
-                  class="btn btn-dark position-relative btn-sm">
-                  Orders
-                </button></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link m-0 p-0 ms-1 me-1" href="{{ url_for('WebView:settings')}}"><button type="button"
-                  class="btn btn-dark position-relative btn-sm">
-                  Update
-                </button></a>
-            </li>
-          </ul>
+      </nav>
+      <div class="rounded-bottom"
+        style="background: rgb(0, 255, 170);background: linear-gradient(48deg, rgb(0, 255, 221) 0%, rgb(0, 255, 106) 46%, rgb(0, 255, 247) 100%);">
+        <div class="container" style="min-height:.2em;">
         </div>
       </div>
     </div>
-  </nav>
+    <div class="position-absolute custom-shape-divider-top-1658682124" style="position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(0deg);">
+      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"
+        style="width:100%;height:clamp(100px, 120vw, 600px);fill: url(#imagetop);">
+        <defs>
+          <pattern id="imagetop" width="1" height="1" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <image xlink:href="/static/images/grad.jpg" width="100" height="100" preserveAspectRatio="none"></image>
+          </pattern>
+        </defs>
+        <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" class="shape-fill"></path>
+      </svg>
+
+    </div>
+  </div>
 
   <!-- Vertically centered modal -->
   <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -102,14 +146,6 @@
       <div class="modal-content rounded position-absolute top-50 start-50 translate-middle shadow"
         style="width:15em;height:15em;background: url(/static/images/qrcode.png);background-size: cover;">
       </div>
-    </div>
-  </div>
-
-  <div class="text-white text-center jumbotron specialjum shadow-sm"
-    style="background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;filter: invert(0.07)">
-    <div class="container">
-      <img src="{{url_for('static',filename='images/logo.svg')}}" height="300" class="d-inline-block align-text-top"
-        style="-webkit-filter: invert(1);filter: invert(0.95) drop-shadow(3px 3px 3px rgb(0 0 0 / 0.1));padding: 1em;">
     </div>
   </div>
   <!-- Content goes here-->
@@ -127,7 +163,8 @@
             restarted <br>💨 This should only take a few seconds</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-outline-primary" id="update_loading_button" type="button" onclick="handle_update_action()">
+          <button class="btn btn-outline-primary" id="update_loading_button" type="button"
+            onclick="handle_update_action()">
             <span class="spinner-border spinner-border-sm" id="update_loading_button_spinner" role="status"
               aria-hidden="true" style="display: none;"></span>
             Update now
@@ -137,17 +174,18 @@
     </div>
   </div>
 
-  <div class="b-example-divider"></div>
-
-  <div class="container">
-    <footer class="d-flex flex-column py-3 my-4 border-top">
-      <div class="col-md-4 d-flex align-items-center">
-        <span class="mb-3 mb-md-0 text-muted">© 2022, #stayniceandcrispy</span>
-      </div> 
-      <div class="col-md-4 d-flex align-items-center">
-        <span>🍜🧑🏻🐶👩🏻‍🦰🍜</span>
-      </div>
-    </footer>
+  <div class="position-fixed" style="bottom:0%;width: 100%;">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"
+      style="width: 100%;height:50px;fill: url(#image);">
+      <defs>
+        <pattern id="image" width="1" height="1" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <image xlink:href="/static/images/gradient.jpg" width="100" height="100" preserveAspectRatio="none"></image>
+        </pattern>
+      </defs>
+      <path
+        d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
+        class="shape-fill"></path>
+    </svg>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"

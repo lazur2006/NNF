@@ -3,15 +3,11 @@
 {% block content %}
 
 <body>
-  <div class="container">
+  <div class="container" style="z-index: 9;margin-top:15em;">
     <div class="row">
 
-      <div class="col-lg-10 col-xl-9 mx-auto">
-        <div class="card flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
-          <div
-            style="width: 45%;background: scroll center url({{url_for('static',filename='images/splash.jpg')}});background-size: cover;">
-            <!-- Background image for card set in CSS! -->
-          </div>
+      <div class="col-lg-10 col-xl-9 mx-auto" style="max-width:40em;">
+        <div class="card border-0 flex-row my-5 border-0 shadow rounded-3 overflow-hidden">
           <div class="card-body p-4 p-sm-5">
             <h5 class="card-title text-center mb-5 fw-light fs-5">Set credentials</h5>
 
@@ -31,26 +27,10 @@
                 <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_HelloFresh"></i>
               </span>
 
-              <span class="badge rounded-pill text-bg-secondary m-2" id="login_status_badge_Bring"
+              <span class="badge rounded-pill text-bg-secondary m-2 bring_badge" id="login_status_badge_Bring"
                 data-bs-toggle="tooltip" data-bs-placement="top"> Bring
-                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Bring"></i>
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top bring_status" id="login_status_bi_Bring"></i>
               </span>
-            </div>
-
-            <div class="alert alert-primary d-flex align-items-center" role="alert">
-              <div>
-                <h4 class="alert-heading"><i class="bi bi-info-circle-fill align-bottom m-1"></i> Security information
-                </h4>
-                Your password is stored in your system keychain. Only your username and the corresponding vendor
-                informations are stored in a database.
-                <br>More Infos <a type="button" class="btn btn-outline-primary pt-0 pb-0"
-                  style="border-radius: .2rem;font-size: .875rem;text-align: center;"
-                  href="https://docs.microsoft.com/en-us/windows/uwp/security/credential-locker"
-                  target="_blank">Windows</a>
-                or <a type="button" class="btn btn-outline-primary pt-0 pb-0"
-                  style="border-radius: .2rem;font-size: .875rem;text-align: center;"
-                  href="https://en.wikipedia.org/wiki/Keychain_%28software%29" target="_blank">Mac</a> Users.
-              </div>
             </div>
 
             <form method="post" enctype="multipart/form-data" id="index-form">
@@ -95,7 +75,7 @@
                   <span class="m-1" style="display: none" id="loginTryText">Login</span>
                   <i style="display: none" id="bichecklogin" class="bi bi-check-all m-1"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-danger" type="button" onclick="logout_action()">
+                <button class="btn btn-sm btn-link" type="button" onclick="logout_action()">
                   <span class="m-0" style="display: inline-block">Logout Everything</span>
                 </button>
               </div>

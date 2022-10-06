@@ -31,7 +31,7 @@ class WebView(FlaskView):
         super().__init__()
         if not static.frun:
             static.frun = True
-            self.handle_recipes('handle_recipe_action_get_randoms',10)
+            self.handle_recipes('handle_recipe_action_get_randoms',16)
             print(" :: __INIT__ :: ")
 
     @classmethod
@@ -121,6 +121,11 @@ class WebView(FlaskView):
         elif fcn=='clear_basket':
             static.basket_items = []
             static.basket_ids = ()
+        elif fcn=='update_basket':
+            try:
+                static.basket_items = self.basket_manager.build_basket(static.basket_ids)
+            except:
+                pass
         elif fcn=='return_basket':
             pass
 
@@ -148,6 +153,8 @@ class WebView(FlaskView):
             return(make_response(jsonify({'vendor':retval.get('vendor'),'status':status,'info':info}), 200))
         elif route == 'checkout':
             return(make_response(jsonify(self.vendor.handleCheckout(ingredients=self.handle_basket('return_basket').get('unique_basket_elements'),vendor=retval.get('vendor'))), 200))
+        elif route == 'add_missing':
+            return(make_response(jsonify(self.vendor.handleMissingIngredients(), 200)))
         elif route == 'mod':
             return(make_response(jsonify(self.vendor.modify_basket(idx=retval.get('idx'),fnc=retval.get('f'))), 200))
         elif route == 'push_vendor_basket':
@@ -192,6 +199,9 @@ class WebView(FlaskView):
         elif route=='start_application_update':
             self.git_manager.update_repository()
             return(make_response(jsonify({'':''}), 200))
+        elif route=='modify_recipe_portions':
+            self.basket_manager.modify_recipe_portions(retval.get('f'))
+            return(make_response(jsonify({'num_recipe_portions':self.basket_manager.get_num_recipe_portions(),'basket':self.handle_basket('update_basket')}), 200))
             
 
     @route('/choose', methods=['POST'])
@@ -212,7 +222,8 @@ class WebView(FlaskView):
 
     @route('/cards')
     def cards(self):
-        return(render_template('cards.html',data=self.create_cards.get(static.cards_ids),basket_items=self.basket_manager.build_basket(static.cards_ids)))
+        data = self.create_cards.get_basket(static.cards_ids)
+        return(render_template('cards.html',data=data.get('cards_data'),basket_items=data.get('cards_overall_ingredients')))
 
     @route('/favorites')
     def favorites(self):

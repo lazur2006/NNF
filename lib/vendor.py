@@ -105,6 +105,11 @@ class vendor(object):
             vendorbasket = self.bring.search(ingredients)
         
         return(vendorbasket)
+
+    def handleMissingIngredients(self):
+        global vendorbasket
+        
+        return(self.bring.missing(vendorbasket.get('missing')))
     
     def modify_basket(self,idx,fnc):
         global vendorbasket

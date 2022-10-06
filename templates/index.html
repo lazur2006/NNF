@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container-fluid">
-  <div class="row py-xl-5 py-lg-5 py-md-5 py-sm-5 py-3">
+<div class="container-fluid" style="margin-top:clamp(150px, 70vw, 320px);">
+  <div class="row">
     {%if amount == 0%}
     <div class="mx-auto" style="width: 25em;">
       <div class="alert alert-primary shadow" role="alert">
@@ -14,25 +14,43 @@
     {%endif%}
     {%for k in range(0, amount)%}
     <!-- Gallery item -->
-    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+    <div class="col-xl-3 col-lg-3 col-md-3 col-6 mb-4">
       <div class="quiz_card_area h-100">
         <input class="quiz_checkbox" type="checkbox" id="c_checkboxField" name="checkbox" value={{k}} />
         <div class="single_quiz_card h-100">
-          <div class="bg-white rounded shadow-sm h-100"><img src="{{filename[k]}}" alt=""
-              class="img-fluid card-img-top rounded-top">
-            <div class="p-4">
-              <h5> <a href="#" class="text-dark">{{r_name[k]}}</a></h5>
-              <p class="small text-muted mb-0">{{r_subtitle[k]}}</p>
-              <div class="badge bg-light shadow-sm text-dark position-absolute top-0 start-50 translate-middle">
-                <span class="fw-light text-muted align-text-bottom">{{r_type[k]}}</span>
-                <div class="badge bg-primary">{{r_subtype[k]}}</div>
-              </div>
-
-              <div class="badge bg-light shadow-sm fs-6 {{r_fav_status[k]}} position-absolute translate-middle m-2"
-                style="right:0%;bottom:0%;transform: rotate(0);">
+          <div class="bg-white rounded shadow-sm h-100">
+            <img src="{{filename[k]}}" alt="" class="img-fluid card-img-top rounded-top">
+            <div class="position-relative">
+              <div
+                class="badge bg-light shadow-sm position-absolute top-100 start-50 translate-middle {{r_fav_status[k]}}"
+                style="transform: rotate(0);">
                 <a onclick="favorite({{r_id[k]}})" id="fav_btn_{{r_id[k]}}" class="stretched-link">
                 </a><i class="bi bi-heart-fill"></i>
               </div>
+            </div>
+
+            <div class="p-2 text-break">
+              <p style="font-size: clamp(13px, 3vw, 10px);font-weight: bold;color:#3632a8;" class="mt-2 mb-0">
+                {{r_name[k]}}
+              </p>
+              <p class="m-0" style="font-size: clamp(12px, 2vw, 10px);font-weight:300;color:grey;overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;">{{r_subtitle[k]}}
+              </p>
+              {%if r_type[k]!="" %}
+              <div
+                class="badge bg-light rounded-5 shadow-sm text-dark position-absolute top-0 start-50 translate-middle">
+                <span style="font-size: clamp(8px, 1vw, 10px);font-weight:300;">{{r_type[k]}}</span>
+                {%if r_subtype[k]!="" %}
+                <div class="badge bg-primary" style="font-size: clamp(8px, 1vw, 10px);font-weight:300;">{{r_subtype[k]}}
+                </div>
+                {%endif%}
+              </div>
+              {%endif%}
+
+
+
 
             </div>
           </div>
@@ -44,39 +62,8 @@
   </div>
 </div>
 
-<div class="modal fade modal-lg" id="shopping_list_modal" tabindex="-1" aria-labelledby="shopping_list_modal_title"
-  style="display: none;" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="shopping_list_modal_title">Shopping List</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body bg-light">
-        <div class="row d-flex justify-content-start position-relative bg-light">
-
-          <div class="d-flex col-xl-3 p-2 bg-light align-middle">
-            <div class="d-flex justify-content-start align-items-center">
-              <div class="p-4"
-                style="background: url('https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_100,q_auto,w_auto/hellofresh_s3/image/555da9624dab71591b8b4567.png') center center / cover scroll; height: 10vw; width: 10vw; max-height: 3em; max-width: 3em; border-radius: 50%;">
-              </div>
-              <p class="small text-muted text-center m-2">1.0Stück Birne</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="modal-footer"><button type="button" class="btn btn-outline-dark btn-sm"><i
-            class="bi bi-share-fill"></i></button>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
 <div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightVendor"
-  aria-labelledby="offcanvasRightLabelVendor">
+  aria-labelledby="offcanvasRightLabelVendor" style="min-width: 30%;">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">
@@ -90,17 +77,42 @@
       <div class="container-fluid p-0">
 
         <ul class="list-group p-0 m-0" id="vendor_ingredients">
-          <li class="list-group-item text-center bg-white p-5">
-            <img src="/static/images/Picnic_logo.svg" id="img_vendor_basket" height="65em" style="text-align: center;">
+          <li class="list-group-item text-center bg-white p-3">
+            <img src="/static/images/Picnic_logo.svg" id="img_vendor_basket" height="65em"
+              style="text-align: center;margin-left:20%;margin-right:20%;">
 
-            <div class="alert alert-danger mt-5" id="vendor_missing_ingredients" role="alert" style="display: none">
+            <div class="alert alert-secondary mt-5 mb-5 p-2 text-secondary w-100" id="vendor_missing_ingredients"
+              role="alert" style="display: inline-block;background-color:#fafafa;">
               <div class="m-3">
-                <i class="bi bi-exclamation-circle-fill align-top me-2"></i>
-                Some ingredients wasn't found
+                <i class="bi bi-exclamation-circle-fill align-top me-2"></i>Missing products
               </div>
               <ul class="list-group text-start" id="vendor_missing_ingredients_list">
                 <!-- auto generated content -->
+                <li class="list-group-item d-flex align-items-center justify-content-center"
+                  style="background-color: #d9d9d9;">
+                  <div class="d-flex flex-column text-center align-items-center"><img
+                      src="https://storefront-prod.de.picnicinternational.com/static/images/1dfef13fdcc2ebb3f89d97aa30f6931924e5f496a8a1ff18ff6ee50d73899fb0/small.png"
+                      style="height:5em;width:auto;max-width:4.5em;object-fit:contain;" class="m-3"></div>
+                  <div class="d-flex flex-column align-items-start ps-3" style="width:100%;"><span
+                      class="badge bg-secondary rounded-pill text-wrap text-break">1.0Prise(n) Chiliflocke</span></div>
+                </li>
+                <li class="list-group-item bg-transparent text-dark text-opacity-75 fs-6">(150.0g) - Lachsfilet, frisch
+                </li>
               </ul>
+              <div class="d-grid pt-3">
+                <button type="button" id="vendor_checkout_proceed_Bring" onclick="handle_missing_ingredients('Bring')"
+                  class="btn btn-outline-dark btn-lg rounded-0 rounded-top bring_btn">
+                  <i class="bi bi-plus-circle-fill align-bottom" id="spinner_Bring_carticon"></i>
+                  <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
+                    id="spinner_Bring" style="display: none"></span>
+                  Add to Bring! List
+                </button><span id="login_status_badge_Bring" data-bs-placement="top"
+                  class="text-bg-success rounded-bottom fw-light bring_badge" data-bs-toggle="tooltip"
+                  style="font-size:0.7em;" title="Successfully logged in">
+                  Bring!
+                  <i class="bi bi-check-circle-fill ms-1 align-top bring_status" id="login_status_bi_Bring"></i>
+                </span>
+              </div>
             </div>
           </li>
           <!-- auto generated content -->
@@ -126,7 +138,7 @@
 </div>
 
 <div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRightCheckout"
-  aria-labelledby="offcanvasRightLabelCheckout">
+  aria-labelledby="offcanvasRightLabelCheckout" style="min-width: 30%;">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Checkout</h5>
@@ -194,15 +206,16 @@
             <p class="card-text text-start fw-lighter">Transfer your Shopping List into your Bring! App.</p>
             <div class="d-grid pt-3">
               <button type="button" id="vendor_checkout_proceed_Bring" onclick="checkout('Bring')" disabled=""
-                class="btn btn-outline-dark btn-lg rounded-0 rounded-top">
+                class="btn btn-outline-dark btn-lg rounded-0 rounded-top bring_btn">
                 <i class="bi bi-plus-circle-fill align-bottom" id="spinner_Bring_carticon"></i>
                 <span class="spinner-border spinner-border-sm align-baseline" role="status" aria-hidden="true"
                   id="spinner_Bring" style="display: none"></span>
                 Add
               </button><span id="login_status_badge_Bring" data-bs-placement="top"
-                class="text-bg-secondary rounded-bottom fw-light" data-bs-toggle="tooltip" style="font-size:0.7em;">
+                class="text-bg-secondary rounded-bottom fw-light bring_badge" data-bs-toggle="tooltip"
+                style="font-size:0.7em;">
                 Bring!
-                <i class="bi bi-exclamation-circle-fill ms-1 align-top" id="login_status_bi_Bring"></i>
+                <i class="bi bi-exclamation-circle-fill ms-1 align-top bring_status" id="login_status_bi_Bring"></i>
               </span>
             </div>
           </div>
@@ -230,7 +243,8 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+<div class="offcanvas offcanvas-end fullwidth" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"
+  style="min-width: 30%;">
 
   <div class="offcanvas-header bg-dark">
     <h5 class="offcanvas-title text-light" id="offcanvasRightLabel">Basket</h5>
@@ -240,12 +254,23 @@
   <div class="offcanvas-body p-0">
     <div class="p-2 mb-4 bg-light rounded-3">
       <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold mb-3">Recipes</h1>
-
+        <h1 class="display-5 fw-bold m-0">Recipes</h1>
+        <div class="d-flex justify-content-center mb-2 mt-3">
+          <span class="badge rounded-pill text-bg-dark m-3 p-3">Persons
+            <div class="btn-group ms-4">
+              <button class="btn btn-light btn-sm" onclick="modify_recipe_portions('minus')"
+                style="width:2em">-</button>
+              <button class="btn btn-light btn-sm num_recipe_portions" disabled="" style="width:2.5em;">X</button>
+              <button class="btn btn-light btn-sm" onclick="modify_recipe_portions('plus')"
+                style="width:2em">+</button>
+            </div>
+          </span>
+        </div>
         <ul class="list-group" style="padding-bottom:1em" id="recipes-tab">
-          <!-- script content section : populateTable() -->
+          <ul class="list-group" style="padding-bottom:1em" id="recipes-tab">
+            <!-- script content section : populateTable() -->
+          </ul>
         </ul>
-
       </div>
     </div>
 
@@ -266,53 +291,44 @@
   </div>
 </div>
 
-<!-- <div class="position-fixed shadow border border-2 border-dark rounded-5" style="bottom:50%;right:0%;">
-  <div class="bg-white rounded-4">
-    <div class="text-dark text-center pt-2 fw-light" style="height:3em;width:auto;font-size:.7em;">
-      1/10
-    </div>
-    <div class="btn-group-vertical" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-dark btn-lg" style="padding: 5px;">
-        <i class="bi bi-chevron-double-left" style="font-size:15px; vertical-align: top;"></i>
-      </button><button type="button" class="btn btn-dark btn-lg" style="padding: 5px;">
-        <i class="bi bi-chevron-double-right" style="font-size:15px; vertical-align: top;"></i>
+<div class="position-fixed start-50 translate-middle-x p-2" style="bottom:3vw;z-index:999;
+background: rgba(255, 255, 255, 0.17);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(13.9px);
+-webkit-backdrop-filter: blur(13.9px);">
+  <form method="post" enctype="multipart/form-data" id="index-form">
+    <div class="btn-group" role="group" aria-label="Basic example">
+
+      <button type="submit" class="btn btn-dark text-nowrap" id="btn" name="btn" data-bs-toggle="offcanvas"
+        value="basket" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+        <i class="bi bi-bag-plus-fill" style="font-size:15px; vertical-align: top;"></i>
+        <span style="font-size:15px; vertical-align: center;">Add to Basket</span>
       </button>
+
+      <button type="button" class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom">
+        <i class="bi bi-sliders2" style="font-size:30px; vertical-align: 10%;top:10%;"></i>
+      </button>
+
     </div>
-  </div>
-</div> -->
-
-<div class="d-grid gap-2 position-fixed start-50 translate-middle-x" style="bottom:2%">
-  <div class="container-fluid bg-light rounded shadow bg-opacity-70" style="padding: .25em; white-space: nowrap;">
-
-    <form method="post" enctype="multipart/form-data" id="index-form">
-      <div class="btn-group" role="group" aria-label="Basic example">
-
-        <button type="submit" class="btn btn-dark" id="btn" name="btn" data-bs-toggle="offcanvas" value="basket"
-          style="padding: 5px;" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-          <i class="bi bi-bag-plus-fill" style="font-size:15px; vertical-align: top;"></i>
-          <span style="font-size:15px; vertical-align: center;">Add to Basket</span>
-        </button>
-
-        <button type="button" class="btn btn-outline-dark" style="padding: 5px;" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasBottom">
-          <i class="bi bi-sliders2" style="font-size:30px; vertical-align: 10%;top:10%;"></i>
-        </button>
-
-      </div>
-    </form>
-  </div>
+  </form>
 </div>
 
-<div class="offcanvas text-white bg-black offcanvas-bottom h-auto" tabindex="-1" id="offcanvasBottom"
-  aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas text-white offcanvas-bottom h-auto m-5" tabindex="-1" id="offcanvasBottom"
+  aria-labelledby="offcanvasBottomLabel" style="
+  background: rgba(0, 0, 0, 0.79);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(0, 0, 0, 0.3);">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasBottomLabel">Recipe Setup</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <form method="post" enctype="multipart/form-data" id="recipe-form" action="choose">
     <div class="offcanvas-body d-flex flex-row">
-      <div class="d-flex flex-column justify-content-start p-3 m-1 text-white"
-        style="min-width:12em;">
+      <div class="d-flex flex-column justify-content-start p-3 m-1 text-white" style="min-width:12em;">
         <h1 class="display-5 fw-bold">Quick Finder</h1>
         <button class="btn btn-outline-light mt-4" type="submit" id="btn" name="btn" value="btn_favorites_show"><i
             class="bi bi-heart-fill" style="font-size:15px; vertical-align: bottom;"></i> Favorites</button>
@@ -336,7 +352,8 @@
           <input type="text" class="form-control bg-black text-white ui-autocomplete-input mt-4"
             id="search_ingredient_input" name="query" placeholder="Ingredient" oninput="search_autocomplete_action()"
             style="z-index:4999;" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
-          <button class="btn btn-outline-light mt-4" type="button" onclick="show_recipes_by_ingredient_search(list)" id="search_ingredient_button" disabled>go
+          <button class="btn btn-outline-light mt-4" type="button" onclick="show_recipes_by_ingredient_search(list)"
+            id="search_ingredient_button" disabled>go
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary"
               id="search_ingredient_value_found_recipes">
               0
@@ -352,19 +369,19 @@
         <h1 class="display-5 fw-bold">Make it Random</h1><label for="customRange3" class="form-label">Recipes
           per page
         </label>
-        <h1 id="toptitle">10</h1><input type="range" class="form-range" min="5" max="50" step="1" value="10"
+        <h1 id="toptitle">16</h1><input type="range" class="form-range" min="5" max="50" step="1" value="16"
           name="range" oninput="$('#toptitle').text(this.value);" style="padding-bottom:1em"><button
           class="btn btn-outline-light" type="submit" id="btn" name="btn" value="random"><i class="bi bi-shuffle"
             style="font-size:15px; vertical-align: bottom;"></i> Random</button>
       </div>
-      <div class="d-flex flex-column justify-content-between p-3 m-1 me-3 ms-3"
-        style="min-width:20em;">
+      <div class="d-flex flex-column justify-content-between p-3 m-1 me-3 ms-3" style="min-width:20em;">
         <h1 class="display-5 fw-bold">#tags</h1>
         <div class="overflow-auto" style="height:11em;">
           <div class="row p-0 m-0 text-start">
             {%for tag in tags%}
             <div class="col-auto p-0" style="margin: 1px 1px 0px 1px;">
-              <button type="button" class="btn btn-primary rounded-pill" onclick='show_recipes_by_tag("{{tag|quote_plus}}")'
+              <button type="button" class="btn btn-primary rounded-pill"
+                onclick='show_recipes_by_tag("{{tag|quote_plus}}")'
                 style="padding:2px 8px 2px 8px;margin:0px;font-size:12px;">{{tag}}</button>
             </div>
             {%endfor%}
@@ -374,4 +391,5 @@
     </div>
   </form>
 </div>
+
 {% endblock %}

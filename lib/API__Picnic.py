@@ -27,7 +27,8 @@ class picnicapi(object):
         retval = {'total':0,
                   'missing':[],
                   'vendorbasket':[{'search_term':ingredients['name'][idx],
-                   'search_amount':str(ingredients['amount'][idx]) + str(ingredients['unit'][idx]),
+                   'search_amount':str(ingredients['printable_unit_amounts'][idx]),
+                   'search_image_uri':ingredients['image'][idx],
                    'amount': 1, # just for initializing the default amount
                    'selected': 0, # just for initializing the default selected item
                    'selected_id': val[0].get('id') if val else 'no_id', # just for initializing the default selected item
@@ -41,7 +42,7 @@ class picnicapi(object):
         
         retval.update({"total":round(sum([val['price'] for val in retval['vendorbasket']]),2)})
         
-        retval.update({"missing":[val['search_term'] for val in retval['vendorbasket'] if not val['results']]})
+        retval.update({"missing":[{"search_term":val['search_term'],"search_amount":val['search_amount'],"search_image_uri":val['search_image_uri']} for val in retval['vendorbasket'] if not val['results']]})
         
         return(retval)
         

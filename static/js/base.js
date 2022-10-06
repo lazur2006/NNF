@@ -1,4 +1,4 @@
-function poll_app_awakes(){
+function poll_app_awakes() {
   var source = new EventSource("/wake");
   source.onmessage = function (event) {
     if (event.data == "close") {
@@ -6,11 +6,11 @@ function poll_app_awakes(){
       location.reload();
     }
   };
-  source.onerror = function(event) {
+  source.onerror = function (event) {
     setTimeout(poll_app_awakes, 5000);
   };
 }
-function handle_update_action(){
+function handle_update_action() {
   $.ajax({
     url: "/",
     data: JSON.stringify({
@@ -19,8 +19,8 @@ function handle_update_action(){
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     beforeSend: function () {
-      $('#update_loading_button').attr("disabled",true);
-      $('#update_loading_button_spinner').show();
+      $("#update_loading_button").attr("disabled", true);
+      $("#update_loading_button_spinner").show();
     },
     success: function (response) {
       poll_app_awakes();
@@ -30,18 +30,20 @@ function handle_update_action(){
     },
   });
 }
-function delete_search_item(element){
-  list = jQuery.grep(list, function(value) {return value != element.textContent;});
+function delete_search_item(element) {
+  list = jQuery.grep(list, function (value) {
+    return value != element.textContent;
+  });
   element.parentNode.removeChild(element);
   count_recipes_by_ingredient_search();
 }
-function show_recipes_by_ingredient_search(ingredient_list){
+function show_recipes_by_ingredient_search(ingredient_list) {
   $.ajax({
     url: "/",
     data: JSON.stringify({
       Route: "show_recipes_by_ingredient_search",
       ingredient_list: ingredient_list,
-      search_method: 'and'
+      search_method: "and",
     }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
@@ -53,27 +55,29 @@ function show_recipes_by_ingredient_search(ingredient_list){
     },
   });
 }
-function count_recipes_by_ingredient_search(){
+function count_recipes_by_ingredient_search() {
   $.ajax({
     url: "/",
     data: JSON.stringify({
       Route: "count_recipes_by_ingredient_search",
       ingredient_list: list,
-      search_method: 'and'
+      search_method: "and",
     }),
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
-      if(response>0){
-        $('#search_ingredient_value_found_recipes').addClass('bg-success').removeClass('bg-secondary');
-        $('#search_ingredient_button').attr("disabled",false);
+      if (response > 0) {
+        $("#search_ingredient_value_found_recipes")
+          .addClass("bg-success")
+          .removeClass("bg-secondary");
+        $("#search_ingredient_button").attr("disabled", false);
+      } else {
+        $("#search_ingredient_value_found_recipes")
+          .addClass("bg-secondary")
+          .removeClass("bg-success");
+        $("#search_ingredient_button").attr("disabled", true);
       }
-      else{
-        $('#search_ingredient_value_found_recipes').addClass('bg-secondary').removeClass('bg-success');
-        $('#search_ingredient_button').attr("disabled",true);
-      }
-      $('#search_ingredient_value_found_recipes').text(response);
-      
+      $("#search_ingredient_value_found_recipes").text(response);
     },
     error: function (error) {
       console.log(error);
@@ -97,7 +101,7 @@ function show_recipes_by_tag(tag) {
     },
   });
 }
-var list = []
+var list = [];
 function search_autocomplete_action() {
   $.ajax({
     url: "/",
@@ -118,22 +122,33 @@ function search_autocomplete_action() {
           collision: "flip flip",
         },
         minLength: 2,
-        select: function(event, ui) {
+        select: function (event, ui) {
           list.push(ui.item.value);
-          var ingredient_search_item_list = document.querySelector("#ingredient_search_item_list");
-          const btn_ingredient_search_item_list = document.createElement("button");
+          var ingredient_search_item_list = document.querySelector(
+            "#ingredient_search_item_list"
+          );
+          const btn_ingredient_search_item_list =
+            document.createElement("button");
           btn_ingredient_search_item_list.classList.add("badge");
           btn_ingredient_search_item_list.classList.add("rounded-pill");
           btn_ingredient_search_item_list.classList.add("text-bg-primary");
           btn_ingredient_search_item_list.classList.add("me-1");
-          btn_ingredient_search_item_list.setAttribute('style',"border:none;")
-          btn_ingredient_search_item_list.setAttribute('onclick',"delete_search_item(this)")
-          btn_ingredient_search_item_list.insertAdjacentHTML( 'beforeend', '<i class="bi bi-x me-1 yalign-bottom"></i>' + ui.item.value );
-          ingredient_search_item_list.appendChild(btn_ingredient_search_item_list);
-          $("#search_ingredient_input").val('');
+          btn_ingredient_search_item_list.setAttribute("style", "border:none;");
+          btn_ingredient_search_item_list.setAttribute(
+            "onclick",
+            "delete_search_item(this)"
+          );
+          btn_ingredient_search_item_list.insertAdjacentHTML(
+            "beforeend",
+            '<i class="bi bi-x me-1 yalign-bottom"></i>' + ui.item.value
+          );
+          ingredient_search_item_list.appendChild(
+            btn_ingredient_search_item_list
+          );
+          $("#search_ingredient_input").val("");
           count_recipes_by_ingredient_search();
           return false;
-        }
+        },
       });
     },
     error: function (error) {
@@ -240,7 +255,9 @@ function create_recipe_cards() {
         //Browser has allowed it to be opened
         win.focus();
         clearBasket();
-        bootstrap.Offcanvas.getOrCreateInstance($("#offcanvasRightCheckout")).hide();
+        bootstrap.Offcanvas.getOrCreateInstance(
+          $("#offcanvasRightCheckout")
+        ).hide();
       } else {
         //Browser has blocked it
         alert("Please allow popups for this website");
@@ -455,15 +472,59 @@ function build_vendor_basket(response) {
         $("#vendor_missing_ingredients").css({ display: "inline-block" });
         const li_vendor_missing_ingredients_list = document.createElement("li");
         li_vendor_missing_ingredients_list.classList.add("list-group-item");
-        li_vendor_missing_ingredients_list.classList.add("bg-transparent");
-        li_vendor_missing_ingredients_list.classList.add("text-dark");
-        li_vendor_missing_ingredients_list.classList.add("text-opacity-75");
-        li_vendor_missing_ingredients_list.classList.add("fs-6");
-        li_vendor_missing_ingredients_list.textContent = element;
+        li_vendor_missing_ingredients_list.classList.add("d-flex");
+        li_vendor_missing_ingredients_list.classList.add("align-items-center");
+        li_vendor_missing_ingredients_list.classList.add("justify-content-center");
+        li_vendor_missing_ingredients_list.setAttribute('style','background-color: #f0f0f0;')
+        // li_vendor_missing_ingredients_list.textContent =
+        //   "(" + element.search_amount + ") - " + element.search_term;
 
-        vendor_missing_ingredients_list.appendChild(
-          li_vendor_missing_ingredients_list
+        const div_vendor_missing_list = document.createElement("div");
+        div_vendor_missing_list.classList.add("d-flex");
+        div_vendor_missing_list.classList.add("flex-column");
+        div_vendor_missing_list.classList.add("text-center");
+        div_vendor_missing_list.classList.add("align-items-center");
+
+        const div_img_vendor_missing_ingredient = document.createElement("div");
+        //div_img_vendor_missing_ingredient.setAttribute("src", element.search_image_uri);
+        div_img_vendor_missing_ingredient.classList.add("m-1");
+        div_img_vendor_missing_ingredient.classList.add("p-4");
+        div_img_vendor_missing_ingredient.setAttribute(
+          "style","background: url(" + element.search_image_uri + ") center center / cover scroll; height: 5vw; width: 5vw; max-height: 4em; max-width: 4em; border-radius: 50%;"
         );
+
+        div_vendor_missing_list.appendChild(div_img_vendor_missing_ingredient);
+        li_vendor_missing_ingredients_list.appendChild(div_vendor_missing_list);
+
+        const div_vendor_missing_element_name = document.createElement("div");
+        div_vendor_missing_element_name.classList.add("d-flex");
+        div_vendor_missing_element_name.classList.add("flex-column");
+        div_vendor_missing_element_name.classList.add("align-items-start");
+        div_vendor_missing_element_name.classList.add("ps-3");
+        div_vendor_missing_element_name.setAttribute("style","width:100%;");
+
+        const span_vendor_missing_element_name = document.createElement("span");
+        span_vendor_missing_element_name.classList.add("badge");
+        span_vendor_missing_element_name.classList.add("bg-secondary");
+        span_vendor_missing_element_name.classList.add("rounded-pill");
+        span_vendor_missing_element_name.classList.add("text-wrap");
+        span_vendor_missing_element_name.classList.add("text-break");
+        span_vendor_missing_element_name.textContent = element.search_amount + " " + element.search_term;
+
+        div_vendor_missing_element_name.appendChild(span_vendor_missing_element_name);
+        li_vendor_missing_ingredients_list.appendChild(div_vendor_missing_element_name);
+
+        vendor_missing_ingredients_list.appendChild(li_vendor_missing_ingredients_list);
+
+        // <li class="list-group-item d-flex align-items-center justify-content-center" style="background-color: #d9d9d9;">
+        // <div class="d-flex flex-column text-center align-items-center">
+        // <img src="https://small.png" style="height:5em;width:auto;max-width:4.5em;object-fit:contain;" class="m-3">
+        // </div>
+        // <div class="d-flex flex-column align-items-start ps-3" style="width:100%;">
+        // <span class="badge bg-secondary rounded-pill text-wrap text-break">1.0Prise(n) Chiliflocke</span>
+        // </div>
+        // </li>
+        // <li class="list-group-item bg-transparent text-dark text-opacity-75 fs-6">(150.0g) - Lachsfilet, frisch</li>
       }
     });
   }
@@ -515,8 +576,8 @@ function push_vendor_basket(vendor) {
   });
 }
 function vendor_change_ingredient(f, idx) {
-  console.log(f);
-  console.log(idx);
+  // console.log(f);
+  // console.log(idx);
 
   $.ajax({
     url: "/",
@@ -531,6 +592,52 @@ function vendor_change_ingredient(f, idx) {
     },
   });
 }
+function modify_recipe_portions(f, idx) {
+  // console.log(f);
+  // console.log(idx);
+
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ f: f, Route: "modify_recipe_portions" }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      //build_vendor_basket(response);
+      $(".num_recipe_portions").text(response.num_recipe_portions)
+      populateTable(response.basket)
+      //console.log(response);
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
+function handle_missing_ingredients(vendor){
+
+  $("#spinner_" + vendor).css({ display: "inline-block" });
+  $("#spinner_" + vendor + "_carticon").css({ display: "none" });
+  $("#vendor_checkout_proceed_" + vendor).addClass("disabled");
+
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ vendor: vendor, Route: "add_missing" }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      console.log(response);
+
+      $("#spinner_" + vendor + "_carticon").css({ display: "inline-block" });
+      $("#spinner_" + vendor).css({ display: "none" });
+      $("#vendor_checkout_proceed_" + vendor).removeClass("disabled");
+      $("#push_vendor_basket").prop("disabled", false);
+      
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}
+
 function checkout(vendor) {
   $("#spinner_" + vendor).css({ display: "inline-block" });
   $("#spinner_" + vendor + "_carticon").css({ display: "none" });
@@ -543,6 +650,7 @@ function checkout(vendor) {
     type: "POST",
     success: function (response) {
       console.log(response);
+
       $("#spinner_" + vendor + "_carticon").css({ display: "inline-block" });
       $("#spinner_" + vendor).css({ display: "none" });
       $("#vendor_checkout_proceed_" + vendor).removeClass("disabled");
@@ -644,6 +752,8 @@ function populateTable(json) {
     var unique_basket_elements_name = json.unique_basket_elements.name;
     var unique_basket_elements_image = json.unique_basket_elements.image;
 
+    var printable_unit_amounts = json.unique_basket_elements.printable_unit_amounts
+
     if (typeof unique_basket_elements_amount != "undefined") {
       Object.keys(recipe_name).forEach((row) => {
         const div_img = document.createElement("div");
@@ -722,29 +832,31 @@ function populateTable(json) {
         span_ingredients.classList.add("rounded-pill");
         span_ingredients.classList.add("text-bg-dark");
         span_ingredients.classList.add("m-3");
-        if (unique_basket_elements_amount[row] == 0) {
-          span_ingredients.textContent = unique_basket_elements_unit[row];
-          if (
-            unique_basket_elements_unit[row] == "None" ||
-            unique_basket_elements_unit[row] == "Einheit" ||
-            unique_basket_elements_unit[row] == "nach Geschmack"
-          ) {
-            span_ingredients.textContent = "-";
-          } else {
-            span_ingredients.textContent = unique_basket_elements_unit[row];
-          }
-        } else {
-          span_ingredients.textContent =
-            unique_basket_elements_amount[row] +
-            " " +
-            unique_basket_elements_unit[row];
-          if (unique_basket_elements_amount[row] == "None") {
-            span_ingredients.textContent =
-              unique_basket_elements_amount[row] +
-              " " +
-              unique_basket_elements_name[row];
-          }
-        }
+
+        span_ingredients.textContent = printable_unit_amounts[row];
+        // if (unique_basket_elements_amount[row] == 0) {
+        //   span_ingredients.textContent = unique_basket_elements_unit[row];
+        //   if (
+        //     unique_basket_elements_unit[row] == "None" ||
+        //     unique_basket_elements_unit[row] == "Einheit" ||
+        //     unique_basket_elements_unit[row] == "nach Geschmack"
+        //   ) {
+        //     span_ingredients.textContent = "-";
+        //   } else {
+        //     span_ingredients.textContent = unique_basket_elements_unit[row];
+        //   }
+        // } else {
+        //   span_ingredients.textContent =
+        //     unique_basket_elements_amount[row] +
+        //     " " +
+        //     unique_basket_elements_unit[row];
+        //   if (unique_basket_elements_amount[row] == "None") {
+        //     span_ingredients.textContent =
+        //       unique_basket_elements_amount[row] +
+        //       " " +
+        //       unique_basket_elements_name[row];
+        //   }
+        // }
 
         li_ingredients.appendChild(span_ingredients);
         ingredientsTab.appendChild(ul_ingredients);
@@ -900,10 +1012,8 @@ function setCurrentUserStatus() {
     "login_status_bi_HelloFresh"
   );
 
-  var login_status_badge_Bring = document.getElementById(
-    "login_status_badge_Bring"
-  );
-  var login_status_bi_Bring = document.getElementById("login_status_bi_Bring");
+  var login_status_badge_Bring = document.getElementsByClassName("bring_badge");
+  var login_status_bi_Bring = document.getElementsByClassName("bring_status");
 
   var vendor_checkout_proceed_REWE = document.getElementById(
     "vendor_checkout_proceed_REWE"
@@ -911,9 +1021,8 @@ function setCurrentUserStatus() {
   var vendor_checkout_proceed_Picnic = document.getElementById(
     "vendor_checkout_proceed_Picnic"
   );
-  var vendor_checkout_proceed_Bring = document.getElementById(
-    "vendor_checkout_proceed_Bring"
-  );
+  var vendor_checkout_proceed_Bring =
+    document.getElementsByClassName("bring_btn");
 
   $.ajax({
     url: "/",
@@ -1053,44 +1162,71 @@ function setCurrentUserStatus() {
       }
       if (response.Bring) {
         try {
-          vendor_checkout_proceed_Bring.disabled = false;
+          //vendor_checkout_proceed_Bring.disabled = false;
+          Array.from(vendor_checkout_proceed_Bring).forEach(function (item) {
+            item.disabled = false;
+          });
         } catch (e) {}
         try {
-          login_status_badge_Bring.classList.replace(
-            "text-bg-secondary",
-            "text-bg-success"
-          );
+          // login_status_badge_Bring.classList.replace(
+          //   "text-bg-secondary",
+          //   "text-bg-success"
+          // );
+          Array.from(login_status_badge_Bring).forEach(function (item) {
+            item.classList.replace("text-bg-secondary", "text-bg-success");
+          });
         } catch (e) {}
         try {
-          login_status_badge_Bring.setAttribute(
-            "title",
-            "Successfully logged in"
-          );
+          // login_status_badge_Bring.setAttribute("title","Successfully logged in");
+          Array.from(login_status_badge_Bring).forEach(function (item) {
+            item.setAttribute("title", "Successfully logged in");
+          });
         } catch (e) {}
         try {
-          login_status_bi_Bring.classList.replace(
-            "bi-exclamation-circle-fill",
-            "bi-check-circle-fill"
-          );
+          // login_status_bi_Bring.classList.replace(
+          //   "bi-exclamation-circle-fill",
+          //   "bi-check-circle-fill"
+          // );
+          Array.from(login_status_bi_Bring).forEach(function (item) {
+            item.classList.replace(
+              "bi-exclamation-circle-fill",
+              "bi-check-circle-fill"
+            );
+          });
         } catch (e) {}
       } else {
         try {
-          vendor_checkout_proceed_Bring.disabled = true;
+          //vendor_checkout_proceed_Bring.disabled = true;
+          Array.from(vendor_checkout_proceed_Bring).forEach(function (item) {
+            item.disabled = true;
+          });
         } catch (e) {}
         try {
-          login_status_badge_Bring.classList.replace(
-            "text-bg-success",
-            "text-bg-secondary"
-          );
+          // login_status_badge_Bring.classList.replace(
+          //   "text-bg-success",
+          //   "text-bg-secondary"
+          // );
+          Array.from(login_status_badge_Bring).forEach(function (item) {
+            item.classList.replace("text-bg-success", "text-bg-secondary");
+          });
         } catch (e) {}
         try {
-          login_status_badge_Bring.setAttribute("title", "Not logged in");
+          // login_status_badge_Bring.setAttribute("title", "Not logged in");
+          Array.from(login_status_badge_Bring).forEach(function (item) {
+            item.setAttribute("title", "Not logged in");
+          });
         } catch (e) {}
         try {
-          login_status_bi_Bring.classList.replace(
-            "bi-check-circle-fill",
-            "bi-exclamation-circle-fill"
-          );
+          // login_status_bi_Bring.classList.replace(
+          //   "bi-check-circle-fill",
+          //   "bi-exclamation-circle-fill"
+          // );
+          Array.from(login_status_bi_Bring).forEach(function (item) {
+            item.classList.replace(
+              "bi-check-circle-fill",
+              "bi-exclamation-circle-fill"
+            );
+          });
         } catch (e) {}
       }
     },
@@ -1104,6 +1240,19 @@ function setCurrentUserStatus() {
     Is called when the page is loaded completly
 */
 $(document).ready(function () {
+  // init some parameters
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({ f: 'default', Route: "modify_recipe_portions" }),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      $(".num_recipe_portions").text(response.num_recipe_portions)
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
 
   // check if app is up to date
   $.ajax({
@@ -1114,16 +1263,15 @@ $(document).ready(function () {
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
-      if(response.update_is_available){
+      if (response.update_is_available) {
         console.log(response.diff);
-        $('#update_modal').show();
-      }
-      else{
-        $('#update_modal').hide();
+        $("#update_modal").show();
+      } else {
+        $("#update_modal").hide();
       }
     },
     error: function (error) {
-      console.log('error');
+      console.log("error");
       console.log(error);
     },
   });

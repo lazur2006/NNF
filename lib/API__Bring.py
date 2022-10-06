@@ -78,8 +78,15 @@ class bring():
     def search(self,vendorbasket):
         list_name = f"Nice'n Fresh 🍜  {datetime.date.today()}"
         list_uuid = self.create_list(list_name)
-        [self.add_item(list_uuid,e,str(vendorbasket.get('amount')[idx]) + " " + str(vendorbasket.get('unit')[idx])) for idx,e in enumerate(vendorbasket.get('name'))]
+        [self.add_item(list_uuid,e,str(vendorbasket.get('printable_unit_amounts')[idx])) for idx,e in enumerate(vendorbasket.get('name'))]
         return("immediately_push_vendor_basket")
+
+    def missing(self,missingingredients):
+        list_name = f"NNF - Your Missing Products 🍜  {datetime.date.today()}"
+        list_uuid = self.create_list(list_name)
+        #[self.add_item(list_uuid,e,"") for idx,e in enumerate(missingingredients)]
+        [self.add_item(list_uuid,e.get('search_term'),e.get('search_amount')) for e in missingingredients]
+        return("missing_ingredients_added")
 
     def get_list_items(self,list_uuid):
         url = f"{base_address}/v2/bringlists/{list_uuid}"

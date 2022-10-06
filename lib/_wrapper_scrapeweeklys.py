@@ -11,14 +11,14 @@ class wr_scrapeWeeklys(object):
         self.class_obj.login(credentials=credentials)
         self.class_obj.account()
         self.class_obj.weeklys()
-        self.results = self.class_obj.stream['WEEKLYS']['meals']
+        self.results = self.class_obj.stream['WEEKLYS']
         self.user = user()
         
     def get(self):
         _, week_num, _ = datetime.date.today().isocalendar()
         if week_num != self.class_obj.week_num:
             self.repeat_access()
-        return(self.getDatabaseID([dic['recipe'].get('name') for dic in self.results]))
+        return(self.getDatabaseID(self.results))
         
     def getDatabaseID(self,Recipes):
         conn = sqlite3.connect('static/db/recipe.db')
@@ -39,7 +39,7 @@ class wr_scrapeWeeklys(object):
     def repeat_access(self):
         self.class_obj.login(credentials=[self.user.getCredentials('HelloFresh')['username'],self.user.getCredentials('HelloFresh')['password']])
         self.class_obj.weeklys()
-        self.results = self.class_obj.stream['WEEKLYS']['meals']
+        self.results = self.class_obj.stream['WEEKLYS']
     
     
     
