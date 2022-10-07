@@ -11,7 +11,8 @@ class git_manager():
 
     def __init__(self) -> None:
         self.repository = git.Repo(os.getcwd())
-    
+        self.repository.git.checkout('main')
+        
     def update_repository(self):
         if self.__allow_update_by_os_type():
             try:
@@ -33,8 +34,8 @@ class git_manager():
             return({'update_is_available':False,'diff':'OS: unix isn''t used'})
 
     def __restart_server(self):
-        #subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
-        print('restart')
+        subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
+        #print('restart')
 
     def __allow_update_by_os_type(self):
         if platform == "linux" or platform == "linux2":
@@ -42,7 +43,7 @@ class git_manager():
             return(True)
         elif platform == "darwin":
             # OS X - for debugging -
-            return(True)
+            return(False)
         elif platform == "win32":
             # Windows...
             return(False)
