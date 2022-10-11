@@ -5,17 +5,17 @@ import subprocess
 from sys import platform
 
 repository = 'https://github.com/lazur2006/NNF.git'
-branch = 'unstable_alpha_dev_2_0_1'
+branch = 'unstable_beta_2_0_0'
 
 class git_manager():
 
     def __init__(self) -> None:
         self.repository = git.Repo(os.getcwd())
-        self.repository.git.checkout('unstable_alpha_dev_2_0_1')
         
     def update_repository(self):
         if self.__allow_update_by_os_type():
             try:
+                self.repository.git.checkout('unstable_beta_2_0_0')
                 Repo.clone_from(repository, '', branch=branch)
             except:
                 self.repository.remotes.origin.pull()
@@ -26,8 +26,8 @@ class git_manager():
     def update_available(self):
         if self.__allow_update_by_os_type():
             self.repository.remotes.origin.fetch()
-            if(self.repository.git.diff('origin/unstable_alpha_dev_2_0_1') != ''):
-                return({'update_is_available':True,'diff':self.repository.git.diff('origin/unstable_alpha_dev_2_0_1')})
+            if(self.repository.git.diff('origin/unstable_beta_2_0_0') != ''):
+                return({'update_is_available':True,'diff':self.repository.git.diff('origin/unstable_beta_2_0_0')})
             else:
                 return({'update_is_available':False,'diff':''})
         else:
