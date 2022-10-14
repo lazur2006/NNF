@@ -8,8 +8,38 @@ from tqdm import tqdm
 import threading
 import sqlite3
 
+
+import ssl
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.poolmanager import PoolManager
+from requests.packages.urllib3.util import ssl_
+ciphers = (
+'''ECDHE-ECDSA-AES128-GCM-SHA256:'''
+'''ECDHE-RSA-AES128-GCM-SHA256:'''
+'''ECDHE-ECDSA-AES256-GCM-SHA384:'''
+'''ECDHE-RSA-AES256-GCM-SHA384:'''
+'''ECDHE-ECDSA-CHACHA20-POLY1305:'''
+'''ECDHE-RSA-CHACHA20-POLY1305:'''
+'''DHE-RSA-AES128-GCM-SHA256:'''
+'''DHE-RSA-AES256-GCM-SHA384'''
+)
+
 host = "https://gw.hellofresh.com"
 salt = "hellofresh-ios-customer:ca154f43-687b-4866-9d4e-a618f42da8c9"
+
+class TLSAdapter(HTTPAdapter):
+
+    def __init__(self, ssl_options=0, **kwargs):
+        self.ssl_options = ssl_options
+        super(TLSAdapter, self).__init__(**kwargs)
+
+    def init_poolmanager(self, *pool_args, **pool_kwargs):
+        ctx = ssl_.create_urllib3_context(ciphers=ciphers, 
+                                          cert_reqs=ssl.CERT_REQUIRED, 
+                                          options=self.ssl_options)
+        self.poolmanager = PoolManager(*pool_args,
+                                       ssl_context=ctx,
+                                       **pool_kwargs)
 
 class TQDM:
     def __init__(self,r):
@@ -30,6 +60,10 @@ class Thread(threading.Thread):
         self._isRunning = True
         self._tqdmObj = TQDM(range(1))
 
+        self.session = requests.session()
+        self.adapter = TLSAdapter(ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1 | ssl.OP_NO_TLSv1_3 | ssl.OP_NO_TICKET)
+        self.session.mount("https://", self.adapter)
+
     def __del__(self):
         self.wait()
         
@@ -41,9 +75,11 @@ class Thread(threading.Thread):
         payload = "grant_type=client_credentials&scope=public"
         headers = {
           'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+          'user-agent': 'HelloFresh/22.8 (com.hellofresh.HelloFresh; build:4616773; iOS 14.6.0) Alamofire/5.4.4',
           'authorization': f'Basic {str(base64.b64encode(salt.encode("ascii")), "utf-8")}'
         }
-        return(requests.request("POST", url, headers=headers, data=payload).json()['access_token'])
+        
+        return(self.session.request("POST", url, headers=headers, data=payload).json()['access_token'])
 
     def run(self):
         
