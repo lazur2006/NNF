@@ -11,10 +11,11 @@ class git_manager():
 
     def __init__(self) -> None:
         self.repository = git.Repo(os.getcwd())
-    
+        
     def update_repository(self):
         if self.__allow_update_by_os_type():
             try:
+                self.repository.git.checkout('unstable_beta_2_0_0')
                 Repo.clone_from(repository, '', branch=branch)
             except:
                 self.repository.remotes.origin.pull()
@@ -33,8 +34,8 @@ class git_manager():
             return({'update_is_available':False,'diff':'OS: unix isn''t used'})
 
     def __restart_server(self):
-        #subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
-        print('restart')
+        subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
+        #print('restart')
 
     def __allow_update_by_os_type(self):
         if platform == "linux" or platform == "linux2":
