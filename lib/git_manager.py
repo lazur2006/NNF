@@ -42,7 +42,7 @@ class git_manager():
             return(True)
         elif platform == "darwin":
             # OS X - for debugging -
-            return(True)
+            return(False)
         elif platform == "win32":
             # Windows...
             return(False)

@@ -614,9 +614,9 @@ function modify_recipe_portions(f, idx) {
 }
 function handle_missing_ingredients(vendor){
 
-  $("#spinner_" + vendor).css({ display: "inline-block" });
-  $("#spinner_" + vendor + "_carticon").css({ display: "none" });
-  $("#vendor_checkout_proceed_" + vendor).addClass("disabled");
+  $(".spinner_" + vendor).css({ display: "inline-block" });
+  $(".spinner_" + vendor + "_carticon").css({ display: "none" });
+  $(".vendor_checkout_proceed_" + vendor).addClass("disabled");
 
   $.ajax({
     url: "/",
@@ -626,9 +626,9 @@ function handle_missing_ingredients(vendor){
     success: function (response) {
       console.log(response);
 
-      $("#spinner_" + vendor + "_carticon").css({ display: "inline-block" });
-      $("#spinner_" + vendor).css({ display: "none" });
-      $("#vendor_checkout_proceed_" + vendor).removeClass("disabled");
+      $(".spinner_" + vendor + "_carticon").css({ display: "inline-block" });
+      $(".spinner_" + vendor).css({ display: "none" });
+      $(".vendor_checkout_proceed_" + vendor).removeClass("disabled");
       $("#push_vendor_basket").prop("disabled", false);
       
     },
@@ -639,9 +639,10 @@ function handle_missing_ingredients(vendor){
 }
 
 function checkout(vendor) {
-  $("#spinner_" + vendor).css({ display: "inline-block" });
-  $("#spinner_" + vendor + "_carticon").css({ display: "none" });
-  $("#vendor_checkout_proceed_" + vendor).addClass("disabled");
+  //$("#spinner_" + vendor).css({ display: "inline-block" });
+  $(".spinner_" + vendor).css({ display: "inline-block" });
+  $(".spinner_" + vendor + "_carticon").css({ display: "none" });
+  $(".vendor_checkout_proceed_" + vendor).addClass("disabled");
 
   $.ajax({
     url: "/",
@@ -651,9 +652,9 @@ function checkout(vendor) {
     success: function (response) {
       console.log(response);
 
-      $("#spinner_" + vendor + "_carticon").css({ display: "inline-block" });
-      $("#spinner_" + vendor).css({ display: "none" });
-      $("#vendor_checkout_proceed_" + vendor).removeClass("disabled");
+      $(".spinner_" + vendor + "_carticon").css({ display: "inline-block" });
+      $(".spinner_" + vendor).css({ display: "none" });
+      $(".vendor_checkout_proceed_" + vendor).removeClass("disabled");
       $("#push_vendor_basket").prop("disabled", false);
 
       if (response != "immediately_push_vendor_basket") {
@@ -1015,12 +1016,12 @@ function setCurrentUserStatus() {
   var login_status_badge_Bring = document.getElementsByClassName("bring_badge");
   var login_status_bi_Bring = document.getElementsByClassName("bring_status");
 
-  var vendor_checkout_proceed_REWE = document.getElementById(
-    "vendor_checkout_proceed_REWE"
-  );
-  var vendor_checkout_proceed_Picnic = document.getElementById(
-    "vendor_checkout_proceed_Picnic"
-  );
+  // var vendor_checkout_proceed_REWE = document.getElementsByClassName(
+  //   "vendor_checkout_proceed_REWE"
+  // );
+  // var vendor_checkout_proceed_Picnic = document.getElementsByClassName(
+  //   "vendor_checkout_proceed_Picnic"
+  // );
   var vendor_checkout_proceed_Bring =
     document.getElementsByClassName("bring_btn");
 
@@ -1032,7 +1033,8 @@ function setCurrentUserStatus() {
     success: function (response) {
       if (response.REWE) {
         try {
-          vendor_checkout_proceed_REWE.disabled = false;
+          // vendor_checkout_proceed_REWE.disabled = false;
+          $('.vendor_checkout_proceed_REWE').each(function(i,obj){ obj.disabled = false; });
         } catch (e) {}
         try {
           login_status_badge_REWE.classList.replace(
@@ -1054,7 +1056,8 @@ function setCurrentUserStatus() {
         } catch (e) {}
       } else {
         try {
-          vendor_checkout_proceed_REWE.disabled = true;
+          // vendor_checkout_proceed_REWE.disabled = true;
+          $('.vendor_checkout_proceed_REWE').each(function(i,obj){ obj.disabled = true; });
         } catch (e) {}
         try {
           login_status_badge_REWE.classList.replace(
@@ -1074,7 +1077,8 @@ function setCurrentUserStatus() {
       }
       if (response.Picnic) {
         try {
-          vendor_checkout_proceed_Picnic.disabled = false;
+          //vendor_checkout_proceed_Picnic.disabled = false;
+          $('.vendor_checkout_proceed_Picnic').each(function(i,obj){ obj.disabled = false; });
         } catch (e) {}
         try {
           login_status_badge_Picnic.classList.replace(
@@ -1096,7 +1100,8 @@ function setCurrentUserStatus() {
         } catch (e) {}
       } else {
         try {
-          vendor_checkout_proceed_Picnic.disabled = true;
+          // vendor_checkout_proceed_Picnic.disabled = true;
+          $('.vendor_checkout_proceed_Picnic').each(function(i,obj){ obj.disabled = true; });
         } catch (e) {}
         try {
           login_status_badge_Picnic.classList.replace(
