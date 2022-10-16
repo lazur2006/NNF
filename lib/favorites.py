@@ -63,6 +63,6 @@ class favorites_manager(object):
 
     def get_fav_recipe_ids(self):
         conn = sqlite3.connect('static/db/favorites.db')
-        retval = tuple([self.get_recipe_id(e[0]) for e in conn.execute("SELECT RECIPE_UID FROM FAVORITES;").fetchall()])
+        retval = tuple([self.get_recipe_id(e[0]) for e in conn.execute("SELECT RECIPE_UID FROM FAVORITES;").fetchall() if self.get_recipe_id(e[0])])
         conn.close()
         return(retval)
