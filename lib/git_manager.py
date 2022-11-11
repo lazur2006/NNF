@@ -5,8 +5,8 @@ import subprocess
 from sys import platform
 
 repository = 'https://github.com/lazur2006/NNF.git'
-branch = 'unstable_beta_2_0_0'
-# unstable_alpha_dev_2_0_1
+branch = 'unstable_alpha_dev_2_0_1'
+# unstable_alpha_dev_2_0_1 unstable_beta_2_0_0
 
 
 class git_manager():
