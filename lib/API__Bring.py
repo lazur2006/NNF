@@ -26,11 +26,21 @@ class bring():
                 response = False
             else:
                 self.bearer_token = response.get('access_token')
+                self.bearer_refresh = response.get('refresh_token')
                 self.user_uuid = response.get('uuid')
                 response = True
         except:
             response = False
         return(response)
+
+    def refresh_token(self):
+        url = f"{base_address}/v2/bringauth/token"
+        payload = f"grant_type=refresh_token&refresh_token={self.bearer_refresh}"
+        headers = {
+        'host': 'api.getbring.com',
+        'connection': 'keep-alive'
+        }
+        self.bearer_token = self.session.request("POST", url, headers=headers, data=payload).json().get('access_token')
 
     def add_item(self,list_uuid,item,specification):
         url = f"{base_address}/v2/bringlists/{list_uuid}/items"
@@ -47,7 +57,15 @@ class bring():
         'host': host,
         'authorization': f'Bearer {self.bearer_token}'
         }
-        self.session.request("PUT", url, headers=headers, data=payload)
+        r = self.session.request("PUT", url, headers=headers, data=payload)
+        print(r.status_code)
+        if(r.status_code!=200):
+            self.refresh_token()
+            headers = {
+            'host': host,
+            'authorization': f'Bearer {self.bearer_token}'
+            }
+            self.session.request("PUT", url, headers=headers, data=payload)
 
     def get_all_lists(self):
         url = f"{base_address}/bringusers/{self.user_uuid}/lists"
