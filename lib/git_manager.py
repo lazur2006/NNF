@@ -6,7 +6,7 @@ from sys import platform
 import requests
 
 repository = 'https://github.com/lazur2006/NNF.git'
-branch = 'unstable_beta_2_0_0'
+branch = 'unstable_alpha_dev_2_0_1'
 # unstable_alpha_dev_2_0_1 unstable_beta_2_0_0
 # ab
 
