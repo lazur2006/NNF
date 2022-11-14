@@ -81,7 +81,7 @@ class wr_scrapeDatabase(object):
 
     def get_by_tag(self,tag):
         conn = sqlite3.connect('static/db/recipe.db')
-        ret = self.get_byID([e[0] for e in conn.execute("SELECT UID FROM 'TAGS' WHERE TAG = ? LIMIT(52);",(tag,)).fetchall()])
+        ret = self.get_byID([e[0] for e in conn.execute("SELECT UID FROM 'TAGS' WHERE TAG = ?;",(tag,)).fetchall()])
         conn.close()
         return(ret)
 

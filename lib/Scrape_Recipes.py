@@ -331,6 +331,9 @@ class Thread(threading.Thread):
                     for j,tag in enumerate(listRecipes[5][i]):
                         conn.execute("INSERT INTO TAGS (ID,UID,TAG) VALUES (?,?,?)",(cnt[2],i,tag))
                         cnt[2] = cnt[2] + 1
+                    if listRecipes[6][i][0]:
+                        conn.execute("INSERT INTO TAGS (ID,UID,TAG) VALUES (?,?,?)",(cnt[2],i,listRecipes[6][i][0]))
+                        cnt[2] = cnt[2] + 1
                         
                 ''' '''
                 conn.execute("CREATE TABLE UINGREDIENT AS SELECT DISTINCT INGREDIENT FROM INGREDIENTS ORDER BY INGREDIENT")
