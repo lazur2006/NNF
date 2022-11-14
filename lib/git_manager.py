@@ -5,7 +5,7 @@ import subprocess
 from sys import platform
 
 repository = 'https://github.com/lazur2006/NNF.git'
-branch = 'main'
+branch = 'main_v2'
 
 class git_manager():
 
@@ -15,6 +15,7 @@ class git_manager():
     def update_repository(self):
         if self.__allow_update_by_os_type():
             try:
+                self.repository.git.checkout(branch)
                 Repo.clone_from(repository, '', branch=branch)
             except:
                 self.repository.remotes.origin.pull()
@@ -25,8 +26,8 @@ class git_manager():
     def update_available(self):
         if self.__allow_update_by_os_type():
             self.repository.remotes.origin.fetch()
-            if(self.repository.git.diff('origin/main') != ''):
-                return({'update_is_available':True,'diff':self.repository.git.diff('origin/main')})
+            if(self.repository.git.diff('origin/main_v2') != ''):
+                return({'update_is_available':True,'diff':self.repository.git.diff('origin/main_v2')})
             else:
                 return({'update_is_available':False,'diff':''})
         else:
