@@ -44,10 +44,12 @@
 <body class="d-flex flex-column min-vh-100" style="padding-bottom: 200px;">
 
   <div class="position-relative">
-    <div class="position-absolute start-50 translate-middle" style="left:23vw !important;top:8em;z-index:20;height:clamp(180px, 17vw, 300px);width: clamp(180px, 17vw, 300px);background: scroll center url(/static/images/logo_.svg);background-size: 100% 100%;">
+    <div class="position-absolute start-50 translate-middle"
+      style="left:23vw !important;top:8em;z-index:20;height:clamp(180px, 17vw, 300px);width: clamp(180px, 17vw, 300px);background: scroll center url(/static/images/logo_.svg);background-size: 100% 100%;">
       <!-- Background image for card set in CSS! -->
     </div>
-    <div class="position-absolute rounded" style="min-width:clamp(10em,50vw,80em);right:4vw;margin-top:5em;box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;z-index:20;">
+    <div class="position-absolute rounded"
+      style="min-width:clamp(10em,50vw,80em);right:4vw;margin-top:5em;box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;z-index:20;">
       <nav class="navbar navbar-expand-lg navbar-light bg-light rounded-top" aria-label="Offcanvas navbar large">
         <div class="container-fluid">
           <a class="navbar-brand fs-6 fw-light" href="#"><i class="bi bi-boxes"
@@ -159,10 +161,16 @@
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">🎉 NNF Update is available!</h5>
         </div>
-        <div class="modal-body">🥳 Your app will be updated<p class="small text-muted m-0">🚀 Then the server will be
+
+        <div class="modal-body mb-3">🥳 Your app will be updated<p class="small text-muted m-0">🚀 Then the server will
+            be
             restarted <br>💨 This should only take a few seconds</p>
         </div>
-        <div class="modal-footer">
+
+        <div class="list-group update_notice">
+          <!-- Auto generated content -->
+        </div>
+        <div class="p-3 text-end">
           <button class="btn btn-outline-primary" id="update_loading_button" type="button"
             onclick="handle_update_action()">
             <span class="spinner-border spinner-border-sm" id="update_loading_button_spinner" role="status"
@@ -170,6 +178,9 @@
             Update now
           </button>
         </div>
+
+
+
       </div>
     </div>
   </div>

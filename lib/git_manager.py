@@ -4,7 +4,7 @@ import git
 import subprocess
 from sys import platform
 import requests
-
+import datetime
 import re
 
 repository = 'https://github.com/lazur2006/NNF.git'
@@ -55,29 +55,26 @@ class git_manager():
     def get_commit_history(self):
         url = f"https://api.github.com/repos/lazur2006/NNF/commits?sha={branch}"
         response = requests.request("GET", url).json()
-        results = []
-        title = []
-        features = []
+        log = []
         for e in response:
-            # if e.get('sha') == self.get_repo_head_sha():
-            #     break
-            # else:
-            msg = repr(e.get('commit').get('message'))
-            
-
-            regex = r"([^\\]*\s*)(\\n\\n|\\r\\n)([^\\]*\s*)"
-            #test_str = "Upgrade\\n\\n#1 Upgrade to newer Version available!\\r\\n# Bug fixed\\r\\n# Bla bla"
-            try:
-                title.append([e.group(1) for e in re.finditer(regex, msg, re.MULTILINE)][0])
-            except:
-                pass
-            f = [e.group(3) for e in re.finditer(regex, msg, re.MULTILINE)]
-            if f:
-                features.append(f)
+            if e.get('sha') == self.get_repo_head_sha():
+                break
             else:
-                features.append(msg)
+                msg = repr(e.get('commit').get('message'))
+                regex = r"([^\\']*\s*)(\\n\\n|\\r\\n|\\n)([^\\]*\s*)"
+                try:
+                    timestamp = datetime.datetime.strptime(e.get('commit').get('committer').get('date'), "%Y-%m-%dT%H:%M:%SZ").date()
+                    today = datetime.date.today()
+                    log.append(([{
+                        'title':r.group(1),
+                        'features':[t.group(3) for t in re.finditer(regex, msg, re.MULTILINE)],
+                        'days':str((today-timestamp).days)+" days ago" if (today-timestamp).days>0 else 'today'
+                        } for r in re.finditer(regex, msg, re.MULTILINE)])[0])
+                except:
+                    print('failed')
+                    pass
 
-        return(results)
+        return(log)
 
     def get_repo_head_sha(self):
         return(self.repository.head.object.hexsha)
