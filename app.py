@@ -138,7 +138,7 @@ class WebView(FlaskView):
         route = retval.get('Route')
 
         if route == 'basket':
-            self.handle_basket('handle_basket_action_relative_ids',request.get_json().get('Recipes'))
+            self.handle_basket('handle_basket_action_absolute_ids',request.get_json().get('Recipes'))
             return(make_response(jsonify(self.handle_basket('return_basket')), 201))
         elif route == 'clearBasket':
             self.handle_basket('clear_basket')
