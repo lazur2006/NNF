@@ -32,11 +32,11 @@ class git_manager():
         if self.__allow_update_by_os_type():
             self.repository.remotes.origin.fetch()
             if(self.repository.git.diff(f'origin/{branch}') != ''):
-                return({'update_is_available':True,'diff':self.repository.git.diff(f'origin/{branch}'),'notes':self.get_commit_history()})
+                return({'update_is_available':True,'diff':self.repository.git.diff(f'origin/{branch}'),'notes':self.get_commit_history(),'head_revision':self.get_repo_head_sha()[:7]})
             else:
-                return({'update_is_available':False,'diff':''})
+                return({'update_is_available':False,'diff':'','head_revision':self.get_repo_head_sha()[:7]})
         else:
-            return({'update_is_available':False,'diff':'OS: unix isn''t used'})
+            return({'update_is_available':False,'diff':'OS: unix isn''t used','head_revision':self.get_repo_head_sha()[:7]})
 
     def __restart_server(self):
         subprocess.check_output("sudo systemctl restart my-server --now", shell=True)

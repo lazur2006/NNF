@@ -1268,29 +1268,16 @@ $(document).ready(function () {
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
+      $(".head_revision").text(' ' + response.head_revision);
       if (response.update_is_available) {
-        console.log(response.notes);
-        //  <a class="list-group-item list-group-item-action">
-        //     <div class="d-flex w-100 justify-content-between">
-        //     <h5 class="mb-1">List group item heading</h5>
-        //     <small class="text-muted">3 days ago</small>
-        //   </div>
-        //   <p class="mb-1">Some placeholder content in a paragraph.</p>
-        // </a>
-
         response.notes.forEach(function(log_notes,index){
-          console.log(log_notes);
-
           $(".update_notice").append(
             '<a class="list-group-item list-group-item-action"><div class="d-flex w-100 justify-content-between"><h5 class="mb-1">' + 
             log_notes.title + 
             '</h5><small class="text-muted">'+ log_notes.days +'</small></div><div class="feature_text_' + index + '"></div></a>'
           );
-
           log_notes.features.forEach(function(feature){$(".feature_text_" + index + "").append('<p class="mb-1">' + feature + '</p>');}) 
-
         })
-
         $("#update_modal").show();
       } else {
         $("#update_modal").hide();
