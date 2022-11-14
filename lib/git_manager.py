@@ -5,10 +5,12 @@ import subprocess
 from sys import platform
 import requests
 
+import re
+
 repository = 'https://github.com/lazur2006/NNF.git'
 branch = 'unstable_beta_2_0_0'
 # unstable_alpha_dev_2_0_1 unstable_beta_2_0_0
-# a b
+# a
 
 class git_manager():
 
@@ -54,11 +56,27 @@ class git_manager():
         url = f"https://api.github.com/repos/lazur2006/NNF/commits?sha={branch}"
         response = requests.request("GET", url).json()
         results = []
+        title = []
+        features = []
         for e in response:
-            if e.get('sha') == self.get_repo_head_sha():
-                break
+            # if e.get('sha') == self.get_repo_head_sha():
+            #     break
+            # else:
+            msg = repr(e.get('commit').get('message'))
+            
+
+            regex = r"([^\\]*\s*)(\\n\\n|\\r\\n)([^\\]*\s*)"
+            #test_str = "Upgrade\\n\\n#1 Upgrade to newer Version available!\\r\\n# Bug fixed\\r\\n# Bla bla"
+            try:
+                title.append([e.group(1) for e in re.finditer(regex, msg, re.MULTILINE)][0])
+            except:
+                pass
+            f = [e.group(3) for e in re.finditer(regex, msg, re.MULTILINE)]
+            if f:
+                features.append(f)
             else:
-                results.append(e.get('commit').get('message'))
+                features.append(msg)
+
         return(results)
 
     def get_repo_head_sha(self):
