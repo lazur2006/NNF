@@ -8,7 +8,7 @@ import datetime
 import re
 
 repository = 'https://github.com/lazur2006/NNF.git'
-branch = 'main_v2'
+branch = 'main_v2'#a
 
 class git_manager():
 
