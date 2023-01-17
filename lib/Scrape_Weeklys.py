@@ -100,7 +100,7 @@ class scrapeWeeklys(object):
         year, self.week_num, _ = my_date.isocalendar()
         for i in range(3):
             next_week = self.week_num + i + 1
-            url = f"{host}/my-deliveries/menu?delivery-option={delivery_option}&postcode={postcode}&preference={preference}&product-sku={product_sku}&servings={servings}&subscription={subscription}&week={str(year)}-W{str(next_week)}&locale=de-DE&country=DE"
+            url = f"{host}/my-deliveries/menu?delivery-option={delivery_option}&postcode={postcode}&preference={preference}&product-sku={product_sku}&servings={servings}&subscription={subscription}&week={str(year)}-W{str('%02d' % (next_week,))}&locale=de-DE&country=DE"
             headers = {
             'authorization': f"Bearer {self.stream['LOGIN']['access_token']}"
             }
