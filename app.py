@@ -147,7 +147,7 @@ class WebView(FlaskView):
             self.handle_basket('remove_item',retval.get('deleteItem'))
             return(make_response(jsonify(self.handle_basket('return_basket')), 201))
         elif route == 'saveCredentials':
-            self.user.setCredentials(retval.get('vendor'),retval.get('username'),retval.get('password'),retval.get('ipaddress'))
+            self.user.setCredentials(retval.get('vendor'),retval.get('username'),retval.get('password'),'')
             status = self.vendor.login(retval.get('vendor'))
             info = self.vendor.getUserInfo(retval.get('vendor'))
             return(make_response(jsonify({'vendor':retval.get('vendor'),'status':status,'info':info}), 200))

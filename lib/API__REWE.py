@@ -102,13 +102,19 @@ class ReweMobileApi():
     
             payload = json.dumps({
               "username": user,
-              "password": password,
-              "recaptchaToken": self.getDeviceAuthToken(AndroidDeviceIp)
+              "password": password#,
+            #   "recaptchaToken": self.getDeviceAuthToken(AndroidDeviceIp)
             })
     
+            # headers = {
+            #   'user-agent': useragent,
+            #   'content-type': 'application/json; charset=UTF-8',
+            # }
             headers = {
-              'user-agent': useragent,
-              'content-type': 'application/json; charset=UTF-8',
+                'host': 'mobile-api.rewe.de',
+                'device-check-token': 'abc123',
+                'content-type': 'application/json',
+                'user-agent': 'REWE-Mobile-Client/3.21.1.202107221517 iOS/14.6.0 Phone/iPhone_XS'
             }
             
             r = self.session.request("POST", url, headers=headers, data=payload)
