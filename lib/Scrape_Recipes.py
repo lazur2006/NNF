@@ -89,10 +89,23 @@ class Thread(threading.Thread):
             session = requests.Session()
             
             # HelloFresh URL
-            url = f"{host}/api/recipes/search?"
+            # url = f"{host}/api/recipes/search?"
+
+            
+
+            payload = {}
+            headers = {
+            'host': 'gw.hellofresh.com',
+            'accept': '*/*',
+            'connection': 'keep-alive',
+            'user-agent': 'HelloFresh/23.30 (com.hellofresh.HelloFresh; build:17675107; iPhone 15.7.7) HFNetworking',
+            'authorization': f"Bearer {self.auth()}",
+            'accept-language': 'de-DE,de;q=0.9',
+            'accept-encoding': 'gzip, deflate, br'
+            }
             
             # maximum items to return are 250
-            limit = 250
+            limit = 1000
             # take only recipes in consideration if there ingredient amount is more than 3
             minIngredientAmount = 3
             # Should also are the images saved?
@@ -104,18 +117,20 @@ class Thread(threading.Thread):
             locale=LOCALE[0]
             country=COUNTRY[0]
             
-            payload={
-              "offset": "0",
-              "limit": str(limit),
-              "locale": locale,
-              "country": country
-            }
+            # payload={
+            #   "offset": "0",
+            #   "limit": str(limit),
+            #   "locale": locale,
+            #   "country": country
+            # }
             
             #self._state_msg.emit("Get fresh bearer auth token...")
             # apply bearer
-            headers = {
-              'Authorization': f"Bearer {self.auth()}"
-              }
+            # headers = {
+            #   'Authorization': f"Bearer {self.auth()}"
+            #   }
+
+            url = f"https://gw.hellofresh.com/recipes/recipes/search?country=DE&locale=de-DE&not-author=thermomix&skip=0&limit=1"
             
             # find out how many recipes are present (only german DE market)
             try:
@@ -148,13 +163,14 @@ class Thread(threading.Thread):
                 #self._max.emit(iterations)
                 #self._signal.emit(i)
                 #self._state_msg.emit("Step 1/8\n\nDownload "+str(i)+" of "+str(iterations)+" packages server\n\nRemaining Time "+self._tqdmObj.remaining())
-                payload={
-                    "offset": str(offset),
-                    "limit": str(limit),
-                    "locale": locale,
-                    "country": country
-                }
-                offset += 250
+                # payload={
+                #     "offset": str(offset),
+                #     "limit": str(limit),
+                #     "locale": locale,
+                #     "country": country
+                # }
+                url = f"https://gw.hellofresh.com/recipes/recipes/search?country=DE&locale=de-DE&not-author=thermomix&skip={offset}&limit={limit}"
+                offset += limit
                 try:
                     response = session.request("GET", url, headers=headers, params=payload, timeout=2)
                     timeout = False
@@ -164,13 +180,16 @@ class Thread(threading.Thread):
                 cnt = 0
                 if response.status_code == 503 or timeout:
                     print("503 detected ... do max 5 retries")
-                    while response.status_code == 503 and cnt < 5:
+                    while response.status_code == 503 or response.status_code == 500 and cnt < 5:
                         try:
                             response = session.request("GET", url, headers=headers, params=payload, timeout=2)
                         except:
                             response.status_code = 503
                         cnt = cnt + 1
-                recipes.extend(response.json()['items'])
+                try:
+                    recipes.extend(response.json()['items'])
+                except:
+                    pass
             
             # Drop recipes when
             # - ingredients list is empty
@@ -178,7 +197,7 @@ class Thread(threading.Thread):
             # - ingredients amount less than "minIngredientAmount"
             recipesFiltred=[]
             recipesOutsourced=[]
-            for i in range(total):
+            for i in range(len(recipes)):
                 if not self._isRunning:
                     break
                 try:
