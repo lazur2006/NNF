@@ -1,3 +1,27 @@
+import subprocess
+import pkg_resources
+
+def install_package(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+def is_package_installed(package):
+    try:
+        pkg_resources.get_distribution(package)
+        return True
+    except pkg_resources.DistributionNotFound:
+        return False
+
+# Package name
+package_name = 'brotli'
+
+if not is_package_installed(package_name):
+    print(f"{package_name} is not installed. Installing now...")
+    install_package(package_name)
+    print(f"{package_name} has been successfully installed.")
+else:
+    print(f"{package_name} is already installed.")
+
+
 import requests
 import re
 import urllib.request
