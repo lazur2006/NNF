@@ -7,6 +7,7 @@ from tqdm import tqdm
 #from PyQt5.QtCore import QThread, pyqtSignal
 import threading
 import sqlite3
+import brotli
 
 
 import ssl
@@ -98,14 +99,14 @@ class Thread(threading.Thread):
             'host': 'gw.hellofresh.com',
             'accept': '*/*',
             'connection': 'keep-alive',
-            'user-agent': 'HelloFresh/23.30 (com.hellofresh.HelloFresh; build:17675107; iPhone 15.7.7) HFNetworking',
+            'user-agent': 'HelloFresh/24.12 (com.hellofresh.HelloFresh; build:6703464; iPhone 16.7.4) HFNetworking',
             'authorization': f"Bearer {self.auth()}",
             'accept-language': 'de-DE,de;q=0.9',
             'accept-encoding': 'gzip, deflate, br'
             }
             
             # maximum items to return are 250
-            limit = 1000
+            limit = 100
             # take only recipes in consideration if there ingredient amount is more than 3
             minIngredientAmount = 3
             # Should also are the images saved?
@@ -130,7 +131,9 @@ class Thread(threading.Thread):
             #   'Authorization': f"Bearer {self.auth()}"
             #   }
 
-            url = f"https://gw.hellofresh.com/recipes/recipes/search?country=DE&locale=de-DE&not-author=thermomix&skip=0&limit=1"
+            url = f"https://gw.hellofresh.com/recipes/recipes/search?country=de&locale=de-DE&not-author=thermomix&offset=0&limit=10"
+
+            # "https://gw.hellofresh.com/recipes/recipes/search?country=de&locale=de-DE&limit=10&not-author=thermomix&offset=0&order=-date"
             
             # find out how many recipes are present (only german DE market)
             try:
@@ -169,7 +172,7 @@ class Thread(threading.Thread):
                 #     "locale": locale,
                 #     "country": country
                 # }
-                url = f"https://gw.hellofresh.com/recipes/recipes/search?country=DE&locale=de-DE&not-author=thermomix&skip={offset}&limit={limit}"
+                url = f"https://gw.hellofresh.com/recipes/recipes/search?country=DE&locale=de-DE&not-author=thermomix&offset={offset}&limit={limit}"
                 offset += limit
                 try:
                     response = session.request("GET", url, headers=headers, params=payload, timeout=2)
@@ -188,8 +191,10 @@ class Thread(threading.Thread):
                         cnt = cnt + 1
                 try:
                     recipes.extend(response.json()['items'])
-                except:
-                    pass
+                except Exception as e:
+                    print(e)
+                    break
+                    # pass
             
             # Drop recipes when
             # - ingredients list is empty
@@ -201,15 +206,22 @@ class Thread(threading.Thread):
                 if not self._isRunning:
                     break
                 try:
-                    if(any(recipes[i]['ingredients']) and recipes[i]['label']['handle']!='thermomix' and re.match(".*thermomix",recipes[i]['comment'])==None and len(recipes[i]['ingredients'])>minIngredientAmount):
+                    # if(any(recipes[i]['ingredients']) and recipes[i]['label']['handle']!='thermomix' and re.match(".*thermomix",recipes[i]['comment'])==None and len(recipes[i]['ingredients'])>minIngredientAmount):
+                    #     recipesFiltred.append(recipes[i])
+                    if (any(recipes[i]['ingredients']) and 
+                    (recipes[i]['label'] is None or recipes[i]['label']['handle'] != 'thermomix') and 
+                    (recipes[i]['comment'] is None or re.match(".*thermomix", recipes[i]['comment']) is None) and 
+                    len(recipes[i]['ingredients']) > minIngredientAmount):
                         recipesFiltred.append(recipes[i])
                     else:
                         recipesOutsourced.append(recipes[i])
-                except:
+                except Exception as e:
                     if(recipes[i]['label']==None and len(recipes[i]['ingredients'])>minIngredientAmount):
                         recipesFiltred.append(recipes[i])
                     else:
                         recipesOutsourced.append(recipes[i])
+
+            # recipesFiltred = recipesOutsourced
                         
             print(">> Found ",str(len(recipesFiltred)),"relevant recipes")
             
@@ -266,7 +278,7 @@ class Thread(threading.Thread):
                 recipesFinal.append([
                     recipesFiltred[i]['name'],
                     ingredients,
-                    recipesFiltred[i]['websiteUrl'],
+                    '',#recipesFiltred[i]['websiteUrl'],
                     steps,
                     "https://img.hellofresh.com/c_fit,f_auto,fl_lossy,h_1100,q_auto,w_2600/hellofresh_s3"+recipesFiltred[i]['imagePath'],
                     tags,
@@ -369,3 +381,7 @@ class Thread(threading.Thread):
                 conn.close()
             
             self._isRunning = False
+
+
+# run = Thread()
+# run.run()
