@@ -37,9 +37,6 @@ class git_manager():
             return({'update_is_available':False,'diff':'OS: unix isn''t used','head_revision':self.get_repo_head_sha()[:7]})
 
     def __restart_server(self):
-        subprocess.check_output("source menv/bin/activate", shell=True)
-        subprocess.check_output("pip install brotli", shell=True)
-        subprocess.check_output("deactivate", shell=True)
         subprocess.check_output("sudo systemctl restart my-server --now", shell=True)
 
     def __allow_update_by_os_type(self):
