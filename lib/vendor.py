@@ -28,8 +28,8 @@ class vendor(object):
         self.HelloFresh = hellofresh()
         self.bring = bring()
         
-        early_dic = dict({'REWE':self.login('REWE'),
-                          'Picnic':self.login('Picnic'),
+        early_dic = dict({'REWE':False,
+                          'Picnic':False,
                           'HelloFresh':self.login('HelloFresh'),
                           'Bring':self.login('Bring')})
         self.early = early_dic
@@ -65,6 +65,9 @@ class vendor(object):
         self.early = early_dic
         
         return(auth)
+    
+    def otp(self,code):
+        return self.Picnic.otp(code)
 
     def logout(self):
         try:

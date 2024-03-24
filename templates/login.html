@@ -59,14 +59,6 @@
                 <label for="floatingPassword">Password</label>
               </div>
 
-              <!-- <div class="form-floating mb-3" id="ipaddress_div">
-                <input type="text" minlength="7" maxlength="15" size="15"
-                  pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$"
-                  class="form-control" id="floatingIPaddress" placeholder="e.g. 192.168.0.1"
-                  autocomplete="current-ipaddress" name="ipaddress" required>
-                <label for="floatingIPaddress">Device IP-Address</label>
-              </div> -->
-
               <div class="d-grid mb-2 gap-2">
                 <button class="btn btn-lg btn-outline-dark" type="submit" id="btn" value="saveCredentials">
                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loginspinner"
@@ -100,6 +92,15 @@
               </div>
 
             </form>
+
+            <form method="post" id="otp-form" style="display:none;">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInputOTP" placeholder="OTP Token" name="otpToken" required>
+                <label for="floatingInputOTP">OTP Token</label>
+              </div>
+              <button class="btn btn-lg btn-outline-dark" type="submit">Verify OTP</button>
+            </form>
+            
           </div>
         </div>
       </div>

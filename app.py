@@ -202,8 +202,10 @@ class WebView(FlaskView):
         elif route=='modify_recipe_portions':
             self.basket_manager.modify_recipe_portions(retval.get('f'))
             return(make_response(jsonify({'num_recipe_portions':self.basket_manager.get_num_recipe_portions(),'basket':self.handle_basket('update_basket')}), 200))
-            
-
+        elif route=='OTP':
+            status = self.vendor.otp(retval.get('code').get('otp'))
+            return(make_response(jsonify({'status':status}), 200))
+        
     @route('/choose', methods=['POST'])
     def post_route_choose(self):
 

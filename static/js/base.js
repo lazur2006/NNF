@@ -893,7 +893,10 @@ $(document).on("submit", "#index-form", function (e) {
     contentType: "application/json;charset=UTF-8",
     type: "POST",
     success: function (response) {
-      //console.log(response);
+      if (response.status === 'OTP_required') {
+        $("#index-form").css({ display: "none" });
+        $("#otp-form").css({ display: "block" });
+      }
       if (selection.Route == "saveCredentials") {
         var btn = document.getElementById("btn");
         var icon = document.getElementById("bichecklogin");
@@ -946,6 +949,31 @@ $(document).on("submit", "#index-form", function (e) {
   });
 });
 
+// Handle OTP form submission
+$(document).on("submit", "#otp-form", function (e) {
+  e.preventDefault();
+  
+  var otpSelection = {
+    otp: $("#floatingInputOTP").val()
+  };
+
+  $.ajax({
+    url: "/",
+    data: JSON.stringify({'Route': 'OTP', 'code': otpSelection}),
+    contentType: "application/json;charset=UTF-8",
+    type: "POST",
+    success: function (response) {
+      if (response.status) {
+        alert("OTP verification successful.");
+      } else {
+        alert("OTP verification failed. Please try again.");
+      }
+    },
+    error: function (error) {
+      console.log(error);
+    },
+  });
+});
 /*
     Is called if the clear basket button is called on the index page
 */
